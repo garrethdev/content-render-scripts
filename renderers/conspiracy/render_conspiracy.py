@@ -31,7 +31,7 @@ FONT = env.get("HOOK_FONT_OTF",
                os.path.expanduser("~/Claude/carousel-command-center/fonts/TikTokSans36pt-ExtraBold.otf"))
 EMOJI_FONT = env.get("EMOJI_FONT", "/System/Library/Fonts/Apple Color Emoji.ttc")
 SUPA_URL = env.get("SUPABASE_URL", "https://qlcmgxgwpzmiebzxflai.supabase.co") \
-    + "/rest/v1/medical_conspiracy_stories"
+    + "/rest/v1/conspiracy_kitchen"
 SUPA_KEY = env.require("SUPABASE_ANON_KEY")
 os.makedirs(WORK, exist_ok=True)
 
