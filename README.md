@@ -47,6 +47,9 @@ lane's deps. ffmpeg/ffprobe must be on PATH (or set `FFMPEG`/`FFPROBE`).
 
 ## Security
 
+- **Pre-commit/pre-push guard:** `bash scripts/install-hooks.sh` once per clone — every commit
+  and push is then scanned for credential-shaped content (Supabase/OpenRouter/Anthropic/GitHub/
+  Slack/AWS key patterns, JWTs, private keys, staged `.env` files) and blocked on a hit.
 - **No keys are committed.** All 5 formerly-hardcoded keys were moved to env loading; a
   full sweep confirms zero secrets in the tree. The `.gitignore` blocks `.env` and media.
 - Two scripts were **deliberately excluded** from this repo and should be rotated separately
