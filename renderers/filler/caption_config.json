@@ -1,0 +1,59 @@
+{
+  "source": {
+    "table": "viral_filler_content",
+    "filter": "caption=is.null&status=eq.done",
+    "id_column": "id",
+    "limit": 12,
+    "context_columns": [
+      "hook",
+      "about",
+      "hook_angle"
+    ]
+  },
+  "voice": {
+    "system_prompt": "You write the caption for a short relatable weight-loss or clean-eating filler video for Black women. Write 1 to 2 short relatable human sentences matched to the hook, then ease gently into the provided CTA using a soft empathetic conditional opener. Never invent your own CTA. Never write link in bio, start your journey, click the link, tap the link, or follow for more.",
+    "cta_template": "{{variant}} Type QUIZ in the comments.",
+    "cta_variants": [
+      "If you feel like you cannot handle your weight on your own, there is a quiz built for Black women that shows us our options.",
+      "If you are tired of trying to figure this out alone, there is a quiz built for Black women that walks us through our options.",
+      "If you have been wondering what could actually work for your body, there is a quiz made just for Black women like us.",
+      "If you feel stuck and unsure where to start, there is a quiz built for Black women that lays out our options.",
+      "If you are ready to stop guessing, there is a quiz built for Black women that shows us what is possible.",
+      "If no plan has ever felt made for you, there is a quiz built for Black women that finally does.",
+      "If you want a real path that fits your body, there is a quiz built for Black women that shows us our options.",
+      "If you feel like your body keeps its own rules, there is a quiz built for Black women that helps us understand them."
+    ],
+    "banned_words": [
+      "ozempic",
+      "wegovy",
+      "zepbound",
+      "mounjaro",
+      "semaglutide",
+      "tirzepatide",
+      "glp-1",
+      "glp1",
+      "peptide",
+      "the shot",
+      "injection",
+      "cure",
+      "diabetes",
+      "insulin",
+      "melts fat",
+      "peptide miracles",
+      "link in bio",
+      "start your journey",
+      "follow for more"
+    ],
+    "extra_rules": "No drug names, no claims, no selling, no contractions, no ampersands. Always end the caption with the CTA line exactly as provided. Never write link in bio, start your journey, click the link, tap the link, or follow for more.",
+    "temperature": 0.85,
+    "max_tokens": 400
+  },
+  "format": {
+    "hashtag_stack": "#weightlossjourney #blackgirlwellness #healthjourney #relatable #fyp"
+  },
+  "output": {
+    "target_column": "caption",
+    "timestamp_column": "caption_generated_at"
+  },
+  "concurrency": 10
+}

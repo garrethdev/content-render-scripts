@@ -1,0 +1,53 @@
+# secrets — NEVER commit
+.env
+*.env
+!.env.example
+
+# python
+__pycache__/
+*.pyc
+.venv/
+venv/
+.eggs/
+*.egg-info/
+
+# node
+node_modules/
+
+# render outputs, caches, working dirs (these renderers read source from Supabase,
+# write finished media to Supabase storage, and use these only as scratch)
+out/
+out2/
+renders/
+renders_hooked/
+work/
+cache/
+segments/
+variants/
+images/v3/
+images/food/
+
+# media — code repo only, no binaries
+*.mp4
+*.mov
+*.webm
+*.m4a
+*.wav
+*.mp3
+*.png
+*.jpg
+*.jpeg
+*.gif
+*.otf
+*.ttf
+*.ttc
+
+# large local data dumps (renderers pull from the DB, not these)
+*_manifest.json
+all_videos.json
+candidates*.json
+targets.json
+batch_*.json
+
+# os
+.DS_Store
