@@ -210,6 +210,23 @@ def get_row(cid):
     return rows[0]
 
 
+APPROVED = "&audit_status=eq.approved&gatekeep_status=eq.approved"
+
+def run_rows(rows, publish_fn, label):
+    print(label, "rows to render:", len(rows or []))
+    ok = 0; errs = []
+    for row in (rows or []):
+        try:
+            p = render_row(row); publish_fn(row, p); ok += 1
+            print("  ok", row["carousel_id"])
+        except Exception as e:
+            errs.append(row["carousel_id"] + ": " + str(e)[:120])
+            print("  ERR", row["carousel_id"], str(e)[:120])
+    print("DONE", label, "ok", ok, "errors", len(errs))
+    for e in errs:
+        print("   ", e)
+
+
 def main():
     mode = sys.argv[1] if len(sys.argv) > 1 else "test"
     if mode == "test":
@@ -252,8 +269,22 @@ def main():
         print("DONE ba", prefix, "ok", ok, "errors", len(errs))
         for e in errs:
             print("   ", e)
+    elif mode == "queue":
+        # command-center mode: audit+gate approved grandma rows with no video yet
+        rows = rest("grandma_before_after?select=*" + APPROVED +
+                    "&or=(final_video.is.null,final_video.eq.)&order=carousel_id")
+        if not rows:
+            print("QUEUE EMPTY: no approved unrendered grandma rows"); return
+        run_rows(rows, publish, "queue")
+    elif mode == "ba-queue":
+        # command-center mode: audit+gate approved 2-slide rows with no video yet
+        rows = rest("ba_2slide_content?select=*" + APPROVED + "&before_clip=not.is.null" +
+                    "&or=(final_video.is.null,final_video.eq.)&order=carousel_id")
+        if not rows:
+            print("QUEUE EMPTY: no approved unrendered ba rows"); return
+        run_rows(rows, publish_ba, "ba-queue")
     else:
-        raise SystemExit("usage: render_ba.py test|one|batch|ba <arg>")
+        raise SystemExit("usage: render_ba.py test|one|batch|ba <arg> | queue | ba-queue")
 
 
 if __name__ == "__main__":

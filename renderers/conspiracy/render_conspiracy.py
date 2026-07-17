@@ -10,6 +10,7 @@ render is wrapped by ffguard (auto-kills runaway/hanging ffmpeg).
 Usage:
     python3 render_conspiracy.py --ids 62,63,64,65 --prefix BATCH4
     python3 render_conspiracy.py --ids 26 --prefix TEST --orders Order1
+    python3 render_conspiracy.py --queue --prefix BATCH5   # gate-passed rows with no video yet
 
 Reference docs (edit these, they are the source of truth):
     Character 4/EDIT RULES.md, EDIT PATTERNS.json, DEATH-HARM-WORD-GRID.md
@@ -232,6 +233,13 @@ def fetch_stories(ids):
     with urllib.request.urlopen(req, timeout=30) as r:
         return json.load(r)
 
+def fetch_queue():
+    # gate-before-render: only rows the pre-publish gate passed and that have no video yet
+    q = SUPA_URL + "?select=id&gatekeep_status=eq.pass&video_url=is.null&order=id.asc"
+    req = urllib.request.Request(q, headers={"apikey": SUPA_KEY, "Authorization": "Bearer " + SUPA_KEY})
+    with urllib.request.urlopen(req, timeout=30) as r:
+        return [int(x["id"]) for x in json.load(r)]
+
 _ABBR = ['Dr','Mr','Mrs','Ms','St','Jr','Sr','vs','etc','Inc','Co','No','Gen','Sen','Rep','Gov','Lt','Sgt']
 def sentences(text):
     t = (text or "").strip()
@@ -275,11 +283,20 @@ def sanitize(title):
 
 def main():
     ap = argparse.ArgumentParser(description="Render conspiracy-kitchen videos from DB story ids.")
-    ap.add_argument("--ids", required=True, help="comma-separated story ids, e.g. 62,63,64")
+    ap.add_argument("--ids", help="comma-separated story ids, e.g. 62,63,64")
+    ap.add_argument("--queue", action="store_true", help="render rows with gatekeep_status=pass and no video_url")
     ap.add_argument("--prefix", default="RENDER", help="output filename prefix (e.g. BATCH5)")
     ap.add_argument("--orders", default="Order1,Order2,Order3", help="orders to rotate across ids")
     a = ap.parse_args()
-    ids = [int(x) for x in a.ids.split(",") if x.strip()]
+    if a.queue:
+        ids = fetch_queue()
+        if not ids:
+            print("QUEUE EMPTY: no gate-passed unrendered rows"); return
+        print(f"QUEUE: {len(ids)} rows -> {ids}")
+    elif a.ids:
+        ids = [int(x) for x in a.ids.split(",") if x.strip()]
+    else:
+        ap.error("--ids or --queue required")
     orders = [o.strip() for o in a.orders.split(",") if o.strip()]
     rows = fetch_stories(ids)
     by_id = {int(r["id"]): r for r in rows}

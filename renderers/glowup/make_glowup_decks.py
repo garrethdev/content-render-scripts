@@ -95,7 +95,14 @@ def main():
         s=random.choice(pool) if pool else None
         return (s["artist"]+" - "+s["title"]+(" | "+s["same_style_url"] if s.get("same_style_url") else "")) if s else ""
 
-    decks=get(f"{REST}/glowup_decks?select=*&order=id")
+    # Optional argv PostgREST filters (e.g. "render_status=eq.pending" "batch=eq.X").
+    # Default = UNRENDERED rows only (forward-looking; never re-touches rendered decks).
+    # Pass --all for the legacy render-everything behavior.
+    args=[a for a in sys.argv[1:] if a!="--all"]
+    q="".join("&"+f for f in args)
+    if "--all" not in sys.argv[1:] and not any(a.startswith("render_status") for a in args):
+        q+="&or=(render_status.is.null,render_status.eq.pending)"
+    decks=get(f"{REST}/glowup_decks?select=*&order=id{q}")
     print(f"{len(decks)} decks")
     for k,deck in enumerate(decks):
         dk=deck["deck_key"]; hook=deck["hook"]; random.seed(dk)

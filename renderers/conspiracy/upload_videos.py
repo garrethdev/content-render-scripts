@@ -1,10 +1,11 @@
 #!/usr/bin/env python3
 """Upload rendered conspiracy-kitchen MP4s to Supabase storage and set video_url per row.
 Maps each BATCH*.mp4 to its story by the sanitized-title embedded in the filename,
-uploads as <content_id>.mp4 to the 'conspiracy-kitchen' bucket, sets medical_conspiracy_stories.video_url.
+uploads as <content_id>.mp4 to the 'conspiracy-kitchen' bucket, sets conspiracy_kitchen.video_url.
 
     python3 upload_videos.py --dry     # show the mapping only
     python3 upload_videos.py           # upload + set video_url
+    python3 upload_videos.py --glob "BATCH99*.mp4"   # only files matching this glob
 """
 import os, re, json, glob, urllib.request, argparse
 
@@ -28,7 +29,7 @@ def sanitize(title):
     return re.sub(r'\s+', ' ', t)[:48].strip()
 
 def fetch_stories():
-    q = f"{BASE}/rest/v1/medical_conspiracy_stories?select=id,content_id,title&music_id=not.is.null"
+    q = f"{BASE}/rest/v1/conspiracy_kitchen?select=id,content_id,title&music_id=not.is.null"
     return json.load(urllib.request.urlopen(urllib.request.Request(q, headers=H), timeout=30))
 
 def match(files, stories):
@@ -55,15 +56,17 @@ def upload(f, content_id):
     return f"{BASE}/storage/v1/object/public/{BUCKET}/{obj}"
 
 def set_url(sid, url):
-    req = urllib.request.Request(f"{BASE}/rest/v1/medical_conspiracy_stories?id=eq.{sid}",
+    req = urllib.request.Request(f"{BASE}/rest/v1/conspiracy_kitchen?id=eq.{sid}",
                                  data=json.dumps({"video_url": url}).encode(), method="PATCH",
                                  headers={**H, "Content-Type": "application/json", "Prefer": "return=minimal"})
     urllib.request.urlopen(req, timeout=30)
 
 def main():
-    ap = argparse.ArgumentParser(); ap.add_argument("--dry", action="store_true"); a = ap.parse_args()
+    ap = argparse.ArgumentParser(); ap.add_argument("--dry", action="store_true")
+    ap.add_argument("--glob", default="BATCH*.mp4", help="filename glob inside the Edit folder")
+    a = ap.parse_args()
     stories = fetch_stories()
-    files = sorted(glob.glob(os.path.join(EDIT, "BATCH*.mp4")))
+    files = sorted(glob.glob(os.path.join(EDIT, a.glob)))
     pairs, unmatched = match(files, stories)
     print(f"stories(music_id)={len(stories)}  files={len(files)}  matched={len(pairs)}  unmatched={len(unmatched)}")
     if unmatched: print("UNMATCHED:", unmatched)
