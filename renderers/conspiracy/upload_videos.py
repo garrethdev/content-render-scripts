@@ -28,8 +28,12 @@ def sanitize(title):
     t = re.sub(r'[^A-Za-z0-9 ]+', ' ', title or 'story').strip()
     return re.sub(r'\s+', ' ', t)[:48].strip()
 
-def fetch_stories():
-    q = f"{BASE}/rest/v1/conspiracy_kitchen?select=id,content_id,title&music_id=not.is.null"
+def fetch_stories(require_music=True):
+    # music_id is the historical "ready to post" gate; --no-music-gate drops it
+    # so the render trigger can persist a freshly rendered video without music.
+    q = f"{BASE}/rest/v1/conspiracy_kitchen?select=id,content_id,title"
+    if require_music:
+        q += "&music_id=not.is.null"
     return json.load(urllib.request.urlopen(urllib.request.Request(q, headers=H), timeout=30))
 
 def match(files, stories):
@@ -64,8 +68,10 @@ def set_url(sid, url):
 def main():
     ap = argparse.ArgumentParser(); ap.add_argument("--dry", action="store_true")
     ap.add_argument("--glob", default="BATCH*.mp4", help="filename glob inside the Edit folder")
+    ap.add_argument("--no-music-gate", action="store_true",
+                    help="upload rows without a music_id too (render-trigger path)")
     a = ap.parse_args()
-    stories = fetch_stories()
+    stories = fetch_stories(require_music=not a.no_music_gate)
     files = sorted(glob.glob(os.path.join(EDIT, a.glob)))
     pairs, unmatched = match(files, stories)
     print(f"stories(music_id)={len(stories)}  files={len(files)}  matched={len(pairs)}  unmatched={len(unmatched)}")
