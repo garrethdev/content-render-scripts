@@ -117,7 +117,8 @@ def main():
         ]
         d=f"{OUT}/{dk}"; os.makedirs(d,exist_ok=True)
         for i,im in enumerate(slides,1): im.save(f"{d}/slide{i}.png"); upload(dk,i,im)
-        patch(dk,{"render_status":"rendered","suggested_sound":sound_for(hook),"after_line":AFTER})
+        urls={f"slide_{i}_url": f"{STOR}/object/public/glowup-renders/{dk}/slide{i}.png" for i in range(1,8)}
+        patch(dk,{**urls,"render_status":"rendered","suggested_sound":sound_for(hook),"after_line":AFTER})
         print(f"  [{k+1}/{len(decks)}] {dk[:22]} :: {hook[:34]}")
     print("done")
 
