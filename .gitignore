@@ -51,3 +51,13 @@ batch_*.json
 
 # os
 .DS_Store
+
+# Runtime media-asset symlinks (assets live in the original working dirs on this machine)
+renderers/embarrassed/character
+renderers/filler/assets
+renderers/divorce/assets
+# Render working/output dirs
+renderers/*/work/
+renderers/*/out/
+renderers/*/cache/
+renderers/*/renders/
