@@ -125,6 +125,17 @@ def sb_patch(table, match_qs, body):
     with urllib.request.urlopen(req, timeout=30) as r:
         return json.loads(r.read())
 
+def sb_upload_video(path, content_id):
+    obj = f"{content_id}.mp4"
+    with open(path, "rb") as f:
+        data = f.read()
+    req = urllib.request.Request(
+        f"{SB_URL}/storage/v1/object/embarrassed-angle/{obj}", data=data, method="POST",
+        headers={"apikey": SB_KEY, "Authorization": f"Bearer {SB_KEY}",
+                 "Content-Type": "video/mp4", "x-upsert": "true"})
+    urllib.request.urlopen(req, timeout=180)
+    return f"{SB_URL}/storage/v1/object/public/embarrassed-angle/{obj}"
+
 # ── ffmpeg helpers ────────────────────────────────────────────────────────────
 def probe(path):
     out = subprocess.run(
@@ -440,13 +451,14 @@ def stitch_one(content_id, norm_begin, norm_end, local_only=False):
         return out_path
 
     import datetime
+    public_url = sb_upload_video(out_path, content["content_id"])
     sb_patch(CONTENT_TABLE, f"id=eq.{content_id}", {
         "video_local_path": out_path,
-        "video_public_url": out_path,
+        "video_public_url": public_url,
         "stitch_status": "rendered",
         "rendered_at": datetime.datetime.utcnow().isoformat() + "Z",
     })
-    print(f"  content row → stitch_status=rendered")
+    print(f"  content row → stitch_status=rendered, uploaded {public_url}")
     return out_path
 
 # ── main ──────────────────────────────────────────────────────────────────────
