@@ -1,0 +1,26 @@
+[
+ {
+  "id": 1,
+  "scene": "hedge deck couple-selfie comp",
+  "src": "/private/tmp/claude-501/-Users-garrethdottin-Claude/e282b3a1-cb33-400b-920f-8ab53587f490/scratchpad/yara_gallery_src/0620_DZ0c4WxFUFB_s00.jpg",
+  "prompt": "The first image is the identity reference: a Black woman with dark skin tone, long dark wavy hair, slim toned build. The second image is the composition reference. Recreate the second image EXACTLY: same camera angle, same framing and crop, same pose, same setting, same background elements, same lighting, same phone-camera realism with sensor grain and imperfect white balance. Replace the woman in it with the woman from the first image: her face, her skin tone, her hair, unchanged from the first image. Replace any tattoos with bare skin. If she wears a bikini in the second image, change it to a tasteful one-piece swimsuit in the same color. Keep every other detail of the second image identical. Vertical 9:16. Not glossy, not editorial, not professional photography."
+ },
+ {
+  "id": 2,
+  "scene": "seated pool selfie",
+  "src": "/private/tmp/claude-501/-Users-garrethdottin-Claude/e282b3a1-cb33-400b-920f-8ab53587f490/scratchpad/yara_gallery_src/0622_DZ5dbMUFQJ2_s00.jpg",
+  "prompt": "The first image is the identity reference: a Black woman with dark skin tone, long dark wavy hair, slim toned build. The second image is the composition reference. Recreate the second image EXACTLY: same camera angle, same framing and crop, same pose, same setting, same background elements, same lighting, same phone-camera realism with sensor grain and imperfect white balance. Replace the woman in it with the woman from the first image: her face, her skin tone, her hair, unchanged from the first image. Replace any tattoos with bare skin. If she wears a bikini in the second image, change it to a tasteful one-piece swimsuit in the same color. Keep every other detail of the second image identical. Vertical 9:16. Not glossy, not editorial, not professional photography."
+ },
+ {
+  "id": 3,
+  "scene": "daybed recline",
+  "src": "/private/tmp/claude-501/-Users-garrethdottin-Claude/e282b3a1-cb33-400b-920f-8ab53587f490/scratchpad/yara_gallery_src/0704_DaYxonzlSey_s01.jpg",
+  "prompt": "The first image is the identity reference: a Black woman with dark skin tone, long dark wavy hair, slim toned build. The second image is the composition reference. Recreate the second image EXACTLY: same camera angle, same framing and crop, same pose, same setting, same background elements, same lighting, same phone-camera realism with sensor grain and imperfect white balance. Replace the woman in it with the woman from the first image: her face, her skin tone, her hair, unchanged from the first image. Replace any tattoos with bare skin. If she wears a bikini in the second image, change it to a tasteful one-piece swimsuit in the same color. Keep every other detail of the second image identical. Vertical 9:16. Not glossy, not editorial, not professional photography."
+ },
+ {
+  "id": 4,
+  "scene": "night glam",
+  "src": "/private/tmp/claude-501/-Users-garrethdottin-Claude/e282b3a1-cb33-400b-920f-8ab53587f490/scratchpad/yara_gallery_src/0715_Da1tYSEla8X_s00.jpg",
+  "prompt": "The first image is the identity reference: a Black woman with dark skin tone, long dark wavy hair, slim toned build. The second image is the composition reference. Recreate the second image EXACTLY: same camera angle, same framing and crop, same pose, same setting, same background elements, same lighting, same phone-camera realism with sensor grain and imperfect white balance. Replace the woman in it with the woman from the first image: her face, her skin tone, her hair, unchanged from the first image. Replace any tattoos with bare skin. If she wears a bikini in the second image, change it to a tasteful one-piece swimsuit in the same color. Keep every other detail of the second image identical. Vertical 9:16. Not glossy, not editorial, not professional photography."
+ }
+]

@@ -1,0 +1,44 @@
+[
+ {
+  "id": 60,
+  "scene": "cliff terrace lunch",
+  "src": "/Users/garrethdottin/Claude/jessicas-aesthetic/lavish-approved/sources/src_cliff_terrace_lunch.jpg",
+  "prompt": "The first image is the identity reference for the woman: a Black woman with dark skin tone, long dark wavy hair, slim toned build. The second image is the composition reference. Recreate the second image EXACTLY: same camera position and angle, same framing and crop, same poses, same setting and background elements, IDENTICAL lighting direction and quality, same phone-camera realism with sensor grain and imperfect white balance. Replace the woman with the woman from the first image, unchanged face, skin tone and hair. Preserve: her laugh aimed off to the side, the straw hat, the full tapas tablescape rolling toward the sea and pool below, hard Mediterranean sun. Her hands stay where they are in the reference. Keep every other detail identical. Vertical 9:16. Not glossy, not editorial, not professional photography."
+ },
+ {
+  "id": 61,
+  "scene": "dock luggage arrival",
+  "src": "/Users/garrethdottin/Claude/jessicas-aesthetic/lavish-approved/sources/src_dock_luggage.jpg",
+  "prompt": "The first image is the identity reference for the woman: a Black woman with dark skin tone, long dark wavy hair, slim toned build. The second image is the composition reference. Recreate the second image EXACTLY: same camera position and angle, same framing and crop, same poses, same setting and background elements, IDENTICAL lighting direction and quality, same phone-camera realism with sensor grain and imperfect white balance. Replace the woman with the woman from the first image, unchanged face, skin tone and hair. Preserve: fully back-turned, zero face visible, the floral dress and straw hat, luggage on the dock, hard tropical sun, turquoise water. Keep every other detail identical. Vertical 9:16. Not glossy, not editorial, not professional photography."
+ },
+ {
+  "id": 62,
+  "scene": "sunset window dinner",
+  "src": "/Users/garrethdottin/Claude/jessicas-aesthetic/lavish-approved/sources/src_sunset_window_dinner.jpg",
+  "prompt": "The first image is the identity reference for the woman: a Black woman with dark skin tone, long dark wavy hair, slim toned build. The second image is the composition reference. Recreate the second image EXACTLY: same camera position and angle, same framing and crop, same poses, same setting and background elements, IDENTICAL lighting direction and quality, same phone-camera realism with sensor grain and imperfect white balance. Replace the woman with the woman from the first image, unchanged face, skin tone and hair. Preserve: her profile gaze fully off-lens toward the blazing sunset out the window, the printed halter dress, the set table with silverware, golden-hour light on her face. Keep every other detail identical. Vertical 9:16. Not glossy, not editorial, not professional photography."
+ },
+ {
+  "id": 63,
+  "scene": "banff mimosa clink",
+  "src": "/Users/garrethdottin/Claude/jessicas-aesthetic/lavish-approved/sources/src_banff_mimosa_clink.jpg",
+  "prompt": "The first image is the identity reference for the woman's SKIN TONE and jewelry style: deep brown skin. The second image is the composition reference. Recreate it EXACTLY: two hands clinking mimosa glasses with orange slices over snow, the stone hotel building and dome behind, overcast mountain light. The right-side hand becomes a Black woman's hand with deep brown skin, a gold bracelet stack and a neat manicure; the left-side hand becomes a Black man's hand with deep brown skin in a dark sleeve. No faces. Same grain, same framing. Keep every other detail identical. Vertical 9:16. Not glossy, not editorial, not professional photography."
+ },
+ {
+  "id": 64,
+  "scene": "cruise daybed toast",
+  "src": "/Users/garrethdottin/Claude/jessicas-aesthetic/lavish-approved/sources/src_cruise_daybed_toast.jpg",
+  "prompt": "The first image is the identity reference for the woman: a Black woman with dark skin tone, long dark wavy hair, slim toned build. The second image is the composition reference. Recreate the second image EXACTLY: same camera position and angle, same framing and crop, same poses, same setting and background elements, IDENTICAL lighting direction and quality, same phone-camera realism with sensor grain and imperfect white balance. Replace the woman with the woman from the first image, unchanged face, skin tone and hair. Replace the man with a tall athletic Black man with a short fade haircut and a neat short beard, natural matte skin, same pose, position and clothing style as the man in the reference. Preserve: they sit apart casually on the blue daybed clinking glasses, both sunglassed, gazing at each other, his shoes up on the cushion, bright diffused deck light, wicker pendants above. Her white dress stays. Keep every other detail identical. Vertical 9:16. Not glossy, not editorial, not professional photography."
+ },
+ {
+  "id": 65,
+  "scene": "ship rail ocean",
+  "src": "/Users/garrethdottin/Claude/jessicas-aesthetic/lavish-approved/sources/src_ship_rail_ocean.jpg",
+  "prompt": "The first image is the identity reference for the woman: a Black woman with dark skin tone, long dark wavy hair, slim toned build. The second image is the composition reference. Recreate the second image EXACTLY: same camera position and angle, same framing and crop, same poses, same setting and background elements, IDENTICAL lighting direction and quality, same phone-camera realism with sensor grain and imperfect white balance. Replace the woman with the woman from the first image, unchanged face, skin tone and hair. Preserve: her stand at the rail with one hand in her hair, face tipped off-lens behind sunglasses, the white tank and full white skirt, the vast flat ocean and huge sky, hard midday sun with real shadows on the deck. Keep every other detail identical. Vertical 9:16. Not glossy, not editorial, not professional photography."
+ },
+ {
+  "id": 66,
+  "scene": "cocktail clink marble",
+  "src": "/Users/garrethdottin/Claude/jessicas-aesthetic/lavish-approved/sources/src_cocktail_clink_marble.jpg",
+  "prompt": "The second image is the composition reference. Recreate it EXACTLY: two hands clinking cocktail glasses over a white marble table in soft window light, blurred restaurant behind. The right-side hand becomes a Black woman's hand with deep brown skin, a gold-and-steel watch and red manicure; the left-side hand becomes a Black man's hand with deep brown skin, a ring and a blue shirt cuff. No faces. Same grain, framing and light. Keep every other detail identical. Vertical 9:16. Not glossy, not editorial, not professional photography."
+ }
+]
