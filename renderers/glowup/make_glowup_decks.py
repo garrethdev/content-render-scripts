@@ -48,12 +48,14 @@ def cap(im,t,sz,yc=0.5):
         x=(W-d.textlength(ln,font=f))/2
         d.text((x+2,y+3),ln,font=f,fill=(0,0,0)); d.text((x,y),ln,font=f,fill=(255,255,255),stroke_width=3,stroke_fill=(0,0,0)); y+=lh
     return im
-def year(im,yr):
-    d=ImageDraw.Draw(im); f=ImageFont.truetype(FONT,64); tw=d.textlength(yr,font=f); x=W-tw-46
-    d.text((x+2,43),yr,font=f,fill=(0,0,0)); d.text((x,40),yr,font=f,fill=(255,255,255),stroke_width=3,stroke_fill=(0,0,0)); return im
-def tag(im,text):  # bold BEFORE/AFTER label, top-left corner
-    d=ImageDraw.Draw(im); f=ImageFont.truetype(FONT,58)
-    d.text((48,42),text,font=f,fill=(0,0,0)); d.text((46,40),text,font=f,fill=(255,255,255),stroke_width=3,stroke_fill=(0,0,0)); return im
+def datestamp(im,month,yr):  # month over year, top-right. replaces the old BEFORE/AFTER tag
+    d=ImageDraw.Draw(im); f=ImageFont.truetype(FONT,60)
+    for i,txt in enumerate((month,yr)):
+        tw=d.textlength(txt,font=f); x=W-tw-46; y=40+i*66
+        d.text((x+2,y+3),txt,font=f,fill=(0,0,0))
+        d.text((x,y),txt,font=f,fill=(255,255,255),stroke_width=3,stroke_fill=(0,0,0))
+    return im
+MONTHS=["January","February","March","April","May","June","July","August","September","October","November","December"]
 def quad(paths):
     c=Image.new("RGB",(W,H),(12,10,9))
     for p,(x,y) in zip(paths,[(0,0),(W//2,0),(0,H//2),(W//2,H//2)]): c.paste(fill(fetch(p),(W//2,H//2)),(x,y))
@@ -71,6 +73,8 @@ def main():
         r=[b["storage_path"] for b in bank if b["pool"]==pool and (cats is None or b["category"] in cats) and (exclude is None or exclude not in b["label"])]
         return r
     covers=cells("cover"); befores=cells("before"); afters=cells("after"); quizc=cells("quiz")
+    # slide 2 draws a regular portrait rather than the staged "before" pool
+    regulars=cells("cover") or befores
     # res = the ONE woman-with-product cell per middle slide (kept minimal so the deck's only
     # real "characters" are the before/after woman). sol = the product/solution cells (the focus).
     face_res=cells("feature",["face"])
@@ -108,12 +112,13 @@ def main():
         dk=deck["deck_key"]; hook=deck["hook"]; random.seed(dk)
         slides=[
             cap(quad(random.sample(covers,4)),hook,56),
-            tag(year(cap(single(random.choice(befores)),deck["before_line"],48),"2023"),"BEFORE"),
+            # slide 2: normal slide, no datestamp. only the final reveal carries a date.
+            cap(single(random.choice(regulars)),deck["before_line"],48),
             cap(quad(pair(face_res,water_sol)),deck.get("tip_face") or random.choice(FACE_TIPS),50),
             cap(quad(pair(stom_res,prot_sol)),deck.get("tip_stomach") or random.choice(STOM_TIPS),48),
             cap(cap(single(random.choice(quizc)),deck["quiz_line"],44,0.13),QUIZ_CTA,40,0.9),
             cap(quad(pair(waist_res,step_sol)),deck.get("tip_waist") or random.choice(WAIST_TIPS),50),
-            tag(year(cap(single(random.choice(afters)),AFTER,42),"2026"),"AFTER"),
+            datestamp(cap(single(random.choice(afters)),AFTER,42),"July","2026"),
         ]
         d=f"{OUT}/{dk}"; os.makedirs(d,exist_ok=True)
         for i,im in enumerate(slides,1): im.save(f"{d}/slide{i}.png"); upload(dk,i,im)

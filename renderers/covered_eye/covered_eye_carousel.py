@@ -121,15 +121,70 @@ def cover_fit(img, canvas):
     return ImageOps.fit(img, canvas, method=Image.LANCZOS, centering=(0.5, 0.5))
 
 
-def wrap_caption(draw, text, font, max_width):
-    """Greedy word-wrap to fit max_width in pixels."""
+# ---- emoji support (SF Pro has no color emoji: they render as tofu boxes).
+# Same approach as the conspiracy renderer: render each emoji via Apple Color
+# Emoji with embedded_color and paste it inline as an image.
+import re as _re
+EMOJI_FONT_PATH = "/System/Library/Fonts/Apple Color Emoji.ttc"
+EMOJI_RE = _re.compile(
+    "[\U0001F300-\U0001FAFF\U00002600-\U000027BF\U0001F1E6-\U0001F1FF"
+    "\U00002B00-\U00002BFF\U0001F900-\U0001F9FF]️?|️")
+_emoji_font = None
+
+def _get_emoji_font():
+    global _emoji_font
+    if _emoji_font is None:
+        _emoji_font = ImageFont.truetype(EMOJI_FONT_PATH, 160)
+    return _emoji_font
+
+def render_emoji(ch, target_h):
+    img = Image.new("RGBA", (240, 240), (0, 0, 0, 0))
+    ImageDraw.Draw(img).text((120, 120), ch, font=_get_emoji_font(),
+                             embedded_color=True, anchor="mm")
+    bb = img.getbbox()
+    if not bb:
+        return None
+    img = img.crop(bb)
+    s = target_h / img.height
+    return img.resize((max(1, int(img.width * s)), target_h), Image.LANCZOS)
+
+def split_runs(line):
+    """[('text', str)|('emoji', ch), ...] preserving order."""
+    runs, pos = [], 0
+    for m in EMOJI_RE.finditer(line):
+        if m.start() > pos:
+            runs.append(("text", line[pos:m.start()]))
+        ch = m.group().replace("️", "")
+        if ch:
+            runs.append(("emoji", ch))
+        pos = m.end()
+    if pos < len(line):
+        runs.append(("text", line[pos:]))
+    return runs
+
+def line_width(draw, font, line, emoji_h):
+    w = 0
+    for kind, val in split_runs(line):
+        if kind == "text":
+            w += draw.textlength(val, font=font)
+        else:
+            em = render_emoji(val, emoji_h)
+            if em is not None:
+                w += em.width + 6
+    return w
+
+
+def wrap_caption(draw, text, font, max_width, emoji_h=None):
+    """Greedy word-wrap to fit max_width in pixels (emoji-aware)."""
+    if emoji_h is None:
+        emoji_h = font.size
     words = text.split()
     if not words:
         return []
     lines, cur = [], words[0]
     for w in words[1:]:
         trial = cur + " " + w
-        if draw.textlength(trial, font=font) <= max_width:
+        if line_width(draw, font, trial, emoji_h) <= max_width:
             cur = trial
         else:
             lines.append(cur)
@@ -152,7 +207,8 @@ def draw_caption(base, text, canvas, pos="top", scale=1.0):
     line_h = int(font_px * CAP_LINE_SPACING)
 
     draw = ImageDraw.Draw(base)
-    lines = wrap_caption(draw, text, font, max_text_w)
+    emoji_h = int(font_px * 1.0)
+    lines = wrap_caption(draw, text, font, max_text_w, emoji_h=emoji_h)
     block_h = line_h * len(lines)
 
     if pos == "top":
@@ -167,24 +223,43 @@ def draw_caption(base, text, canvas, pos="top", scale=1.0):
     sdraw = ImageDraw.Draw(shadow)
     off = int(H * SHADOW_OFFSET_FRAC)
     for i, ln in enumerate(lines):
-        w = sdraw.textlength(ln, font=font)
+        w = line_width(sdraw, font, ln, emoji_h)
         x = (W - w) / 2
         y = y0 + i * line_h
-        sdraw.text((x + off, y + off), ln, font=font, fill=(0, 0, 0, 170))
+        for kind, val in split_runs(ln):
+            if kind == "text":
+                sdraw.text((x + off, y + off), val, font=font, fill=(0, 0, 0, 170))
+                x += sdraw.textlength(val, font=font)
+            else:
+                em = render_emoji(val, emoji_h)
+                if em is None:
+                    continue
+                sil = Image.new("RGBA", em.size, (0, 0, 0, 170))
+                shadow.paste(sil, (int(x + off) + 3, int(y + off)), em.split()[3])
+                x += em.width + 6
     blur = max(1, int(H * SHADOW_BLUR_FRAC))
     shadow = shadow.filter(ImageFilter.GaussianBlur(blur))
     base = Image.alpha_composite(base.convert("RGBA"), shadow).convert("RGB")
 
-    # ---- crisp white text w/ thin dark stroke on top
+    # ---- crisp white text w/ thin dark stroke on top; emojis pasted as images
     draw = ImageDraw.Draw(base)
     for i, ln in enumerate(lines):
-        w = draw.textlength(ln, font=font)
+        w = line_width(draw, font, ln, emoji_h)
         x = (W - w) / 2
         y = y0 + i * line_h
-        draw.text(
-            (x, y), ln, font=font, fill=(255, 255, 255),
-            stroke_width=stroke_w, stroke_fill=(0, 0, 0),
-        )
+        for kind, val in split_runs(ln):
+            if kind == "text":
+                draw.text(
+                    (x, y), val, font=font, fill=(255, 255, 255),
+                    stroke_width=stroke_w, stroke_fill=(0, 0, 0),
+                )
+                x += draw.textlength(val, font=font)
+            else:
+                em = render_emoji(val, emoji_h)
+                if em is None:
+                    continue
+                base.paste(em, (int(x) + 3, int(y) + int((line_h - emoji_h) * 0.3)), em)
+                x += em.width + 6
     return base
 
 
@@ -297,12 +372,16 @@ def _sb_conn():
     return base, headers
 
 
-def fetch_carousels(render_set=None, batch=None, carousel_id=None, all_rows=False):
-    """Pull APPROVED covered_eye_carousel rows (rendered_at IS NULL unless --all)."""
+def fetch_carousels(render_set=None, batch=None, carousel_id=None, all_rows=False,
+                    include_unapproved=False):
+    """Pull covered_eye_carousel rows (approved=true unless --include-unapproved;
+    rendered_at IS NULL unless --all)."""
     import requests
     base, headers = _sb_conn()
     cols = ["carousel_id", "hook_text", "hook_type", "caption"] + SLIDE_COPY_COLS + SLIDE_URL_COLS
-    params = {"select": ",".join(cols), "approved": "eq.true", "order": "carousel_id"}
+    params = {"select": ",".join(cols), "order": "carousel_id"}
+    if not include_unapproved:
+        params["approved"] = "eq.true"
     if not all_rows:
         params["rendered_at"] = "is.null"
     if render_set:
@@ -451,12 +530,14 @@ def row_to_slides(row):
 
 
 def render_from_supabase(render_set=None, batch=None, carousel_id=None,
-                         all_rows=False, mark=False, upload=False, out_root=None):
+                         all_rows=False, mark=False, upload=False, out_root=None,
+                         include_unapproved=False):
     import random
-    rows = fetch_carousels(render_set, batch, carousel_id, all_rows)
+    rows = fetch_carousels(render_set, batch, carousel_id, all_rows,
+                           include_unapproved=include_unapproved)
     if not rows:
-        print("No approved rows to render "
-              "(need approved=true"
+        print("No rows to render "
+              f"(need {'any approval' if include_unapproved else 'approved=true'}"
               f"{'' if all_rows else ' and rendered_at IS NULL'}).")
         return
     bank = fetch_image_bank()   # the brain's image pool, fetched once
@@ -523,6 +604,7 @@ def main(argv):
             all_rows="--all" in flags,
             mark="--mark-rendered" in flags,
             upload="--upload" in flags,
+            include_unapproved="--include-unapproved" in flags,
         )
         return
 
