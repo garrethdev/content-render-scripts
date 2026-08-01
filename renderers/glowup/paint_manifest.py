@@ -136,22 +136,33 @@ def main():
         q += "&render_status=eq.ready"
     decks = get(f"{REST}/glowup_decks?select=deck_key,render_manifest{q}&order=id")
     print(f"{len(decks)} decks to paint")
+    ok, errs = 0, []
     for k, deck in enumerate(decks):
         dk = deck["deck_key"]
         man = deck.get("render_manifest")
         if not man or not man.get("slides"):
             print(f"  [SKIP] {dk}: no manifest (Director hasn't run)")
             continue
-        d = f"{OUT}/{dk}"; os.makedirs(d, exist_ok=True)
-        for s in man["slides"]:
-            im = paint_slide(s)
-            n = s["n"]
-            im.save(f"{d}/slide{n}.png")
-            upload(dk, n, im)
-        urls = {f"slide_{i}_url": f"{STOR}/object/public/glowup-renders/{dk}/slide{i}.png" for i in range(1, 8)}
-        patch(dk, {**urls, "render_status": "rendered"})
-        print(f"  [{k+1}/{len(decks)}] {dk} painted")
-    print("done")
+        try:
+            d = f"{OUT}/{dk}"; os.makedirs(d, exist_ok=True)
+            for s in man["slides"]:
+                im = paint_slide(s)
+                n = s["n"]
+                im.save(f"{d}/slide{n}.png")
+                for attempt in range(3):                    # storage is flaky; retry uploads
+                    try:
+                        upload(dk, n, im); break
+                    except Exception:
+                        if attempt == 2:
+                            raise
+            urls = {f"slide_{i}_url": f"{STOR}/object/public/glowup-renders/{dk}/slide{i}.png" for i in range(1, 8)}
+            patch(dk, {**urls, "render_status": "rendered"})
+            ok += 1
+            print(f"  [{k+1}/{len(decks)}] {dk} painted")
+        except Exception as e:
+            errs.append(dk)
+            print(f"  [{k+1}/{len(decks)}] {dk} FAILED: {str(e)[:80]}")
+    print(f"done: {ok} ok, {len(errs)} failed" + (f" -> {errs}" if errs else ""))
 
 
 if __name__ == "__main__":
