@@ -1,0 +1,29 @@
+{
+  "_comment": "Layout rules for the glow-up deck lane. SOURCE OF TRUTH lives on GitHub (renderers/glowup/deck_rules.json). The n8n Director reads this to build a fully-resolved manifest; the renderer only paints the manifest. Edit here, push, and both sides pick it up. See ARCHITECTURE.md.",
+  "version": "2026-07-31",
+  "canvas": { "w": 1080, "h": 1440 },
+  "slides": [
+    { "n": 1, "layout": "quad",   "text_field": "hook",         "font": 56, "pools": ["cover"] },
+    { "n": 2, "layout": "single", "text_field": "before_line",  "font": 48, "pools": ["cover"] },
+    { "n": 3, "layout": "quad",   "text_field": "tip_face",     "font": 50, "body_pools": ["feature:face"], "evidence_pools": ["evidence:water"] },
+    { "n": 4, "layout": "quad",   "text_field": "tip_stomach",  "font": 48, "body_pools": ["feature:stomach","feature:waist","body:abs"], "evidence_pools": ["evidence:protein","evidence:eggs","evidence:greens","evidence:meal_prep"] },
+    { "n": 5, "layout": "quiz",   "text_field": "quiz_line",    "font": 44, "cta_font": 40, "pools": ["quiz"] },
+    { "n": 6, "layout": "quad",   "text_field": "tip_waist",    "font": 50, "body_pools": ["feature:waist","body:abs","body:gym"], "evidence_pools": ["evidence:steps","evidence:measure"] },
+    { "n": 7, "layout": "single", "text_field": "after_line",   "font": 42, "pools": ["after","body:gym"], "datestamp": "July\n2026" }
+  ],
+  "collage_rule": {
+    "grid": "2x2",
+    "composition": "2 body/person cells + 2 evidence cells",
+    "placement": "diagonal",
+    "placement_note": "matching pair sits on a diagonal (TL+BR and TR+BL), never as a top row over a bottom row",
+    "brightness_match": true,
+    "brightness_tolerance": 40,
+    "brightness_note": "the two cells forming each diagonal must be within tolerance on the stored luminance column, so a near-black cell never sits opposite a white one. category variety is only a tiebreak among cells that already match on brightness."
+  },
+  "fixed_copy": {
+    "before_line": "4 years stuck. i didn't give up a single thing.",
+    "quiz_cta": "comment the word QUIZ and I will send you the link",
+    "after_line": "honestly the peptide was the cheat code. it helped me keep the weight off. But I wouldn't change a thing..",
+    "datestamp": "July\n2026"
+  }
+}

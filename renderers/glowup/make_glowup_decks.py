@@ -62,6 +62,35 @@ def quad(paths):
     return c
 def single(p): return fill(fetch(p),(W,H))
 
+_lum={}
+def lum(path):
+    """Mean luminance 0-255 of a bank image. Measured, not read from the bank's
+    `brightness` column — that column is null on 6 of 8 face images and a wrong tag
+    is worse than no tag."""
+    if path not in _lum:
+        im=fetch(path).convert("L").resize((32,32))
+        px=list(im.getdata()); _lum[path]=sum(px)/len(px)
+    return _lum[path]
+
+def _p(c): return c[1] if isinstance(c,tuple) else c
+
+def matched_pair(cands, keyfn=None, tol=40):
+    """Two cells whose LIGHTING matches — a diagonal must never put a near-black cell
+    opposite a white one. Brightness is the hard rule; category variety is only a
+    tiebreak among cells that already match. (Forcing different categories first put a
+    black air-bike opposite a white tape measure, because `measure` has one bright image.)
+    Random anchor keeps variety across decks."""
+    if len(cands)<2: return (cands*2)[:2]
+    a=random.choice(cands); la=lum(_p(a))
+    others=[c for c in cands if c!=a]
+    close=[c for c in others if abs(lum(_p(c))-la)<=tol]
+    if not close:                       # nothing matches: take the nearest anyway
+        return (a, min(others,key=lambda c: abs(lum(_p(c))-la)))
+    if keyfn:
+        diff=[c for c in close if keyfn(c)!=keyfn(a)]
+        if diff: return (a, random.choice(diff))
+    return (a, random.choice(close))
+
 def upload(dk,n,im):
     buf=io.BytesIO(); im.save(buf,"PNG"); buf.seek(0)
     urllib.request.urlopen(urllib.request.Request(f"{STOR}/object/glowup-renders/{dk}/slide{n}.png",
@@ -69,8 +98,9 @@ def upload(dk,n,im):
 
 def main():
     bank=get(f"{REST}/glowup_image_bank?status=eq.active&select=pool,category,label,storage_path")
-    def cells(pool,cats=None,exclude=None):
-        r=[b["storage_path"] for b in bank if b["pool"]==pool and (cats is None or b["category"] in cats) and (exclude is None or exclude not in b["label"])]
+    def cells(pool,cats=None,exclude=None,withcat=False):
+        r=[((b["category"],b["storage_path"]) if withcat else b["storage_path"])
+           for b in bank if b["pool"]==pool and (cats is None or b["category"] in cats) and (exclude is None or exclude not in b["label"])]
         return r
     covers=cells("cover"); befores=cells("before"); afters=cells("after"); quizc=cells("quiz")
     # slide 2 draws a regular portrait rather than the staged "before" pool
@@ -80,19 +110,25 @@ def main():
     face_res=cells("feature",["face"])
     stom_res=cells("feature",["stomach"])+cells("body",["abs"])
     waist_res=cells("feature",["waist"])+cells("body",["gym"])
-    water_sol=cells("evidence",["water","facetool"],exclude="lemonwater_bw")
-    prot_sol=cells("evidence",["protein","eggs","greens","meal_prep"])
-    step_sol=cells("evidence",["steps"])
+    water_sol=cells("evidence",["water","facetool"],exclude="lemonwater_bw",withcat=True)
+    prot_sol=cells("evidence",["protein","eggs","greens","meal_prep"],withcat=True)
+    step_sol=cells("evidence",["steps","measure"],withcat=True)
     sounds=[s for s in get(f"{REST}/music_library?select=artist,title,same_style_url,pillar_fit,genre&is_active=eq.true")
             if "glowup_carousel" in (s.get("pillar_fit") or [])]
-    def pair(res,sol):  # product-heavy 2x2: 3 product cells + 1 woman-with-product
-        s=random.sample(sol,3) if len(sol)>=3 else (sol*3)[:3]
-        cells=list(s)
-        if res:
-            cells.insert(random.randint(0,3), random.choice(res))  # woman at a random corner
-        else:
-            cells.append(random.choice(sol))  # no woman-with-product yet -> 4 products
-        return cells[:4]
+    def pair(res,sol):
+        """maxxingnation 2x2 rule (maxxingnation-research/FACT_BANK.md):
+        2 evidence cells + 2 body/person cells. The two evidence cells are drawn from
+        DIFFERENT categories so a narrow pool can never fill a slide with three
+        near-identical props (the 3-lemon-waters bug). sol is [(category,path)]."""
+        # evidence: 2 cells, DIFFERENT categories, MATCHED lighting
+        ea,eb=matched_pair(sol, keyfn=lambda c: c[0])
+        ev=[ea[1],eb[1]]
+        # body: 2 cells, matched lighting to each other
+        bodies=list(matched_pair(res))
+        # DIAGONAL placement. quad() pastes TL,TR,BL,BR — a matching pair must land on a
+        # diagonal (TL+BR and TR+BL), never as a top row and a bottom row.
+        (b0,b1),(e0,e1)=bodies,ev
+        return [b0,e0,e1,b1] if random.random()<0.5 else [e0,b0,b1,e1]
     def sound_for(hook):
         emo=any(k in hook.lower() for k in ["breakup","rejection","divorce","kids","aura","invisible","hiding","hated","believing","losing your","gave up"])
         pool=[s for s in sounds if ("sade" in (s["artist"] or "").lower())==emo] or sounds
