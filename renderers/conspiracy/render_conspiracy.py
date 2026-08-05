@@ -250,32 +250,15 @@ def sentences(text):
     parts = re.split(r'(?<=[.!?])\s+', t)
     return [p.replace('<DOT>', '.').strip() for p in parts if p.strip()]
 
+# The renderer is a dumb pipe: copy is handed to it and it puts that text on
+# screen verbatim. No splitting, no trimming, no rewriting. The full hook shows
+# on the first hook beat; the second hook beat has no caption unless upstream
+# ever hands one. Any shortening belongs in the scriptwriter, never here.
 def split_hook(hook):
-    hook = (hook or "").strip()
-    sents = sentences(hook)
-    if len(sents) >= 2:
-        return sents[0], " ".join(sents[1:])
-    h = sents[0] if sents else hook
-    m = re.search(r'\s(and|but|then|so)\s', h, re.I)
-    if m and m.start() >= 12:
-        return h[:m.start()].strip(), h[m.start():].strip()
-    w = h.split()
-    if len(w) < 5: return h, ""
-    mid = (len(w) + 1) // 2
-    return " ".join(w[:mid]), " ".join(w[mid:])
+    return (hook or "").strip(), ""
 
-def distill(screen, max_words=15):
-    screen = (screen or "").strip()
-    sents = sentences(screen)
-    if not sents: return screen
-    first = sents[0]; w = first.split()
-    if len(w) <= max_words:
-        if len(sents) > 1 and len(w) + len(sents[1].split()) <= max_words:
-            return first + " " + sents[1]
-        return first
-    trunc = " ".join(w[:max_words])
-    if "," in trunc: return trunc[:trunc.rfind(",")].rstrip() + "."
-    return trunc.rstrip(".,;:") + "."
+def distill(screen, max_words=None):
+    return (screen or "").strip()
 
 def sanitize(title):
     t = re.sub(r'[^A-Za-z0-9 ]+', ' ', title or 'story').strip()
