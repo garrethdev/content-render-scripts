@@ -12,9 +12,10 @@ sixty-plus text pairs from jealousy_char3_content. Layout: 1080x1440 (3:4), 30fp
 Camera + finish recipe locked 2026-08-06 in the gym-content session:
   jitter = stacked incommensurate sines (never loops, reads as real vibration),
   finish = approved iPhone pass (cool shift, curves, grain) + Apple metadata.
-Text: TikTok caption style — TikTok Sans (shared hook-font.ttf), white text on a
-black box per wrapped line, centered mid-screen. Quote on the before segment,
-payoff on the after segment (user-locked format 8/6).
+Text (locked 8/6 final): ONE rounded solid WHITE box, BLACK Montserrat Bold,
+balanced wrap, centered mid-screen. Quote on the before segment, payoff on the
+after. Segment lengths vary slightly per piece via seg_lengths() so the batch
+does not read as one template (before 5-7s, after 8.5-10s, deterministic).
 
 Source table: jealousy_char3_content (stitch_status ready -> done / stitch_failed).
 `used`/`used_at` mark a hook pair as consumed so later batches never repeat copy.
@@ -48,6 +49,13 @@ BEFORE_KEY = "char3-treadmill/before10_720p.mp4"
 AFTER_KEY = "char3-treadmill/after10_720p.mp4"
 W, H, FPS = 1080, 1440, 30
 BEFORE_LEN = float(os.environ.get("JELT_BEFORE_LEN", "6"))
+
+
+def seg_lengths(cid):
+    """Deterministic slight length variation per piece (re-renders reproduce):
+    before 5.0-7.0s, after 8.5-10.0s, keyed off the carousel_id digits."""
+    n = sum(ord(c) for c in cid)
+    return 5.0 + (n % 5) * 0.5, 8.5 + ((n // 5) % 4) * 0.5
 YEAR = 31536000
 _H = {"apikey": KEY, "Authorization": "Bearer " + KEY}
 
@@ -109,14 +117,23 @@ def _font(size):
 
 def build_text_png(lines_specs, out):
     """lines_specs: [(text, y_center_fraction, font_size)] -> transparent 1080x1440 PNG.
-    Text-block style (user-locked 8/6): ALL wrapped lines inside ONE rounded solid
-    black box, white Montserrat Bold, centered — the TikTok write-up look inverted."""
+    Text-block style (user-locked 8/6 v2): ALL wrapped lines inside ONE rounded solid
+    WHITE box, BLACK Montserrat Bold, centered. Wrap is balanced so line lengths are
+    even and the box hugs the text with minimal dead space."""
     img = Image.new("RGBA", (W, H), (0, 0, 0, 0))
     d = ImageDraw.Draw(img)
-    PAD_X, PAD_Y, LEAD, RADIUS = 34, 26, 10, 24
+    PAD_X, PAD_Y, LEAD, RADIUS = 30, 24, 8, 24
     for text, y_frac, size in lines_specs:
         font = _font(size)
         wrapped = textwrap.wrap(text, width=26)
+        if len(wrapped) > 1:
+            # rebalance: re-wrap at the width that evens the lines out
+            target = max(len(l) for l in textwrap.wrap(text, width=-(-len(text) // len(wrapped)) + 4))
+            for wdt in range(max(12, target - 4), 27):
+                cand = textwrap.wrap(text, width=wdt)
+                if len(cand) == len(wrapped):
+                    wrapped = cand
+                    break
         line_h = size + LEAD
         widths = []
         for line in wrapped:
@@ -127,12 +144,12 @@ def build_text_png(lines_specs, out):
         bx = (W - block_w) // 2
         by = int(H * y_frac) - block_h // 2
         d.rounded_rectangle([bx, by, bx + block_w, by + block_h],
-                            radius=RADIUS, fill=(0, 0, 0, 255))
+                            radius=RADIUS, fill=(255, 255, 255, 255))
         y = by + PAD_Y
         for line, tw in zip(wrapped, widths):
             bbox = d.textbbox((0, 0), line, font=font)
             x = (W - tw) // 2
-            d.text((x - bbox[0], y - bbox[1]), line, font=font, fill=(255, 255, 255, 255))
+            d.text((x - bbox[0], y - bbox[1]), line, font=font, fill=(10, 10, 10, 255))
             y += line_h
     img.save(out)
     return out
@@ -161,14 +178,15 @@ def render(row, out_path):
                                os.path.join(WORK, f"{cid}_quote.png"))
     payoff_png = build_text_png([(row["text_hook_after"], 0.45, 46)],
                                 os.path.join(WORK, f"{cid}_payoff.png"))
-    total = BEFORE_LEN + 10
-    cmd = [FF, "-y", "-t", str(BEFORE_LEN), "-i", before, "-i", after,
+    b_len, a_len = seg_lengths(cid)
+    total = b_len + a_len
+    cmd = [FF, "-y", "-t", str(b_len), "-i", before, "-t", str(a_len), "-i", after,
            "-i", quote_png, "-i", payoff_png,
            "-filter_complex",
            f"[0:v]{BEFORE_CHAIN}[b];[1:v]{AFTER_CHAIN}[a];"
            f"[b][a]concat=n=2:v=1:a=0,{FINISH}[base];"
-           f"[base][2]overlay=0:0:enable='lt(t,{BEFORE_LEN})'[t1];"
-           f"[t1][3]overlay=0:0:enable='gte(t,{BEFORE_LEN})'[out]",
+           f"[base][2]overlay=0:0:enable='lt(t,{b_len})'[t1];"
+           f"[t1][3]overlay=0:0:enable='gte(t,{b_len})'[out]",
            "-map", "[out]", "-c:v", "libx264", "-crf", "18", "-preset", "medium",
            "-tune", "grain", "-pix_fmt", "yuv420p", "-an",
            "-metadata", "make=Apple", "-metadata", "model=iPhone 15 Pro",
