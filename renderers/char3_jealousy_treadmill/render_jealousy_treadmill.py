@@ -174,20 +174,33 @@ def render(row, out_path):
     before = fetch_master(BEFORE_KEY, os.path.join(WORK, "before10_720p.mp4"))
     after = fetch_master(AFTER_KEY, os.path.join(WORK, "after10_720p.mp4"))
     cid = row["carousel_id"]
-    quote_png = build_text_png([(row["text_hook"], 0.45, 46)],
-                               os.path.join(WORK, f"{cid}_quote.png"))
-    payoff_png = build_text_png([(row["text_hook_after"], 0.45, 46)],
-                                os.path.join(WORK, f"{cid}_payoff.png"))
+    quote_png = (build_text_png([(row["text_hook"], 0.45, 46)],
+                                os.path.join(WORK, f"{cid}_quote.png"))
+                 if (row.get("text_hook") or "").strip() else None)
+    payoff_png = (build_text_png([(row["text_hook_after"], 0.45, 46)],
+                                 os.path.join(WORK, f"{cid}_payoff.png"))
+                  if (row.get("text_hook_after") or "").strip() else None)
     b_len, a_len = seg_lengths(cid)
     total = b_len + a_len
-    cmd = [FF, "-y", "-t", str(b_len), "-i", before, "-t", str(a_len), "-i", after,
-           "-i", quote_png, "-i", payoff_png,
-           "-filter_complex",
-           f"[0:v]{BEFORE_CHAIN}[b];[1:v]{AFTER_CHAIN}[a];"
-           f"[b][a]concat=n=2:v=1:a=0,{FINISH}[base];"
-           f"[base][2]overlay=0:0:enable='lt(t,{b_len})'[t1];"
-           f"[t1][3]overlay=0:0:enable='gte(t,{b_len})'[out]",
-           "-map", "[out]", "-c:v", "libx264", "-crf", "18", "-preset", "medium",
+    # after-only rows (text_hook NULL, e.g. the SEMAGLUTIDE-face set) get no
+    # overlay on the before segment; both-slot rows get quote then payoff.
+    overlays, inputs = [], []
+    prev = "base"
+    if quote_png:
+        inputs += ["-i", quote_png]
+        overlays.append((prev, len(inputs) // 2 + 1, f"lt(t,{b_len})", "t1")); prev = "t1"
+    if payoff_png:
+        inputs += ["-i", payoff_png]
+        overlays.append((prev, len(inputs) // 2 + 1, f"gte(t,{b_len})", "out"))
+    fc = (f"[0:v]{BEFORE_CHAIN}[b];[1:v]{AFTER_CHAIN}[a];"
+          f"[b][a]concat=n=2:v=1:a=0,{FINISH}[base];")
+    for i, (src_lbl, idx, enable, dst) in enumerate(overlays):
+        fc += f"[{src_lbl}][{idx}]overlay=0:0:enable='{enable}'[{dst}];"
+    fc = fc.rstrip(";")
+    out_lbl = overlays[-1][3] if overlays else "base"
+    cmd = [FF, "-y", "-t", str(b_len), "-i", before, "-t", str(a_len), "-i", after] + inputs + [
+           "-filter_complex", fc,
+           "-map", f"[{out_lbl}]", "-c:v", "libx264", "-crf", "18", "-preset", "medium",
            "-tune", "grain", "-pix_fmt", "yuv420p", "-an",
            "-metadata", "make=Apple", "-metadata", "model=iPhone 15 Pro",
            "-movflags", "use_metadata_tags", out_path, "-loglevel", "error"]
