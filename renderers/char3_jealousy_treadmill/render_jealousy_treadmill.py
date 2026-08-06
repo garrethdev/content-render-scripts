@@ -98,31 +98,42 @@ def upload(bucket, key, path):
     urllib.request.urlopen(req, timeout=600)
 
 
-# ---- serif text overlay (Didot white + soft shadow, per the approved mockups) ----
+# ---- text-block overlay (single rounded black box, white Montserrat Bold) ----
+
+MONTSERRAT = os.path.join(_HERE, "assets", "Montserrat-Bold.ttf")
+
 
 def _font(size):
-    return ImageFont.truetype(TIKTOK_FONT, size)
+    return ImageFont.truetype(MONTSERRAT, size)
 
 
 def build_text_png(lines_specs, out):
     """lines_specs: [(text, y_center_fraction, font_size)] -> transparent 1080x1440 PNG.
-    TikTok caption style: each wrapped line sits on its own solid black box, white text."""
+    Text-block style (user-locked 8/6): ALL wrapped lines inside ONE rounded solid
+    black box, white Montserrat Bold, centered — the TikTok write-up look inverted."""
     img = Image.new("RGBA", (W, H), (0, 0, 0, 0))
     d = ImageDraw.Draw(img)
-    PAD_X, PAD_Y, GAP = 22, 12, 6
+    PAD_X, PAD_Y, LEAD, RADIUS = 34, 26, 10, 24
     for text, y_frac, size in lines_specs:
         font = _font(size)
-        wrapped = textwrap.wrap(text, width=28)
-        line_h = size + PAD_Y * 2
-        total_h = line_h * len(wrapped) + GAP * (len(wrapped) - 1)
-        y = int(H * y_frac) - total_h // 2
+        wrapped = textwrap.wrap(text, width=26)
+        line_h = size + LEAD
+        widths = []
         for line in wrapped:
             bbox = d.textbbox((0, 0), line, font=font)
-            tw = bbox[2] - bbox[0]
+            widths.append(bbox[2] - bbox[0])
+        block_w = max(widths) + PAD_X * 2
+        block_h = line_h * len(wrapped) - LEAD + PAD_Y * 2
+        bx = (W - block_w) // 2
+        by = int(H * y_frac) - block_h // 2
+        d.rounded_rectangle([bx, by, bx + block_w, by + block_h],
+                            radius=RADIUS, fill=(0, 0, 0, 255))
+        y = by + PAD_Y
+        for line, tw in zip(wrapped, widths):
+            bbox = d.textbbox((0, 0), line, font=font)
             x = (W - tw) // 2
-            d.rectangle([x - PAD_X, y, x + tw + PAD_X, y + line_h], fill=(0, 0, 0, 255))
-            d.text((x - bbox[0], y + PAD_Y - bbox[1]), line, font=font, fill=(255, 255, 255, 255))
-            y += line_h + GAP
+            d.text((x - bbox[0], y - bbox[1]), line, font=font, fill=(255, 255, 255, 255))
+            y += line_h
     img.save(out)
     return out
 
