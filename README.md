@@ -23,6 +23,7 @@ Supabase storage. Nothing secret is hardcoded; everything loads from env via
 | Conspiracy Grandma video | `renderers/conspiracy/` | `render_conspiracy.py --ids ... --prefix ...` | + `add_music.py`, `upload_videos.py` post-steps. |
 | Dating Genre video | `renderers/dating/` | `scripts/run_pipeline.py --row-id N ...` | Clean per-video CLI; `batch_render.py` is the batch driver. |
 | Carousel re-render driver | `renderers/carousel_rerender/` | `rerender_driver.py <rows.json> <log>` | Drives the deployed Vercel `/api/render-carousel`. |
+| Char 3 simple BA video | `renderers/char3_before_after/` | `render_char3_ba.py batch <name>\|queue\|one <cid>` | Optional 2.5s opener image + before + after, natural lengths, silent (music at post). Rows from the `[Char 3] Simple BA Director` n8n webhook. |
 
 **Not in this repo (no renderer exists yet):** Eat Whatever video, Peptide Question deck.
 **BA main video** is a Claude-skill pipeline (Sheets-based), not a standalone script.
