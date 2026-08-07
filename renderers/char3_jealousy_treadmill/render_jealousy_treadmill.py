@@ -49,6 +49,8 @@ BEFORE_KEY = "char3-treadmill/before10_720p.mp4"
 AFTER_KEY = "char3-treadmill/after10_720p.mp4"
 W, H, FPS = 1080, 1440, 30
 BEFORE_LEN = float(os.environ.get("JELT_BEFORE_LEN", "6"))
+PUNCH_AT = float(os.environ.get("JELT_PUNCH_AT", "4"))     # sec into the after clip
+PUNCH_ZOOM = float(os.environ.get("JELT_PUNCH_ZOOM", "0.8"))  # crop fraction = 20% punch-in
 
 
 def seg_lengths(cid):
@@ -117,40 +119,38 @@ def _font(size):
 
 def build_text_png(lines_specs, out):
     """lines_specs: [(text, y_center_fraction, font_size)] -> transparent 1080x1440 PNG.
-    Text-block style (user-locked 8/6 v2): ALL wrapped lines inside ONE rounded solid
-    WHITE box, BLACK Montserrat Bold, centered. Wrap is balanced so line lengths are
-    even and the box hugs the text with minimal dead space."""
+    Wrap-around-text style (user-locked 8/7, Canva "wrap around text"): each wrapped
+    line gets its OWN white rounded rectangle sized to that line's width, stacked with
+    a RADIUS-sized vertical overlap so they union into ONE continuous contoured shape
+    that hugs the text outline (box steps in/out per line, no floating side gaps).
+    Black Montserrat Bold. Drawing all boxes on a separate layer first makes the
+    overlaps merge cleanly before the text goes on top."""
     img = Image.new("RGBA", (W, H), (0, 0, 0, 0))
     d = ImageDraw.Draw(img)
-    PAD_X, PAD_Y, LEAD, RADIUS = 30, 24, 8, 24
+    PAD_X, PAD_Y, RADIUS = 34, 16, 26
     for text, y_frac, size in lines_specs:
         font = _font(size)
-        wrapped = textwrap.wrap(text, width=26)
-        if len(wrapped) > 1:
-            # rebalance: re-wrap at the width that evens the lines out
-            target = max(len(l) for l in textwrap.wrap(text, width=-(-len(text) // len(wrapped)) + 4))
-            for wdt in range(max(12, target - 4), 27):
-                cand = textwrap.wrap(text, width=wdt)
-                if len(cand) == len(wrapped):
-                    wrapped = cand
-                    break
-        line_h = size + LEAD
-        widths = []
+        wrapped = textwrap.wrap(text, width=20)
+        line_h = size + PAD_Y * 2
+        step = line_h - RADIUS                       # overlap by RADIUS -> merged contour
+        total_h = step * (len(wrapped) - 1) + line_h
+        y = int(H * y_frac) - total_h // 2
+        shape = Image.new("RGBA", (W, H), (0, 0, 0, 0))
+        sd = ImageDraw.Draw(shape)
+        geo = []
         for line in wrapped:
-            bbox = d.textbbox((0, 0), line, font=font)
-            widths.append(bbox[2] - bbox[0])
-        block_w = max(widths) + PAD_X * 2
-        block_h = line_h * len(wrapped) - LEAD + PAD_Y * 2
-        bx = (W - block_w) // 2
-        by = int(H * y_frac) - block_h // 2
-        d.rounded_rectangle([bx, by, bx + block_w, by + block_h],
-                            radius=RADIUS, fill=(255, 255, 255, 255))
-        y = by + PAD_Y
-        for line, tw in zip(wrapped, widths):
-            bbox = d.textbbox((0, 0), line, font=font)
-            x = (W - tw) // 2
-            d.text((x - bbox[0], y - bbox[1]), line, font=font, fill=(10, 10, 10, 255))
-            y += line_h
+            bbox = font.getbbox(line)
+            tw = bbox[2] - bbox[0]
+            x0 = (W - tw) // 2 - PAD_X
+            x1 = (W + tw) // 2 + PAD_X
+            sd.rounded_rectangle([x0, y, x1, y + line_h], radius=RADIUS, fill=(255, 255, 255, 255))
+            geo.append((line, bbox, y))
+            y += step
+        img.alpha_composite(shape)
+        for line, bbox, yy in geo:
+            tw = bbox[2] - bbox[0]
+            d.text(((W - tw) // 2 - bbox[0], yy + PAD_Y - bbox[1]), line,
+                   font=font, fill=(12, 12, 12, 255))
     img.save(out)
     return out
 
@@ -192,8 +192,17 @@ def render(row, out_path):
     if payoff_png:
         inputs += ["-i", payoff_png]
         overlays.append((prev, len(inputs) // 2 + 1, f"gte(t,{b_len})", "out"))
-    fc = (f"[0:v]{BEFORE_CHAIN}[b];[1:v]{AFTER_CHAIN}[a];"
-          f"[b][a]concat=n=2:v=1:a=0,{FINISH}[base];")
+    # PUNCH_AT sec into the after clip, a harsh hard-cut zoom PUNCH_ZOOM tighter for
+    # the remainder (re-emphasizes the reveal right as the payoff lands). Locked 8/7.
+    if a_len > PUNCH_AT + 0.5:
+        after_fc = (f"[1:v]{AFTER_CHAIN},split=2[af1][af2];"
+                    f"[af1]trim=0:{PUNCH_AT},setpts=PTS-STARTPTS[a1];"
+                    f"[af2]trim={PUNCH_AT},setpts=PTS-STARTPTS,"
+                    f"crop=iw*{PUNCH_ZOOM}:ih*{PUNCH_ZOOM},scale={W}:{H}:flags=lanczos,setsar=1[a2];"
+                    f"[b][a1][a2]concat=n=3:v=1:a=0,{FINISH}[base];")
+    else:
+        after_fc = f"[1:v]{AFTER_CHAIN}[a];[b][a]concat=n=2:v=1:a=0,{FINISH}[base];"
+    fc = f"[0:v]{BEFORE_CHAIN}[b];" + after_fc
     for i, (src_lbl, idx, enable, dst) in enumerate(overlays):
         fc += f"[{src_lbl}][{idx}]overlay=0:0:enable='{enable}'[{dst}];"
     fc = fc.rstrip(";")
