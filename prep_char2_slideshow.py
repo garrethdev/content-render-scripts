@@ -22,7 +22,7 @@ if "--key" in sys.argv:
 if not KEY:
     sys.exit("Provide the Supabase key: --key <KEY> or export CAROUSEL_SUPABASE_SECRET_KEY")
 H = {"apikey": KEY, "Authorization": "Bearer " + KEY}
-TABLE = "ba_2slide_content"
+TABLE = "char2_slideshow"        # image slideshow (carousel), media = slide_N_url, music col = music
 
 # ethereal pool, Indila removed, only tracks that resolve in music_library
 MUSIC = ["Sade - I Couldn't Love You More", "Enya - Caribbean Blue", "Massive Attack - Angel",
@@ -49,15 +49,16 @@ def main():
     batch = None
     if "--batch" in sys.argv:
         batch = sys.argv[sys.argv.index("--batch") + 1]
-    flt = "character=eq.Character 2&posting_status=is.null&final_video=not.is.null"
+    # new slideshows = not yet published, at least slide 1 present
+    flt = "posting_status=is.null&slide_1_url=not.is.null"
     if batch:
         flt += f"&batch=eq.{batch}"
-    rows = rest(f"{TABLE}?{urllib.parse.quote(flt, safe='=&.*')}&select=carousel_id,caption,suggested_ig_music&order=carousel_id")
+    rows = rest(f"{TABLE}?{urllib.parse.quote(flt, safe='=&.*')}&select=carousel_id,caption,music&order=carousel_id")
     print(f"{len(rows)} new Character 2 slideshow rows to prep")
     for i, r in enumerate(rows):
         patch = {"gatekeep_status": "approved", "character": "Character 2"}
-        if not (r.get("suggested_ig_music") or "").strip():
-            patch["suggested_ig_music"] = MUSIC[i % len(MUSIC)]
+        if not (r.get("music") or "").strip():
+            patch["music"] = MUSIC[i % len(MUSIC)]
         if not (r.get("caption") or "").strip():
             patch["caption"] = CAP[i % len(CAP)]
         rest(f"{TABLE}?carousel_id=eq.{urllib.parse.quote(r['carousel_id'])}", "PATCH", patch)
