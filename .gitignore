@@ -62,3 +62,7 @@ renderers/*/out/
 renderers/*/cache/
 renderers/*/renders/
 renderers/embarrassed/assets
+
+# ops/pull utilities — not renderers, kept local
+pull_content.py
+prep_char2_slideshow.py
