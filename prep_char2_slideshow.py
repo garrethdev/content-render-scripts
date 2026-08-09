@@ -55,14 +55,20 @@ def main():
         flt += f"&batch=eq.{batch}"
     rows = rest(f"{TABLE}?{urllib.parse.quote(flt, safe='=&.*')}&select=carousel_id,caption,music&order=carousel_id")
     print(f"{len(rows)} new Character 2 slideshow rows to prep")
+    no_caption = 0
     for i, r in enumerate(rows):
         patch = {"gatekeep_status": "approved", "character": "Character 2"}
         if not (r.get("music") or "").strip():
             patch["music"] = MUSIC[i % len(MUSIC)]
+        # Caption is NOT filled here: informational slideshows need a topic-matched
+        # Universal-Caption-Maker caption from the source content (the slideshow chat).
         if not (r.get("caption") or "").strip():
-            patch["caption"] = CAP[i % len(CAP)]
+            no_caption += 1
         rest(f"{TABLE}?carousel_id=eq.{urllib.parse.quote(r['carousel_id'])}", "PATCH", patch)
         print(f"  prepped {r['carousel_id']}")
+    if no_caption:
+        print(f"WARNING: {no_caption} rows have NO caption — the slideshow chat must supply "
+              f"topic-matched Universal Caption Maker captions before release.")
     print("DONE — rows left at scheduler_ready=false; flip when released.")
 
 
