@@ -24,16 +24,23 @@ Usage:
   python pull_content.py --lane char3_mito        # one lane
   python pull_content.py --ready                  # only released (scheduler_ready=true) rows
 
-Env: CAROUSEL_SUPABASE_SECRET_KEY  (run `peptide-env`, or source ~/.config/peptide-secrets/.env)
+On another computer (only needs python3, no repo/venv):
+  curl -sO https://raw.githubusercontent.com/garrethdev/content-render-scripts/main/pull_content.py
+  python3 pull_content.py --audit --key <SUPABASE_SECRET_KEY>
+  python3 pull_content.py --key <SUPABASE_SECRET_KEY>          # downloads all into ./content_out/
+Key can also come from env CAROUSEL_SUPABASE_SECRET_KEY instead of --key.
 """
 import csv, json, os, sys, urllib.request
 
 SB = os.environ.get("SUPABASE_URL", "https://qlcmgxgwpzmiebzxflai.supabase.co")
+# key: --key <k> arg wins, else env. Lets this run standalone on any machine.
 KEY = os.environ.get("CAROUSEL_SUPABASE_SECRET_KEY")
+if "--key" in sys.argv:
+    KEY = sys.argv[sys.argv.index("--key") + 1]
 if not KEY:
-    sys.exit("Set CAROUSEL_SUPABASE_SECRET_KEY (run `peptide-env` or source ~/.config/peptide-secrets/.env)")
+    sys.exit("Provide the Supabase key: --key <KEY>  or  export CAROUSEL_SUPABASE_SECRET_KEY=...")
 H = {"apikey": KEY, "Authorization": "Bearer " + KEY}
-OUT = os.path.join(os.path.dirname(os.path.abspath(__file__)), "content_out")
+OUT = os.path.join(os.getcwd(), "content_out")
 
 # lane -> table, id col, text cols, character value, approved filter
 LANES = {
@@ -43,9 +50,10 @@ LANES = {
     "char3_mito":     dict(table="mito_hooks", idc="hook_id",
                            tcols=["hook_text", "beat1", "beat2", "beat3"], persona="Character 3",
                            approved="gate_status=eq.approved"),
+    # char2: only the NEW, not-yet-published slideshows (all existing Char2 are published).
     "char2_slideshow": dict(table="ba_2slide_content", idc="carousel_id",
                             tcols=["text_hook", "text_hook_after"], persona="Character 2",
-                            approved="character=eq.Character 2"),
+                            approved="character=eq.Character 2&posting_status=is.null&final_video=not.is.null"),
 }
 
 
