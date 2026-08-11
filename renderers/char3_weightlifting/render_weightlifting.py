@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""Char 3 metabolic-health "weightlifting" director-stitch (montage lane).
+"""Weightlifting Series — Char 3 metabolic-health director-stitch (montage lane).
 
 Recreates the DbJi1GwJH2i metabolism reel format with our own footage:
 
@@ -45,8 +45,14 @@ os.makedirs(WORK, exist_ok=True)
 
 TABLE = "mito_hooks"
 SRC_BUCKET, OUT_BUCKET = "video-library", "char3-before-after"
-AFTER = ["after_machine", "after_kitchen", "after_cablerow", "after_legpress"]   # Option B pool
-BEFORE = ["before_machine", "before_kitchen", "before_cablerow", "before_legpress"]  # Option A stills
+# Clip pool comes from the video_library catalog (content_label=char3_weightlifting).
+# Set below via load_pool(); these are the fallback if the catalog is empty/unreachable.
+POOL_LABEL = os.environ.get("WL_POOL_LABEL", "char3_weightlifting")
+_FALLBACK_AFTER = ["char3-weightlifting/after_machine.mp4", "char3-weightlifting/after_kitchen.mp4",
+                   "char3-weightlifting/after_cablerow.mp4", "char3-weightlifting/after_legpress.mp4"]
+_FALLBACK_BEFORE = ["char3-weightlifting/before_machine.mp4", "char3-weightlifting/before_kitchen.mp4",
+                    "char3-weightlifting/before_cablerow.mp4", "char3-weightlifting/before_legpress.mp4"]
+AFTER, BEFORE = _FALLBACK_AFTER, _FALLBACK_BEFORE   # Option B pool / Option A stills (set in load_pool)
 W, H, FPS = 1080, 1920, 30
 CLIP_LEN = float(os.environ.get("WL_CLIP_LEN", "4.5"))
 BEFORE_CARD_LEN = float(os.environ.get("WL_BEFORE_LEN", "2"))
@@ -80,13 +86,37 @@ def sign_url(bucket, key, expires=3600):
     return SB + "/storage/v1" + urllib.parse.quote(signed, safe="/?&=%.")
 
 
-def fetch(name, out):
+def fetch(path, out):
     if not os.path.exists(out):
-        req = urllib.request.Request(sign_url(SRC_BUCKET, f"char3-weightlifting/{name}.mp4"),
+        req = urllib.request.Request(sign_url(SRC_BUCKET, path),
                                      headers={"User-Agent": "Mozilla/5.0 (render_weightlifting)"})
         with urllib.request.urlopen(req, timeout=300) as r, open(out, "wb") as f:
             f.write(r.read())
     return out
+
+
+def load_pool():
+    """Pull the after/before clip pool from the video_library catalog by label.
+    Falls back to the hardcoded lists if the catalog is empty or unreachable."""
+    rows = None
+    try:
+        rows = rest("video_library?select=phase,storage_path"
+                    f"&content_label=eq.{POOL_LABEL}&order=storage_path.asc")
+    except Exception as e:
+        print(f"[pool] video_library query failed ({e}); using fallback list", file=sys.stderr)
+    after, before = [], []
+    for r in (rows or []):
+        (after if (r.get("phase") or "").lower() == "after" else before).append(r["storage_path"])
+    if not after or not before:
+        if rows is not None:
+            print("[pool] catalog returned no usable rows; using fallback list", file=sys.stderr)
+        return _FALLBACK_AFTER, _FALLBACK_BEFORE
+    print(f"[pool] loaded {len(after)} after + {len(before)} before clips from video_library",
+          file=sys.stderr)
+    return after, before
+
+
+AFTER, BEFORE = load_pool()
 
 
 def upload(bucket, key, path):
@@ -156,7 +186,7 @@ def order_for(hid):
 def render(row, out_path):
     hid = row["hook_id"]
     order, before_pick = order_for(hid)
-    clips = [fetch(n, os.path.join(WORK, f"{n}.mp4")) for n in order]
+    clips = [fetch(n, os.path.join(WORK, os.path.basename(n))) for n in order]
     # text cards
     cards = [
         wrap_card(row["hook_text"], 0.22, os.path.join(WORK, f"{hid}_hook.png"), size=44, wrap=23),
@@ -188,7 +218,7 @@ def render(row, out_path):
         return out_path
 
     # Option A end still: frozen frame from a before clip + Anton punchline, ~2s, then concat
-    bclip = fetch(before_pick, os.path.join(WORK, f"{before_pick}.mp4"))
+    bclip = fetch(before_pick, os.path.join(WORK, os.path.basename(before_pick)))
     frame = os.path.join(WORK, f"{hid}_beforeframe.png")
     subprocess.run([FF, "-y", "-loglevel", "error", "-ss", "2.5", "-i", bclip,
                     "-frames:v", "1", frame], check=True)

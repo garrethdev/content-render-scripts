@@ -63,6 +63,7 @@ renderers/*/cache/
 renderers/*/renders/
 renderers/embarrassed/assets
 
-# ops/pull utilities — not renderers, kept local
-pull_content.py
+# ops utilities — content_pool.py (pool export + scheduler-readiness audit) is now
+# tracked; it reads secrets via common/env.py and hardcodes nothing.
+# prep_char2_slideshow.py stays local (one-shot batch helper).
 prep_char2_slideshow.py
