@@ -28,12 +28,9 @@ _HERE = os.path.dirname(os.path.abspath(__file__))
 DEFAULT_CLIPS = os.environ.get("C3Q_CLIPS", os.path.join(_HERE, "clips"))
 BEFORE_DIR = os.environ.get("C3Q_BEFORE", os.path.join(_HERE, "before"))
 CTA_VARIANTS = [
-    "My cheat code was in the comments.",
-    "The cheat code's in the comments 👇",
-    "I left the cheat code in the comments.",
-    "Cheat code? It's in the comments.",
-    "My secret's in the comments 👇",
-    "The missing piece is in the comments.",
+    "My cheat code, below in the comments...",
+    "My cheat code is below in the comments...",
+    "The cheat code, below in the comments... 👇",
 ]
 _EMOJI_RE = re.compile("[\U0001F000-\U0001FAFF\U00002600-\U000027BF\U0001F1E6-\U0001F1FF⬀-⯿←-⇿⌀-⏿]")
 
