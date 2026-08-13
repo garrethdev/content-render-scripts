@@ -28,9 +28,11 @@ _HERE = os.path.dirname(os.path.abspath(__file__))
 DEFAULT_CLIPS = os.environ.get("C3Q_CLIPS", os.path.join(_HERE, "clips"))
 BEFORE_DIR = os.environ.get("C3Q_BEFORE", os.path.join(_HERE, "before"))
 CTA_VARIANTS = [
-    "My cheat code, below in the comments...",
-    "My cheat code is below in the comments...",
-    "The cheat code, below in the comments... 👇",
+    "Hard work alone wasn't enough. My cheat code is in the comments.",
+    "The gym wasn't enough on its own. My cheat code, in the comments below.",
+    "Doing it the normal way wasn't enough. The cheat code is in the comments.",
+    "Effort alone wasn't enough for me. My cheat code is in the comments.",
+    "Normal means weren't enough. My cheat code, below in the comments.",
 ]
 _EMOJI_RE = re.compile("[\U0001F000-\U0001FAFF\U00002600-\U000027BF\U0001F1E6-\U0001F1FF⬀-⯿←-⇿⌀-⏿]")
 
@@ -56,7 +58,12 @@ def auto_blueprint(hook_no, hook, payoff, clipsdir):
         r = (r * 6364136223846793005 + 1442695040888963407) & ((1 << 64) - 1)
         j = r % (i + 1)
         ordered[i], ordered[j] = ordered[j], ordered[i]
-    total = 18 + (s % 8)                        # 18-25s (keeps BEFORE inset at ~8-10s)
+    nclips = int(os.environ.get("C3Q_NCLIPS", "0"))     # 0 = use whole pool
+    if nclips:
+        ordered = ordered[:nclips]
+        total = round(len(ordered) * 3.7) + (s % 3)     # ~4 clips -> ~15s
+    else:
+        total = 18 + (s % 8)                            # 18-25s
     n = len(ordered)
     base = total / n
     segs = []
@@ -210,20 +217,47 @@ def render(bp, out, clipsdir):
     t_cta = slide_png(cta, os.path.join(work, "t_cta.png"), size=64)
     bcard = before_card(before_img, os.path.join(work, "before.png")) if before_img else None
 
+    # optional global black cover (constant dark overlay) to boost text readability
+    black_op = float(os.environ.get("C3Q_BLACK", "0"))   # e.g. 0.20 = 20%
     inputs = ["-i", montage, "-i", t_hook, "-i", t_pay, "-i", t_cta]
-    fc = (f"[0][1]overlay=0:0:enable='lt(t,{b2at})'[a];"
-          f"[a][2]overlay=0:0:enable='between(t,{b2at},{b2at + pdur})'[b];"
-          f"[b][3]overlay=0:0:enable='gte(t,{cta_at})'[c]")
+    base = "0"
+    fc = ""
+    if black_op > 0:
+        cov = Image.new("RGBA", (W, H), (0, 0, 0, int(255 * black_op)))
+        covp = os.path.join(work, "cover.png"); cov.save(covp)
+        inputs += ["-i", covp]
+        cov_idx = 4  # after montage,hook,pay,cta
+        fc += f"[0][{cov_idx}]overlay=0:0[bgc];"
+        base = "bgc"
+    fc += (f"[{base}][1]overlay=0:0:enable='lt(t,{b2at})'[a];"
+           f"[a][2]overlay=0:0:enable='between(t,{b2at},{b2at + pdur})'[b];"
+           f"[b][3]overlay=0:0:enable='gte(t,{cta_at})'[c]")
     last = "c"
     if bcard:
+        before_idx = len(inputs) // 2      # next input index (inputs are flat -i/path pairs)
         inputs += ["-i", bcard]
-        fc += f";[{last}][4]overlay=0:0:enable='between(t,{before_at},{before_at + before_dur})'[v]"
+        fc += f";[{last}][{before_idx}]overlay=0:0:enable='between(t,{before_at},{before_at + before_dur})'[v]"
         last = "v"
     else:
         fc = fc[:-3] + "[v]"
-    subprocess.run(["ffmpeg", "-y", "-loglevel", "error", *inputs, "-filter_complex", fc,
-                    "-map", f"[{last}]", "-c:v", "libx264", "-crf", "19", "-preset", "medium", "-pix_fmt", "yuv420p",
-                    "-metadata", "make=Apple", "-metadata", "model=iPhone 15 Pro", out], check=True)
+    music = os.environ.get("C3Q_MUSIC", "")
+    if music and os.path.exists(music):
+        vtmp = out + ".silent.mp4"
+        subprocess.run(["ffmpeg", "-y", "-loglevel", "error", *inputs, "-filter_complex", fc,
+                        "-map", f"[{last}]", "-c:v", "libx264", "-crf", "19", "-preset", "medium",
+                        "-pix_fmt", "yuv420p", vtmp], check=True)
+        vol = os.environ.get("C3Q_MUSIC_VOL", "0.5")
+        fade = max(0.0, total - 1.0)
+        subprocess.run(["ffmpeg", "-y", "-loglevel", "error", "-i", vtmp,
+                        "-stream_loop", "-1", "-i", music, "-map", "0:v", "-map", "1:a",
+                        "-af", f"volume={vol},afade=t=in:st=0:d=1,afade=t=out:st={fade}:d=1",
+                        "-c:v", "copy", "-c:a", "aac", "-b:a", "160k", "-shortest",
+                        "-metadata", "make=Apple", "-metadata", "model=iPhone 15 Pro", out], check=True)
+        os.remove(vtmp)
+    else:
+        subprocess.run(["ffmpeg", "-y", "-loglevel", "error", *inputs, "-filter_complex", fc,
+                        "-map", f"[{last}]", "-c:v", "libx264", "-crf", "19", "-preset", "medium", "-pix_fmt", "yuv420p",
+                        "-metadata", "make=Apple", "-metadata", "model=iPhone 15 Pro", out], check=True)
     print("RENDERED", out, round(probe(out), 2), "s,", len(parts), "clips | payoff",
           round(b2at, 1), "-", round(b2at + pdur, 1), "| before", round(before_at, 1), "-",
           round(before_at + before_dur, 1), "| cta", cta_at, "-> end | \"" + cta + "\"")
