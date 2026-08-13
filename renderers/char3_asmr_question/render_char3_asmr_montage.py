@@ -161,12 +161,12 @@ def before_card(before_path, out, label="60lbs ago"):
     mx, my = int(W * 0.03), int(H * 0.03)
     px, py = W - cw - mx, H - ch - my
     canvas.alpha_composite(src, (px, py))
-    # TikTok-style caption: white Arial Bold with black outline, centered near the top
+    # TikTok-style caption ABOVE the image: white Arial Bold with black outline, centered
     d = ImageDraw.Draw(canvas)
-    lf = ImageFont.truetype(TIKTOK_FONT, 42)
+    lf = ImageFont.truetype(TIKTOK_FONT, 44)
     tw = d.textlength(label, font=lf)
     lx = px + (cw - tw) // 2
-    ly = py + 22
+    ly = py - int(lf.size * 1.25)
     d.text((lx, ly), label, font=lf, fill=(255, 255, 255, 255),
            stroke_width=5, stroke_fill=(0, 0, 0, 255))
     canvas.save(out); return out
