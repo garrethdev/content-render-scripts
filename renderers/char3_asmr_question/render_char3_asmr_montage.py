@@ -50,14 +50,16 @@ def _seed(n):
 def auto_blueprint(hook_no, hook, payoff, clipsdir):
     """Mirror of the n8n Director-Stitch logic, for local/no-DB rendering."""
     clips = sorted([f for f in os.listdir(clipsdir) if f.endswith(".mp4")])
-    # continuity groups: newest 'green' set first, then the rest
-    green = [c for c in clips if any(k in c for k in ("squat", "barbell", "stairs"))]
-    older = [c for c in clips if c not in green]
     s = _seed(hook_no)
-    def rot(lst, k):
-        return lst[k % len(lst):] + lst[:k % len(lst)] if lst else lst
-    ordered = rot(green, s % max(1, len(green))) + rot(older, (s >> 3) % max(1, len(older)))
-    total = 15 + (s % 11)                       # 15-25s
+    # Vary the FIRST clip heavily across videos: seeded Fisher-Yates shuffle of the whole
+    # pool (deterministic per hook_no) so consecutive hooks do not open on the same clip.
+    ordered = clips[:]
+    r = s
+    for i in range(len(ordered) - 1, 0, -1):
+        r = (r * 6364136223846793005 + 1442695040888963407) & ((1 << 64) - 1)
+        j = r % (i + 1)
+        ordered[i], ordered[j] = ordered[j], ordered[i]
+    total = 18 + (s % 8)                        # 18-25s (keeps BEFORE inset at ~8-10s)
     n = len(ordered)
     base = total / n
     segs = []
@@ -150,29 +152,21 @@ def slide_png(text, out, size=60):
 
 
 def before_card(before_path, out):
-    """Full-frame RGBA with a rounded 'BEFORE'-labelled inset, bottom-right."""
+    """Plain rectangular before image in the bottom-right corner — no border, no rounded
+    corners, no card/shadow. Just the photo dropped in, with a plain 'BEFORE' label."""
     from PIL import ImageOps
     canvas = Image.new("RGBA", (W, H), (0, 0, 0, 0))
-    cw, ch = int(W * 0.32), int(W * 0.32 * 1.5)          # ~portrait card
-    src = ImageOps.fit(Image.open(before_path).convert("RGB"), (cw, ch), Image.LANCZOS)
-    card = Image.new("RGBA", (cw, ch), (0, 0, 0, 0)); card.paste(src, (0, 0))
-    mask = Image.new("L", (cw, ch), 0)
-    ImageDraw.Draw(mask).rounded_rectangle([0, 0, cw - 1, ch - 1], radius=34, fill=255)
-    card.putalpha(mask)
-    # subtle white border + drop shadow
-    sh = Image.new("RGBA", (W, H), (0, 0, 0, 0))
+    cw, ch = int(W * 0.32), int(W * 0.32 * 1.5)
+    src = ImageOps.fit(Image.open(before_path).convert("RGB"), (cw, ch), Image.LANCZOS).convert("RGBA")
     mx, my = int(W * 0.03), int(H * 0.03)
     px, py = W - cw - mx, H - ch - my
-    ImageDraw.Draw(sh).rounded_rectangle([px + 8, py + 8, px + cw + 8, py + ch + 8], radius=34, fill=(0, 0, 0, 130))
-    canvas.alpha_composite(sh.filter(ImageFilter.GaussianBlur(10)))
-    canvas.alpha_composite(card, (px, py))
-    ImageDraw.Draw(canvas).rounded_rectangle([px, py, px + cw - 1, py + ch - 1], radius=34, outline=(255, 255, 255, 220), width=4)
-    # BEFORE label
+    canvas.alpha_composite(src, (px, py))
+    # plain BEFORE label (white text + soft shadow, no box)
     lf = ImageFont.truetype(SERIF, 34)
     d = ImageDraw.Draw(canvas)
-    lx, ly = px + 22, py + 16
-    for dx, dy in ((2, 2), (-1, 1)):
-        d.text((lx + dx, ly + dy), "BEFORE", font=lf, fill=(0, 0, 0, 180))
+    lx, ly = px + 16, py + 12
+    for dx, dy in ((2, 2), (-1, 1), (1, -1)):
+        d.text((lx + dx, ly + dy), "BEFORE", font=lf, fill=(0, 0, 0, 190))
     d.text((lx, ly), "BEFORE", font=lf, fill=(255, 255, 255, 255))
     canvas.save(out); return out
 
