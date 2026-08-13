@@ -148,9 +148,12 @@ def slide_png(text, out, size=60):
     img.save(out); return out
 
 
-def before_card(before_path, out):
+TIKTOK_FONT = "/System/Library/Fonts/Supplemental/Arial Bold.ttf"
+
+
+def before_card(before_path, out, label="60lbs ago"):
     """Plain rectangular before image in the bottom-right corner — no border, no rounded
-    corners, no card/shadow. Just the photo dropped in, with a plain 'BEFORE' label."""
+    corners, no card. A normal TikTok-style white caption (black outline) sits on it."""
     from PIL import ImageOps
     canvas = Image.new("RGBA", (W, H), (0, 0, 0, 0))
     cw, ch = int(W * 0.32), int(W * 0.32 * 1.5)
@@ -158,13 +161,14 @@ def before_card(before_path, out):
     mx, my = int(W * 0.03), int(H * 0.03)
     px, py = W - cw - mx, H - ch - my
     canvas.alpha_composite(src, (px, py))
-    # plain BEFORE label (white text + soft shadow, no box)
-    lf = ImageFont.truetype(SERIF, 34)
+    # TikTok-style caption: white Arial Bold with black outline, centered near the top
     d = ImageDraw.Draw(canvas)
-    lx, ly = px + 16, py + 12
-    for dx, dy in ((2, 2), (-1, 1), (1, -1)):
-        d.text((lx + dx, ly + dy), "BEFORE", font=lf, fill=(0, 0, 0, 190))
-    d.text((lx, ly), "BEFORE", font=lf, fill=(255, 255, 255, 255))
+    lf = ImageFont.truetype(TIKTOK_FONT, 42)
+    tw = d.textlength(label, font=lf)
+    lx = px + (cw - tw) // 2
+    ly = py + 22
+    d.text((lx, ly), label, font=lf, fill=(255, 255, 255, 255),
+           stroke_width=5, stroke_fill=(0, 0, 0, 255))
     canvas.save(out); return out
 
 
