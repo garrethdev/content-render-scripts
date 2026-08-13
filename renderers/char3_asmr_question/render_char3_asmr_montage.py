@@ -26,6 +26,15 @@ CREAM = (253, 245, 230, 255)
 COVER = f"scale={W}:{H}:force_original_aspect_ratio=increase,crop={W}:{H},setsar=1,fps={FPS}"
 _HERE = os.path.dirname(os.path.abspath(__file__))
 DEFAULT_CLIPS = os.environ.get("C3Q_CLIPS", os.path.join(_HERE, "clips"))
+BEFORE_DIR = os.environ.get("C3Q_BEFORE", os.path.join(_HERE, "before"))
+CTA_VARIANTS = [
+    "My cheat code was in the comments.",
+    "The cheat code's in the comments 👇",
+    "I left the cheat code in the comments.",
+    "Cheat code? It's in the comments.",
+    "My secret's in the comments 👇",
+    "The missing piece is in the comments.",
+]
 _EMOJI_RE = re.compile("[\U0001F000-\U0001FAFF\U00002600-\U000027BF\U0001F1E6-\U0001F1FF⬀-⯿←-⇿⌀-⏿]")
 
 
@@ -140,6 +149,34 @@ def slide_png(text, out, size=60):
     img.save(out); return out
 
 
+def before_card(before_path, out):
+    """Full-frame RGBA with a rounded 'BEFORE'-labelled inset, bottom-right."""
+    from PIL import ImageOps
+    canvas = Image.new("RGBA", (W, H), (0, 0, 0, 0))
+    cw, ch = int(W * 0.32), int(W * 0.32 * 1.5)          # ~portrait card
+    src = ImageOps.fit(Image.open(before_path).convert("RGB"), (cw, ch), Image.LANCZOS)
+    card = Image.new("RGBA", (cw, ch), (0, 0, 0, 0)); card.paste(src, (0, 0))
+    mask = Image.new("L", (cw, ch), 0)
+    ImageDraw.Draw(mask).rounded_rectangle([0, 0, cw - 1, ch - 1], radius=34, fill=255)
+    card.putalpha(mask)
+    # subtle white border + drop shadow
+    sh = Image.new("RGBA", (W, H), (0, 0, 0, 0))
+    mx, my = int(W * 0.03), int(H * 0.03)
+    px, py = W - cw - mx, H - ch - my
+    ImageDraw.Draw(sh).rounded_rectangle([px + 8, py + 8, px + cw + 8, py + ch + 8], radius=34, fill=(0, 0, 0, 130))
+    canvas.alpha_composite(sh.filter(ImageFilter.GaussianBlur(10)))
+    canvas.alpha_composite(card, (px, py))
+    ImageDraw.Draw(canvas).rounded_rectangle([px, py, px + cw - 1, py + ch - 1], radius=34, outline=(255, 255, 255, 220), width=4)
+    # BEFORE label
+    lf = ImageFont.truetype(SERIF, 34)
+    d = ImageDraw.Draw(canvas)
+    lx, ly = px + 22, py + 16
+    for dx, dy in ((2, 2), (-1, 1)):
+        d.text((lx + dx, ly + dy), "BEFORE", font=lf, fill=(0, 0, 0, 180))
+    d.text((lx, ly), "BEFORE", font=lf, fill=(255, 255, 255, 255))
+    canvas.save(out); return out
+
+
 # ---------------------------- montage assembly ----------------------------
 
 def render(bp, out, clipsdir):
@@ -157,21 +194,54 @@ def render(bp, out, clipsdir):
     montage = os.path.join(work, "montage.mp4")
     subprocess.run(["ffmpeg", "-y", "-loglevel", "error", "-f", "concat", "-safe", "0", "-i", lst,
                     "-c:v", "libx264", "-crf", "18", "-preset", "medium", "-pix_fmt", "yuv420p", montage], check=True)
+    total = probe(montage)
     # sequential text: hook 0->b2at, payoff b2at->b2at+pdur, then NO text.
     hook = bp["text"]["slide1"]; payoff = bp["text"]["slide2"]
     b2at = bp.get("beat2_at_sec", 2.4)
     words = len((payoff or "").split())
     pdur = max(4.0, min(7.0, round(words * 0.42, 1)))   # readable dwell for the payoff
+    # before-image inset: ~8-10s in, 4s long (clamped inside the clip)
+    before_img = bp.get("before_image") or _pick(BEFORE_DIR, ".png", bp)
+    before_at = bp.get("before_at_sec", min(9.0, max(8.0, total * 0.45)))
+    before_dur = bp.get("before_dur_sec", 4.0)
+    before_at = min(before_at, max(0.0, total - before_dur - 3.5))   # leave room for CTA
+    # end CTA
+    cta = bp.get("cta") or CTA_VARIANTS[int(hashlib.md5(hook.encode()).hexdigest(), 16) % len(CTA_VARIANTS)]
+    cta_dur = 3.2
+    cta_at = round(total - cta_dur, 2)
+
     t_hook = slide_png(hook, os.path.join(work, "t_hook.png"), size=62)
     t_pay = slide_png(payoff, os.path.join(work, "t_pay.png"), size=56)
-    subprocess.run(["ffmpeg", "-y", "-loglevel", "error", "-i", montage, "-i", t_hook, "-i", t_pay,
-                    "-filter_complex",
-                    f"[0][1]overlay=0:0:enable='lt(t,{b2at})'[a];"
-                    f"[a][2]overlay=0:0:enable='between(t,{b2at},{b2at + pdur})'[v]",
-                    "-map", "[v]", "-c:v", "libx264", "-crf", "19", "-preset", "medium", "-pix_fmt", "yuv420p",
+    t_cta = slide_png(cta, os.path.join(work, "t_cta.png"), size=64)
+    bcard = before_card(before_img, os.path.join(work, "before.png")) if before_img else None
+
+    inputs = ["-i", montage, "-i", t_hook, "-i", t_pay, "-i", t_cta]
+    fc = (f"[0][1]overlay=0:0:enable='lt(t,{b2at})'[a];"
+          f"[a][2]overlay=0:0:enable='between(t,{b2at},{b2at + pdur})'[b];"
+          f"[b][3]overlay=0:0:enable='gte(t,{cta_at})'[c]")
+    last = "c"
+    if bcard:
+        inputs += ["-i", bcard]
+        fc += f";[{last}][4]overlay=0:0:enable='between(t,{before_at},{before_at + before_dur})'[v]"
+        last = "v"
+    else:
+        fc = fc[:-3] + "[v]"
+    subprocess.run(["ffmpeg", "-y", "-loglevel", "error", *inputs, "-filter_complex", fc,
+                    "-map", f"[{last}]", "-c:v", "libx264", "-crf", "19", "-preset", "medium", "-pix_fmt", "yuv420p",
                     "-metadata", "make=Apple", "-metadata", "model=iPhone 15 Pro", out], check=True)
-    print("RENDERED", out, round(probe(out), 2), "s,", len(parts), "clips, text ends",
-          round(b2at + pdur, 1), "s")
+    print("RENDERED", out, round(probe(out), 2), "s,", len(parts), "clips | payoff",
+          round(b2at, 1), "-", round(b2at + pdur, 1), "| before", round(before_at, 1), "-",
+          round(before_at + before_dur, 1), "| cta", cta_at, "-> end | \"" + cta + "\"")
+
+
+def _pick(d, ext, bp):
+    if not os.path.isdir(d):
+        return None
+    opts = sorted([os.path.join(d, f) for f in os.listdir(d) if f.endswith(ext)])
+    if not opts:
+        return None
+    s = int(hashlib.md5(json.dumps(bp["text"], sort_keys=True).encode()).hexdigest(), 16)
+    return opts[s % len(opts)]
 
 
 def main():
