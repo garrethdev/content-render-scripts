@@ -1,0 +1,15 @@
+# generated media and analysis artifacts — never commit these
+work/
+batch/clips/
+batch/renders/
+batch/manifests/
+batch/quarantine/
+batch/screen_frames/
+batch/qa_frames/
+*.mp4
+*.jpg
+*.png
+*.log
+# batch state (regenerable, and pins one specific run)
+batch/*.json
+!batch/.gitkeep
