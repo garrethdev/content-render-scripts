@@ -47,10 +47,18 @@ OW, OH = 1080, 1920
 # ---------------------------------------------------------------- registries
 # CHARACTERS: key -> alpha cutout webm (nodding/reacting, background removed).
 # Mint new ones with make_cutout.py (see README) then drop the path here.
+# Variant suffixes (_v2, _v3) are DIFFERENT NOD CLIPS OF THE SAME PERSONA — different
+# wardrobe / hair / angle, same identity. Spreading a batch across variants is what keeps
+# any one anchor clip from repeating across the fleet (the CIB fingerprint that drove bans).
+# character_id for the DB is the digit in the key: char2* -> 2, char3* -> 3, char4* -> 4.
 CHARACTERS = {
-    "char2": os.path.join(ASSETS, "char2_cutout.webm"),
-    "char3": os.path.join(ASSETS, "char3_cutout.webm"),
-    "char4": os.path.join(ASSETS, "char4_cutout.webm"),
+    "char2":    os.path.join(ASSETS, "char2_cutout.webm"),
+    "char2_v2": os.path.join(ASSETS, "char2_v2_cutout.webm"),
+    "char3":    os.path.join(ASSETS, "char3_cutout.webm"),
+    "char3_v2": os.path.join(ASSETS, "char3_v2_cutout.webm"),
+    "char4":    os.path.join(ASSETS, "char4_cutout.webm"),
+    "char4_v2": os.path.join(ASSETS, "char4_v2_cutout.webm"),
+    "char4_v3": os.path.join(ASSETS, "char4_v3_cutout.webm"),
 }
 
 # PLACEMENTS: a roaming zone for the cutout's TOP-LEFT corner, as fractions of
