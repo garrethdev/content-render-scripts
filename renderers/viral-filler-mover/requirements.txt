@@ -1,0 +1,12 @@
+# Python deps for the podcast lane (podcast_lane/ + the CLI shims).
+# Everything else the lane needs is either stdlib (urllib for Supabase/OpenRouter
+# HTTP) or a system binary shelled out via subprocess (see below).
+
+faster-whisper   # transcribe_open.py — open-source Whisper transcription
+pytesseract      # ocr_frames.py — on-screen text detection (Tesseract wrapper)
+opencv-python    # ocr_frames.py — frame decode (imported as cv2)
+
+# System binaries expected on PATH (NOT pip-installable):
+#   ffmpeg, ffprobe   — frame grabs + muxing (podcast_lane/media.py)
+#   yt-dlp            — source clip download (podcast_lane/media.py)
+#   tesseract         — OCR engine backing pytesseract
