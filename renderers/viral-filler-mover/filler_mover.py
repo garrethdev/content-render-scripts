@@ -44,6 +44,89 @@ FFPROBE = os.environ.get("FFPROBE", "ffprobe")
 FONT = os.environ.get("HOOK_FONT", os.path.join(ASSETS, "hook-font.ttf"))
 OW, OH = 1080, 1920
 
+# ---------------------------------------------------------------- emoji
+# hook-font.ttf has no emoji glyphs, so a bare emoji rendered as a tofu box.
+# We composite emoji from a real color-emoji font instead: render each emoji at
+# its bitmap strike (Apple Color Emoji only exposes the 160px strike), then scale
+# it inline to the caption's text size. Works without libraqm (single glyphs need
+# no complex shaping). If the emoji font is missing (e.g. a non-mac render host),
+# emoji are simply dropped rather than drawn as tofu.
+EMOJI_FONT = os.environ.get("EMOJI_FONT", "/System/Library/Fonts/Apple Color Emoji.ttc")
+_EMOJI_STRIKE = 160
+_EMO_RANGES = ("\U0001F300-\U0001FAFF\U0001F000-\U0001F0FF☀-➿⬀-⯿"
+               "\U0001F1E6-\U0001F1FF\U0001F3FB-\U0001F3FF️‍⃣")
+_EMOJI_RUN = re.compile("[" + _EMO_RANGES + "]+")
+_emoji_font_obj = "unset"
+_emoji_glyphs = {}
+
+def _emoji_font():
+    global _emoji_font_obj
+    if _emoji_font_obj == "unset":
+        try:
+            _emoji_font_obj = ImageFont.truetype(EMOJI_FONT, _EMOJI_STRIKE)
+        except Exception:
+            _emoji_font_obj = None
+    return _emoji_font_obj
+
+def _emoji_glyph(cluster, px):
+    """RGBA image of one emoji cluster scaled to `px` tall, or None if unavailable."""
+    px = max(1, int(px))
+    key = (cluster, px)
+    if key in _emoji_glyphs:
+        return _emoji_glyphs[key]
+    ef = _emoji_font()
+    glyph = None
+    if ef is not None:
+        big = Image.new("RGBA", (_EMOJI_STRIKE * 2, _EMOJI_STRIKE * 2), (0, 0, 0, 0))
+        try:
+            ImageDraw.Draw(big).text((0, 0), cluster, font=ef, embedded_color=True)
+            bb = big.getbbox()
+            if bb:
+                g = big.crop(bb)
+                scale = px / float(g.height)
+                glyph = g.resize((max(1, round(g.width * scale)), px), Image.LANCZOS)
+        except Exception:
+            glyph = None
+    _emoji_glyphs[key] = glyph
+    return glyph
+
+def _rich_segments(line):
+    """Split a line into ordered ('t', text) / ('e', emoji) segments."""
+    segs, i = [], 0
+    for m in _EMOJI_RUN.finditer(line):
+        if m.start() > i:
+            segs.append(("t", line[i:m.start()]))
+        segs.append(("e", m.group()))
+        i = m.end()
+    if i < len(line):
+        segs.append(("t", line[i:]))
+    return segs
+
+def _rich_width(line, font, draw, px):
+    w = 0.0
+    for kind, seg in _rich_segments(line):
+        if kind == "t":
+            w += draw.textlength(seg, font=font)
+        else:
+            g = _emoji_glyph(seg, px)
+            if g:
+                w += g.width + int(px * 0.08)
+    return w
+
+def _draw_rich(draw, img, cx, cy, line, font, px, fill, stroke_width=0, stroke_fill=None):
+    """Draw `line` centered at (cx, cy), text via `font` and emoji composited inline."""
+    x = cx - _rich_width(line, font, draw, px) / 2.0
+    for kind, seg in _rich_segments(line):
+        if kind == "t":
+            draw.text((x, cy), seg, font=font, anchor="lm", fill=fill,
+                      stroke_width=stroke_width, stroke_fill=stroke_fill)
+            x += draw.textlength(seg, font=font)
+        else:
+            g = _emoji_glyph(seg, px)
+            if g:
+                img.alpha_composite(g, (int(round(x)), int(round(cy - g.height / 2.0))))
+                x += g.width + int(px * 0.08)
+
 # ---------------------------------------------------------------- registries
 # CHARACTERS: key -> alpha cutout webm (nodding/reacting, background removed).
 # Mint new ones with make_cutout.py (see README) then drop the path here.
@@ -169,7 +252,7 @@ def build_caption_png(text, fmt, seed, out, style=CAPTION_STYLE,
         font = ImageFont.truetype(FONT, fs)
         pad_x, pad_y = int(fs * 0.20), int(fs * 0.10)
         lines = _wrap_pixels(words, font, d, box_w - 2 * pad_x)
-        widths = [d.textlength(ln, font=font) for ln in lines]
+        widths = [_rich_width(ln, font, d, int(fs * 0.92)) for ln in lines]
         n = len(lines)
         if n >= 2 and widths[-1] < 0.80 * max(widths[:-1]):
             groups = [list(range(0, n - 1)), [n - 1]]
@@ -226,11 +309,12 @@ def build_caption_png(text, fmt, seed, out, style=CAPTION_STYLE,
         cys.append(cur + line_h / 2)
         cur += line_h
 
+    epx = int(fs * 0.92)
     if fmt == "outline":
         for i, ln in enumerate(lines):
-            d.text((cx, cys[i] + 3), ln, font=font, anchor="mm", fill=(0, 0, 0, 120))
-            d.text((cx, cys[i]), ln, font=font, anchor="mm", fill=(255, 255, 255, 255),
-                   stroke_width=max(3, fs // 9), stroke_fill=(0, 0, 0, 255))
+            _draw_rich(d, img, cx, cys[i] + 3, ln, font, epx, (0, 0, 0, 120))
+            _draw_rich(d, img, cx, cys[i], ln, font, epx, (255, 255, 255, 255),
+                       stroke_width=max(3, fs // 9), stroke_fill=(0, 0, 0, 255))
         img.save(out)
         return out
 
@@ -244,7 +328,7 @@ def build_caption_png(text, fmt, seed, out, style=CAPTION_STYLE,
         d.rounded_rectangle([cx - gw / 2 - pad_x, top, cx + gw / 2 + pad_x, bot],
                             radius=radius, fill=box)
     for i, ln in enumerate(lines):
-        d.text((cx, cys[i]), ln, font=font, anchor="mm", fill=ink)
+        _draw_rich(d, img, cx, cys[i], ln, font, epx, ink)
     img.save(out)
     return out
 

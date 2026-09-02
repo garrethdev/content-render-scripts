@@ -56,12 +56,22 @@ def insert_render(row):
 
 # --- storage ---
 def upload_video(path, key):
-    """Upload an mp4 to the bucket; return its public URL."""
+    """Upload an mp4 to the bucket; return its public URL. Renders can be tens of MB and
+    upstream is often slow, so use a generous timeout and retry transient socket/network
+    stalls (the 'write operation timed out' we saw) a few times before giving up."""
     data = open(path, "rb").read()
     url = f"{config.SUPABASE_URL}/storage/v1/object/{config.BUCKET}/{key}"
     hdr = _headers({"Content-Type": "video/mp4", "x-upsert": "true"})
-    try:
-        _req("POST", url, hdr, data, 180)
-    except urllib.error.HTTPError:
-        _req("PUT", url, hdr, data, 180)
-    return f"{config.SUPABASE_URL}/storage/v1/object/public/{config.BUCKET}/{key}"
+    timeout = int(os.environ.get("POD_UPLOAD_TIMEOUT", "900"))
+    last = None
+    for attempt in range(4):
+        try:
+            try:
+                _req("POST", url, hdr, data, timeout)
+            except urllib.error.HTTPError:
+                _req("PUT", url, hdr, data, timeout)
+            return f"{config.SUPABASE_URL}/storage/v1/object/public/{config.BUCKET}/{key}"
+        except Exception as e:              # socket write timeout / transient network
+            last = e
+            print(f"   upload attempt {attempt+1} failed ({type(e).__name__}); retrying...")
+    raise last
