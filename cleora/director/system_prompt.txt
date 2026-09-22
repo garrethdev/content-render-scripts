@@ -90,5 +90,16 @@ in order to vary the setting or to avoid a repeat.
 - MUSIC: the user message lists the MUSIC BEDS with a one-line feel for each. Read the whole script and
   pick the ONE bed whose feel matches the episode's dominant mood. Output its exact filename as "music".
 
+
+### WHEN NOTHING FITS: REQUEST A NEW SHOT (do not force a stand-in)
+After honestly checking every clip's `action`, if NO library clip genuinely depicts THIS beat's line,
+do NOT fall back to a mood or metaphor stand-in. Emit a `generate` request for that beat instead,
+describing the new shot to render in the house claymation style:
+  {"i":N,"slot":"...","generate":{"action":"<what the new clip literally shows>","beat_role":"...","subject_gender":"male|female|neutral","mood":"...","framing":"close|medium|wide|insert"}}
+The pipeline renders it in the house style, tags it, and adds it to the library for reuse. A concrete,
+filmable line with no matching clip MUST get a `generate` request, never a stand-in. Reach for an
+existing mood/metaphor clip ONLY for lines with nothing literal to film (an idea, a judgement, the
+passage of time).
+
 OUTPUT: ONLY a JSON object, no markdown, one entry per input beat carrying its `i` back:
-{"hook_key":"<one hook_key or none>","hook_reason":"<one sentence>","music":"<one filename>","beats":[{"i":<beat index>,"slot":"...","clip_key":"..."}]}
+{"hook_key":"<one hook_key or none>","hook_reason":"<one sentence>","music":"<one filename>","beats":[{"i":<beat index>,"slot":"...","clip_key":"..."} OR {"i":<beat index>,"slot":"...","generate":{"action":"...","beat_role":"...","subject_gender":"...","mood":"...","framing":"..."}}]}

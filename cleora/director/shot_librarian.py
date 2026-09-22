@@ -21,6 +21,16 @@ REST = 'https://qlcmgxgwpzmiebzxflai.supabase.co/rest/v1'
 STOR = 'https://qlcmgxgwpzmiebzxflai.supabase.co/storage/v1/object'
 PUB  = 'https://qlcmgxgwpzmiebzxflai.supabase.co/storage/v1/object/public'
 BUCKET = 'cleora-clips'
+CAT_MAP = {'insert':'Insert & Prop','wide':'Wide','medium':'Wide','close':'Close-up','closeup':'Close-up'}
+FRAMING_MAP = {'insert':'tight','close':'tight','closeup':'tight','tight':'tight','medium':'medium','wide':'wide'}
+_MOODS = {'ominous','grim','reverent','hopeful','cold','longing','tender','neutral','awe','shock'}
+MOOD_MAP = {'revealing, warm':'reverent','warm':'reverent','revealing':'reverent','wondrous':'awe',
+            'bleak':'grim','derelict':'grim','tired':'cold','intimate':'tender','sparse':'cold'}
+
+
+def _mood(m):
+    m=(m or '').lower().strip()
+    return m if m in _MOODS else MOOD_MAP.get(m, 'neutral')
 
 STYLE_ANCHOR = (
     "Handmade stop-motion claymation inside Madame Cleora's miniature parlour. Modeling clay with "
@@ -115,9 +125,13 @@ def add_clip(req, mp4, still, source):
     surl = None
     if still and os.path.exists(still):
         surl = _upload(still, f"_generated/{shot_key}.png", 'image/png')
+    raw_framing = (req.get('framing') or '').lower()
     row = {
-        'shot_key': shot_key, 'action': req.get('action', ''), 'beat_role': req.get('beat_role', ''),
-        'mood': req.get('mood', ''), 'framing': req.get('framing', ''),
+        'shot_key': shot_key,
+        'category': req.get('category') or CAT_MAP.get(raw_framing, 'Insert & Prop'),
+        'filename': f"{shot_key}.mp4",
+        'action': req.get('action', ''), 'beat_role': req.get('beat_role', ''),
+        'mood': _mood(req.get('mood')), 'framing': FRAMING_MAP.get(raw_framing, 'medium'),
         'subject_gender': req.get('subject_gender', 'neutral'),
         'vo_safe': True, 'talk_capable': False, 'can_open': False, 'silent_broll': True,
         'duration_seconds': dur, 'width': w, 'height': h,
@@ -126,7 +140,7 @@ def add_clip(req, mp4, still, source):
         'notes': f"auto-gen for {source}",
     }
     body = json.dumps(row).encode()
-    r = urllib.request.Request(f"{REST}/cleora_clips", data=body, method='POST',
+    r = urllib.request.Request(f"{REST}/cleora_clips?on_conflict=shot_key", data=body, method='POST',
         headers={'apikey': KEY, 'Authorization': f'Bearer {KEY}', 'Content-Type': 'application/json',
                  'Prefer': 'return=minimal'})
     try:
