@@ -5,3 +5,5 @@ __pycache__/
 # source clips live in Supabase storage, not git
 footage/*.mp4
 footage/*.jpg
+.clip_cache/
+renders/

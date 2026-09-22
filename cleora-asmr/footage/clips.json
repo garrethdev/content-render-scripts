@@ -1,25 +1,21 @@
 [
   {
     "shot_key": "asmr_cauldron_stir",
-    "path": "/Users/garreth/.codex/.chatgpt-projects/g-p-6aa04c3f9b8081919a18f7f1dc51a98c/outputs/miss-cleo-production/footage/asmr_cauldron_stir.mp4",
     "source_url": "https://qlcmgxgwpzmiebzxflai.supabase.co/storage/v1/object/public/cleora-clips/asmr/asmr_cauldron_stir.mp4",
     "can_open": true
   },
   {
     "shot_key": "asmr_walk_to_cauldron",
-    "path": "/Users/garreth/.codex/.chatgpt-projects/g-p-6aa04c3f9b8081919a18f7f1dc51a98c/outputs/miss-cleo-production/footage/asmr_walk_to_cauldron.mp4",
     "source_url": "https://qlcmgxgwpzmiebzxflai.supabase.co/storage/v1/object/public/cleora-clips/asmr/asmr_walk_to_cauldron.mp4",
     "can_open": true
   },
   {
     "shot_key": "asmr_flask_mixing",
-    "path": "/Users/garreth/.codex/.chatgpt-projects/g-p-6aa04c3f9b8081919a18f7f1dc51a98c/outputs/miss-cleo-production/footage/asmr_flask_mixing.mp4",
     "source_url": "https://qlcmgxgwpzmiebzxflai.supabase.co/storage/v1/object/public/cleora-clips/asmr/asmr_flask_mixing.mp4",
     "can_open": false
   },
   {
     "shot_key": "asmr_ladle_taste",
-    "path": "/Users/garreth/.codex/.chatgpt-projects/g-p-6aa04c3f9b8081919a18f7f1dc51a98c/outputs/miss-cleo-production/footage/asmr_ladle_taste.mp4",
     "source_url": "https://qlcmgxgwpzmiebzxflai.supabase.co/storage/v1/object/public/cleora-clips/asmr/asmr_ladle_taste.mp4",
     "can_open": false
   }

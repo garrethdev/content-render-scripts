@@ -6,12 +6,34 @@ import json
 import re
 import shutil
 import subprocess
+import urllib.request
 from pathlib import Path
 
 from PIL import Image, ImageDraw, ImageFilter, ImageFont
 
 ROOT = Path(__file__).resolve().parent
 WIDTH, HEIGHT, FPS = 1080, 1920, 30
+CLIP_CACHE = ROOT / '.clip_cache'
+
+
+def local_clip(clip):
+    """Return a local file for a clip, downloading it from Supabase (source_url) when needed.
+    A local 'path' is honoured only if it actually exists (back-compat); otherwise the Supabase
+    copy is fetched into .clip_cache/ once and reused."""
+    existing = clip.get('path')
+    if existing and Path(existing).is_file():
+        return Path(existing)
+    url = clip.get('source_url')
+    if not url:
+        raise FileNotFoundError(f"{clip.get('shot_key')}: no local path and no source_url")
+    CLIP_CACHE.mkdir(parents=True, exist_ok=True)
+    dest = CLIP_CACHE / (clip['shot_key'] + '.mp4')
+    if not dest.exists() or dest.stat().st_size < 1000:
+        tmp = dest.with_suffix('.part')
+        with urllib.request.urlopen(url, timeout=180) as r, open(tmp, 'wb') as f:
+            shutil.copyfileobj(r, f)
+        tmp.replace(dest)
+    return dest
 
 
 def ffmpeg_path():
@@ -109,15 +131,13 @@ def run(args, logfile):
 
 def prepare_segment(clip, offset, cache):
     import cv2
-    source = Path(clip['path'])
-    if not source.is_file():
-        raise FileNotFoundError(source)
+    source = local_clip(clip)
     cap = cv2.VideoCapture(str(source))
     rate, count = cap.get(cv2.CAP_PROP_FPS), cap.get(cv2.CAP_PROP_FRAME_COUNT)
     cap.release()
     if rate <= 0 or count / rate + 0.02 < offset + 4:
         raise ValueError('Clip is too short for the requested four-second segment: ' + str(source))
-    key = hashlib.sha256(('exact-120-v2' + str(source.resolve()) + str(source.stat().st_mtime_ns) + str(offset)).encode()).hexdigest()[:16]
+    key = hashlib.sha256(('exact-120-v2' + (clip.get('source_url') or str(source.resolve())) + str(offset)).encode()).hexdigest()[:16]
     target = cache / (key + '.mp4')
     if not target.exists():
         run(['-ss', str(offset), '-i', str(source), '-an',
@@ -199,7 +219,7 @@ def main():
         fingerprint = hashlib.sha256(json.dumps({'story': s, 'plan': p,
             'script': hashlib.sha256(Path(__file__).read_bytes()).hexdigest(),
             'fonts': [args.regular_font, args.bold_font],
-            'clips': [(clips[p[k]]['path'], Path(clips[p[k]]['path']).stat().st_mtime_ns) for k in ['opener', 'closer']]}, sort_keys=True).encode()).hexdigest()
+            'clips': [clips[p[k]].get('source_url') or clips[p[k]].get('path') for k in ['opener', 'closer']]}, sort_keys=True).encode()).hexdigest()
         receipt = folder / 'receipt.json'
         reusable = target.exists() and receipt.exists() and json.loads(receipt.read_text()).get('fingerprint') == fingerprint
         if not args.overlays_only and (args.force or not reusable):
