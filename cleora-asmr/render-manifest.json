@@ -1,0 +1,682 @@
+[
+  {
+    "story_id": "MC-026",
+    "title": "The Nobel Prize made of light",
+    "path": "/Users/garreth/.codex/.chatgpt-projects/g-p-6aa04c3f9b8081919a18f7f1dc51a98c/outputs/miss-cleo-production/renders/MC-026.mp4",
+    "frames": 240,
+    "fps": 30.0,
+    "seconds": 8.0,
+    "dimensions": [
+      1080,
+      1920
+    ],
+    "full_decode": "passed",
+    "text_layout": "passed",
+    "glow_words": "concentrated light",
+    "boundary_frames": [
+      119,
+      120
+    ],
+    "boundary_pixel_error": [
+      1.76,
+      1.826,
+      1.566,
+      1.781
+    ],
+    "clip_plan": {
+      "story_id": "MC-026",
+      "opener": "asmr_cauldron_stir",
+      "closer": "asmr_flask_mixing",
+      "opener_start": 0.6,
+      "closer_start": 0.1,
+      "switch_seconds": 4,
+      "duration_seconds": 8
+    }
+  },
+  {
+    "story_id": "MC-021",
+    "title": "The surgeon who studied electricity",
+    "path": "/Users/garreth/.codex/.chatgpt-projects/g-p-6aa04c3f9b8081919a18f7f1dc51a98c/outputs/miss-cleo-production/renders/MC-021.mp4",
+    "frames": 240,
+    "fps": 30.0,
+    "seconds": 8.0,
+    "dimensions": [
+      1080,
+      1920
+    ],
+    "full_decode": "passed",
+    "text_layout": "passed",
+    "glow_words": "regrow limbs",
+    "boundary_frames": [
+      119,
+      120
+    ],
+    "boundary_pixel_error": [
+      1.779,
+      1.88,
+      1.573,
+      1.776
+    ],
+    "clip_plan": {
+      "story_id": "MC-021",
+      "opener": "asmr_walk_to_cauldron",
+      "closer": "asmr_flask_mixing",
+      "opener_start": 0.15,
+      "closer_start": 0.1,
+      "switch_seconds": 4,
+      "duration_seconds": 8
+    }
+  },
+  {
+    "story_id": "MC-050",
+    "title": "From a hospital bed to a marathon",
+    "path": "/Users/garreth/.codex/.chatgpt-projects/g-p-6aa04c3f9b8081919a18f7f1dc51a98c/outputs/miss-cleo-production/renders/MC-050.mp4",
+    "frames": 240,
+    "fps": 30.0,
+    "seconds": 8.0,
+    "dimensions": [
+      1080,
+      1920
+    ],
+    "full_decode": "passed",
+    "text_layout": "passed",
+    "glow_words": "transplanted heart",
+    "boundary_frames": [
+      119,
+      120
+    ],
+    "boundary_pixel_error": [
+      1.794,
+      1.874,
+      1.633,
+      1.864
+    ],
+    "clip_plan": {
+      "story_id": "MC-050",
+      "opener": "asmr_cauldron_stir",
+      "closer": "asmr_ladle_taste",
+      "opener_start": 0.6,
+      "closer_start": 0.1,
+      "switch_seconds": 4,
+      "duration_seconds": 8
+    }
+  },
+  {
+    "story_id": "MC-027",
+    "title": "The immune cell with a fuel problem",
+    "path": "/Users/garreth/.codex/.chatgpt-projects/g-p-6aa04c3f9b8081919a18f7f1dc51a98c/outputs/miss-cleo-production/renders/MC-027.mp4",
+    "frames": 240,
+    "fps": 30.0,
+    "seconds": 8.0,
+    "dimensions": [
+      1080,
+      1920
+    ],
+    "full_decode": "passed",
+    "text_layout": "passed",
+    "glow_words": "Creatine. Immunity.",
+    "boundary_frames": [
+      119,
+      120
+    ],
+    "boundary_pixel_error": [
+      1.809,
+      1.916,
+      1.63,
+      1.873
+    ],
+    "clip_plan": {
+      "story_id": "MC-027",
+      "opener": "asmr_walk_to_cauldron",
+      "closer": "asmr_ladle_taste",
+      "opener_start": 0.15,
+      "closer_start": 0.1,
+      "switch_seconds": 4,
+      "duration_seconds": 8
+    }
+  },
+  {
+    "story_id": "MC-053",
+    "title": "The virus delivered into a tumor",
+    "path": "/Users/garreth/.codex/.chatgpt-projects/g-p-6aa04c3f9b8081919a18f7f1dc51a98c/outputs/miss-cleo-production/renders/MC-053.mp4",
+    "frames": 240,
+    "fps": 30.0,
+    "seconds": 8.0,
+    "dimensions": [
+      1080,
+      1920
+    ],
+    "full_decode": "passed",
+    "text_layout": "passed",
+    "glow_words": "A virus.",
+    "boundary_frames": [
+      119,
+      120
+    ],
+    "boundary_pixel_error": [
+      1.762,
+      1.852,
+      1.597,
+      1.816
+    ],
+    "clip_plan": {
+      "story_id": "MC-053",
+      "opener": "asmr_cauldron_stir",
+      "closer": "asmr_flask_mixing",
+      "opener_start": 1.25,
+      "closer_start": 0.28,
+      "switch_seconds": 4,
+      "duration_seconds": 8
+    }
+  },
+  {
+    "story_id": "MC-033",
+    "title": "The Nobel Prize for cellular recycling",
+    "path": "/Users/garreth/.codex/.chatgpt-projects/g-p-6aa04c3f9b8081919a18f7f1dc51a98c/outputs/miss-cleo-production/renders/MC-033.mp4",
+    "frames": 240,
+    "fps": 30.0,
+    "seconds": 8.0,
+    "dimensions": [
+      1080,
+      1920
+    ],
+    "full_decode": "passed",
+    "text_layout": "passed",
+    "glow_words": "recycle themselves",
+    "boundary_frames": [
+      119,
+      120
+    ],
+    "boundary_pixel_error": [
+      1.784,
+      1.908,
+      1.588,
+      1.798
+    ],
+    "clip_plan": {
+      "story_id": "MC-033",
+      "opener": "asmr_walk_to_cauldron",
+      "closer": "asmr_flask_mixing",
+      "opener_start": 0.33,
+      "closer_start": 0.28,
+      "switch_seconds": 4,
+      "duration_seconds": 8
+    }
+  },
+  {
+    "story_id": "MC-046",
+    "title": "The lawn weed in the cancer lab",
+    "path": "/Users/garreth/.codex/.chatgpt-projects/g-p-6aa04c3f9b8081919a18f7f1dc51a98c/outputs/miss-cleo-production/renders/MC-046.mp4",
+    "frames": 240,
+    "fps": 30.0,
+    "seconds": 8.0,
+    "dimensions": [
+      1080,
+      1920
+    ],
+    "full_decode": "passed",
+    "text_layout": "passed",
+    "glow_words": "Forty-eight hours.",
+    "boundary_frames": [
+      119,
+      120
+    ],
+    "boundary_pixel_error": [
+      1.799,
+      1.892,
+      1.641,
+      1.921
+    ],
+    "clip_plan": {
+      "story_id": "MC-046",
+      "opener": "asmr_cauldron_stir",
+      "closer": "asmr_ladle_taste",
+      "opener_start": 1.25,
+      "closer_start": 0.28,
+      "switch_seconds": 4,
+      "duration_seconds": 8
+    }
+  },
+  {
+    "story_id": "MC-012",
+    "title": "The bottle had not changed. The microscope had.",
+    "path": "/Users/garreth/.codex/.chatgpt-projects/g-p-6aa04c3f9b8081919a18f7f1dc51a98c/outputs/miss-cleo-production/renders/MC-012.mp4",
+    "frames": 240,
+    "fps": 30.0,
+    "seconds": 8.0,
+    "dimensions": [
+      1080,
+      1920
+    ],
+    "full_decode": "passed",
+    "text_layout": "passed",
+    "glow_words": "Invisible plastic.",
+    "boundary_frames": [
+      119,
+      120
+    ],
+    "boundary_pixel_error": [
+      1.795,
+      1.915,
+      1.641,
+      1.899
+    ],
+    "clip_plan": {
+      "story_id": "MC-012",
+      "opener": "asmr_walk_to_cauldron",
+      "closer": "asmr_ladle_taste",
+      "opener_start": 0.33,
+      "closer_start": 0.28,
+      "switch_seconds": 4,
+      "duration_seconds": 8
+    }
+  },
+  {
+    "story_id": "MC-011",
+    "title": "The forest showed up in their bloodwork",
+    "path": "/Users/garreth/.codex/.chatgpt-projects/g-p-6aa04c3f9b8081919a18f7f1dc51a98c/outputs/miss-cleo-production/renders/MC-011.mp4",
+    "frames": 240,
+    "fps": 30.0,
+    "seconds": 8.0,
+    "dimensions": [
+      1080,
+      1920
+    ],
+    "full_decode": "passed",
+    "text_layout": "passed",
+    "glow_words": "Three days.",
+    "boundary_frames": [
+      119,
+      120
+    ],
+    "boundary_pixel_error": [
+      1.758,
+      1.856,
+      1.606,
+      1.803
+    ],
+    "clip_plan": {
+      "story_id": "MC-011",
+      "opener": "asmr_cauldron_stir",
+      "closer": "asmr_flask_mixing",
+      "opener_start": 1.9,
+      "closer_start": 0.46,
+      "switch_seconds": 4,
+      "duration_seconds": 8
+    }
+  },
+  {
+    "story_id": "MC-035",
+    "title": "The hum that showed up in the measurements",
+    "path": "/Users/garreth/.codex/.chatgpt-projects/g-p-6aa04c3f9b8081919a18f7f1dc51a98c/outputs/miss-cleo-production/renders/MC-035.mp4",
+    "frames": 240,
+    "fps": 30.0,
+    "seconds": 8.0,
+    "dimensions": [
+      1080,
+      1920
+    ],
+    "full_decode": "passed",
+    "text_layout": "passed",
+    "glow_words": "They hummed.",
+    "boundary_frames": [
+      119,
+      120
+    ],
+    "boundary_pixel_error": [
+      1.812,
+      1.924,
+      1.607,
+      1.798
+    ],
+    "clip_plan": {
+      "story_id": "MC-035",
+      "opener": "asmr_walk_to_cauldron",
+      "closer": "asmr_flask_mixing",
+      "opener_start": 0.51,
+      "closer_start": 0.46,
+      "switch_seconds": 4,
+      "duration_seconds": 8
+    }
+  },
+  {
+    "story_id": "MC-022",
+    "title": "The cancer clue that became an image",
+    "path": "/Users/garreth/.codex/.chatgpt-projects/g-p-6aa04c3f9b8081919a18f7f1dc51a98c/outputs/miss-cleo-production/renders/MC-022.mp4",
+    "frames": 240,
+    "fps": 30.0,
+    "seconds": 8.0,
+    "dimensions": [
+      1080,
+      1920
+    ],
+    "full_decode": "passed",
+    "text_layout": "passed",
+    "glow_words": "Oxygen available.",
+    "boundary_frames": [
+      119,
+      120
+    ],
+    "boundary_pixel_error": [
+      1.801,
+      1.903,
+      1.626,
+      1.868
+    ],
+    "clip_plan": {
+      "story_id": "MC-022",
+      "opener": "asmr_cauldron_stir",
+      "closer": "asmr_ladle_taste",
+      "opener_start": 1.9,
+      "closer_start": 0.46,
+      "switch_seconds": 4,
+      "duration_seconds": 8
+    }
+  },
+  {
+    "story_id": "MC-054",
+    "title": "The exercise result inside the brain scan",
+    "path": "/Users/garreth/.codex/.chatgpt-projects/g-p-6aa04c3f9b8081919a18f7f1dc51a98c/outputs/miss-cleo-production/renders/MC-054.mp4",
+    "frames": 240,
+    "fps": 30.0,
+    "seconds": 8.0,
+    "dimensions": [
+      1080,
+      1920
+    ],
+    "full_decode": "passed",
+    "text_layout": "passed",
+    "glow_words": "It grew.",
+    "boundary_frames": [
+      119,
+      120
+    ],
+    "boundary_pixel_error": [
+      1.779,
+      1.877,
+      1.65,
+      1.896
+    ],
+    "clip_plan": {
+      "story_id": "MC-054",
+      "opener": "asmr_walk_to_cauldron",
+      "closer": "asmr_ladle_taste",
+      "opener_start": 0.51,
+      "closer_start": 0.46,
+      "switch_seconds": 4,
+      "duration_seconds": 8
+    }
+  },
+  {
+    "story_id": "MC-043",
+    "title": "The old metal with an invisible effect",
+    "path": "/Users/garreth/.codex/.chatgpt-projects/g-p-6aa04c3f9b8081919a18f7f1dc51a98c/outputs/miss-cleo-production/renders/MC-043.mp4",
+    "frames": 240,
+    "fps": 30.0,
+    "seconds": 8.0,
+    "dimensions": [
+      1080,
+      1920
+    ],
+    "full_decode": "passed",
+    "text_layout": "passed",
+    "glow_words": "Copper vessels.",
+    "boundary_frames": [
+      119,
+      120
+    ],
+    "boundary_pixel_error": [
+      1.795,
+      1.884,
+      1.596,
+      1.759
+    ],
+    "clip_plan": {
+      "story_id": "MC-043",
+      "opener": "asmr_cauldron_stir",
+      "closer": "asmr_flask_mixing",
+      "opener_start": 2.55,
+      "closer_start": 0.64,
+      "switch_seconds": 4,
+      "duration_seconds": 8
+    }
+  },
+  {
+    "story_id": "MC-023",
+    "title": "The mineral that went into the salt",
+    "path": "/Users/garreth/.codex/.chatgpt-projects/g-p-6aa04c3f9b8081919a18f7f1dc51a98c/outputs/miss-cleo-production/renders/MC-023.mp4",
+    "frames": 240,
+    "fps": 30.0,
+    "seconds": 8.0,
+    "dimensions": [
+      1080,
+      1920
+    ],
+    "full_decode": "passed",
+    "text_layout": "passed",
+    "glow_words": "missing mineral",
+    "boundary_frames": [
+      119,
+      120
+    ],
+    "boundary_pixel_error": [
+      1.774,
+      1.878,
+      1.603,
+      1.756
+    ],
+    "clip_plan": {
+      "story_id": "MC-023",
+      "opener": "asmr_walk_to_cauldron",
+      "closer": "asmr_flask_mixing",
+      "opener_start": 0.69,
+      "closer_start": 0.64,
+      "switch_seconds": 4,
+      "duration_seconds": 8
+    }
+  },
+  {
+    "story_id": "MC-055",
+    "title": "The tiny sprouts in a pollution study",
+    "path": "/Users/garreth/.codex/.chatgpt-projects/g-p-6aa04c3f9b8081919a18f7f1dc51a98c/outputs/miss-cleo-production/renders/MC-055.mp4",
+    "frames": 240,
+    "fps": 30.0,
+    "seconds": 8.0,
+    "dimensions": [
+      1080,
+      1920
+    ],
+    "full_decode": "passed",
+    "text_layout": "passed",
+    "glow_words": "Tiny sprouts.",
+    "boundary_frames": [
+      119,
+      120
+    ],
+    "boundary_pixel_error": [
+      1.799,
+      1.893,
+      1.644,
+      1.894
+    ],
+    "clip_plan": {
+      "story_id": "MC-055",
+      "opener": "asmr_cauldron_stir",
+      "closer": "asmr_ladle_taste",
+      "opener_start": 2.55,
+      "closer_start": 0.64,
+      "switch_seconds": 4,
+      "duration_seconds": 8
+    }
+  },
+  {
+    "story_id": "MC-048",
+    "title": "The box that became a controversy",
+    "path": "/Users/garreth/.codex/.chatgpt-projects/g-p-6aa04c3f9b8081919a18f7f1dc51a98c/outputs/miss-cleo-production/renders/MC-048.mp4",
+    "frames": 240,
+    "fps": 30.0,
+    "seconds": 8.0,
+    "dimensions": [
+      1080,
+      1920
+    ],
+    "full_decode": "passed",
+    "text_layout": "passed",
+    "glow_words": "A box.",
+    "boundary_frames": [
+      119,
+      120
+    ],
+    "boundary_pixel_error": [
+      1.759,
+      1.858,
+      1.651,
+      1.905
+    ],
+    "clip_plan": {
+      "story_id": "MC-048",
+      "opener": "asmr_walk_to_cauldron",
+      "closer": "asmr_ladle_taste",
+      "opener_start": 0.69,
+      "closer_start": 0.64,
+      "switch_seconds": 4,
+      "duration_seconds": 8
+    }
+  },
+  {
+    "story_id": "MC-047",
+    "title": "The vitamin trial with a second chapter",
+    "path": "/Users/garreth/.codex/.chatgpt-projects/g-p-6aa04c3f9b8081919a18f7f1dc51a98c/outputs/miss-cleo-production/renders/MC-047.mp4",
+    "frames": 240,
+    "fps": 30.0,
+    "seconds": 8.0,
+    "dimensions": [
+      1080,
+      1920
+    ],
+    "full_decode": "passed",
+    "text_layout": "passed",
+    "glow_words": "Brain scans.",
+    "boundary_frames": [
+      119,
+      120
+    ],
+    "boundary_pixel_error": [
+      1.776,
+      1.89,
+      1.597,
+      1.759
+    ],
+    "clip_plan": {
+      "story_id": "MC-047",
+      "opener": "asmr_cauldron_stir",
+      "closer": "asmr_flask_mixing",
+      "opener_start": 3.2,
+      "closer_start": 0.82,
+      "switch_seconds": 4,
+      "duration_seconds": 8
+    }
+  },
+  {
+    "story_id": "MC-006",
+    "title": "The organ that was already there",
+    "path": "/Users/garreth/.codex/.chatgpt-projects/g-p-6aa04c3f9b8081919a18f7f1dc51a98c/outputs/miss-cleo-production/renders/MC-006.mp4",
+    "frames": 240,
+    "fps": 30.0,
+    "seconds": 8.0,
+    "dimensions": [
+      1080,
+      1920
+    ],
+    "full_decode": "passed",
+    "text_layout": "passed",
+    "glow_words": "new organ",
+    "boundary_frames": [
+      119,
+      120
+    ],
+    "boundary_pixel_error": [
+      1.761,
+      1.857,
+      1.602,
+      1.763
+    ],
+    "clip_plan": {
+      "story_id": "MC-006",
+      "opener": "asmr_walk_to_cauldron",
+      "closer": "asmr_flask_mixing",
+      "opener_start": 0.87,
+      "closer_start": 0.82,
+      "switch_seconds": 4,
+      "duration_seconds": 8
+    }
+  },
+  {
+    "story_id": "MC-007",
+    "title": "The woman writing medicine in the 1100s",
+    "path": "/Users/garreth/.codex/.chatgpt-projects/g-p-6aa04c3f9b8081919a18f7f1dc51a98c/outputs/miss-cleo-production/renders/MC-007.mp4",
+    "frames": 240,
+    "fps": 30.0,
+    "seconds": 8.0,
+    "dimensions": [
+      1080,
+      1920
+    ],
+    "full_decode": "passed",
+    "text_layout": "passed",
+    "glow_words": "900 years",
+    "boundary_frames": [
+      119,
+      120
+    ],
+    "boundary_pixel_error": [
+      1.735,
+      1.821,
+      1.646,
+      1.864
+    ],
+    "clip_plan": {
+      "story_id": "MC-007",
+      "opener": "asmr_cauldron_stir",
+      "closer": "asmr_ladle_taste",
+      "opener_start": 3.2,
+      "closer_start": 0.82,
+      "switch_seconds": 4,
+      "duration_seconds": 8
+    }
+  },
+  {
+    "story_id": "MC-025",
+    "title": "Twenty years watching a Finnish habit",
+    "path": "/Users/garreth/.codex/.chatgpt-projects/g-p-6aa04c3f9b8081919a18f7f1dc51a98c/outputs/miss-cleo-production/renders/MC-025.mp4",
+    "frames": 240,
+    "fps": 30.0,
+    "seconds": 8.0,
+    "dimensions": [
+      1080,
+      1920
+    ],
+    "full_decode": "passed",
+    "text_layout": "passed",
+    "glow_words": "Twenty years.",
+    "boundary_frames": [
+      119,
+      120
+    ],
+    "boundary_pixel_error": [
+      1.795,
+      1.886,
+      1.642,
+      1.875
+    ],
+    "clip_plan": {
+      "story_id": "MC-025",
+      "opener": "asmr_walk_to_cauldron",
+      "closer": "asmr_ladle_taste",
+      "opener_start": 0.87,
+      "closer_start": 0.82,
+      "switch_seconds": 4,
+      "duration_seconds": 8
+    }
+  }
+]

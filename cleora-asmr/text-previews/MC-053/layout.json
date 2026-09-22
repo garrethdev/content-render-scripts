@@ -1,0 +1,39 @@
+[
+  {
+    "font_size": 58,
+    "lines": 8,
+    "text_top": 426,
+    "text_bottom": 1034,
+    "highlight_boxes": [
+      [
+        222,
+        426,
+        263,
+        502
+      ],
+      [
+        275,
+        426,
+        423,
+        502
+      ]
+    ],
+    "backdrop_overlay": {
+      "color": "#000000",
+      "alpha": 130,
+      "opacity": 0.5098039215686274
+    }
+  },
+  {
+    "font_size": 58,
+    "lines": 9,
+    "text_top": 388,
+    "text_bottom": 1072,
+    "highlight_boxes": [],
+    "backdrop_overlay": {
+      "color": "#000000",
+      "alpha": 130,
+      "opacity": 0.5098039215686274
+    }
+  }
+]

@@ -1,0 +1,452 @@
+[
+  {
+    "story_id": "MC-026",
+    "opener": "asmr_cauldron_stir",
+    "closer": "asmr_flask_mixing",
+    "opener_start": 0.6,
+    "closer_start": 0.1,
+    "switch_seconds": 4,
+    "duration_seconds": 8
+  },
+  {
+    "story_id": "MC-021",
+    "opener": "asmr_walk_to_cauldron",
+    "closer": "asmr_flask_mixing",
+    "opener_start": 0.15,
+    "closer_start": 0.1,
+    "switch_seconds": 4,
+    "duration_seconds": 8
+  },
+  {
+    "story_id": "MC-050",
+    "opener": "asmr_cauldron_stir",
+    "closer": "asmr_ladle_taste",
+    "opener_start": 0.6,
+    "closer_start": 0.1,
+    "switch_seconds": 4,
+    "duration_seconds": 8
+  },
+  {
+    "story_id": "MC-027",
+    "opener": "asmr_walk_to_cauldron",
+    "closer": "asmr_ladle_taste",
+    "opener_start": 0.15,
+    "closer_start": 0.1,
+    "switch_seconds": 4,
+    "duration_seconds": 8
+  },
+  {
+    "story_id": "MC-053",
+    "opener": "asmr_cauldron_stir",
+    "closer": "asmr_flask_mixing",
+    "opener_start": 1.25,
+    "closer_start": 0.28,
+    "switch_seconds": 4,
+    "duration_seconds": 8
+  },
+  {
+    "story_id": "MC-033",
+    "opener": "asmr_walk_to_cauldron",
+    "closer": "asmr_flask_mixing",
+    "opener_start": 0.33,
+    "closer_start": 0.28,
+    "switch_seconds": 4,
+    "duration_seconds": 8
+  },
+  {
+    "story_id": "MC-046",
+    "opener": "asmr_cauldron_stir",
+    "closer": "asmr_ladle_taste",
+    "opener_start": 1.25,
+    "closer_start": 0.28,
+    "switch_seconds": 4,
+    "duration_seconds": 8
+  },
+  {
+    "story_id": "MC-012",
+    "opener": "asmr_walk_to_cauldron",
+    "closer": "asmr_ladle_taste",
+    "opener_start": 0.33,
+    "closer_start": 0.28,
+    "switch_seconds": 4,
+    "duration_seconds": 8
+  },
+  {
+    "story_id": "MC-011",
+    "opener": "asmr_cauldron_stir",
+    "closer": "asmr_flask_mixing",
+    "opener_start": 1.9,
+    "closer_start": 0.46,
+    "switch_seconds": 4,
+    "duration_seconds": 8
+  },
+  {
+    "story_id": "MC-035",
+    "opener": "asmr_walk_to_cauldron",
+    "closer": "asmr_flask_mixing",
+    "opener_start": 0.51,
+    "closer_start": 0.46,
+    "switch_seconds": 4,
+    "duration_seconds": 8
+  },
+  {
+    "story_id": "MC-022",
+    "opener": "asmr_cauldron_stir",
+    "closer": "asmr_ladle_taste",
+    "opener_start": 1.9,
+    "closer_start": 0.46,
+    "switch_seconds": 4,
+    "duration_seconds": 8
+  },
+  {
+    "story_id": "MC-054",
+    "opener": "asmr_walk_to_cauldron",
+    "closer": "asmr_ladle_taste",
+    "opener_start": 0.51,
+    "closer_start": 0.46,
+    "switch_seconds": 4,
+    "duration_seconds": 8
+  },
+  {
+    "story_id": "MC-043",
+    "opener": "asmr_cauldron_stir",
+    "closer": "asmr_flask_mixing",
+    "opener_start": 2.55,
+    "closer_start": 0.64,
+    "switch_seconds": 4,
+    "duration_seconds": 8
+  },
+  {
+    "story_id": "MC-023",
+    "opener": "asmr_walk_to_cauldron",
+    "closer": "asmr_flask_mixing",
+    "opener_start": 0.69,
+    "closer_start": 0.64,
+    "switch_seconds": 4,
+    "duration_seconds": 8
+  },
+  {
+    "story_id": "MC-055",
+    "opener": "asmr_cauldron_stir",
+    "closer": "asmr_ladle_taste",
+    "opener_start": 2.55,
+    "closer_start": 0.64,
+    "switch_seconds": 4,
+    "duration_seconds": 8
+  },
+  {
+    "story_id": "MC-048",
+    "opener": "asmr_walk_to_cauldron",
+    "closer": "asmr_ladle_taste",
+    "opener_start": 0.69,
+    "closer_start": 0.64,
+    "switch_seconds": 4,
+    "duration_seconds": 8
+  },
+  {
+    "story_id": "MC-047",
+    "opener": "asmr_cauldron_stir",
+    "closer": "asmr_flask_mixing",
+    "opener_start": 3.2,
+    "closer_start": 0.82,
+    "switch_seconds": 4,
+    "duration_seconds": 8
+  },
+  {
+    "story_id": "MC-006",
+    "opener": "asmr_walk_to_cauldron",
+    "closer": "asmr_flask_mixing",
+    "opener_start": 0.87,
+    "closer_start": 0.82,
+    "switch_seconds": 4,
+    "duration_seconds": 8
+  },
+  {
+    "story_id": "MC-007",
+    "opener": "asmr_cauldron_stir",
+    "closer": "asmr_ladle_taste",
+    "opener_start": 3.2,
+    "closer_start": 0.82,
+    "switch_seconds": 4,
+    "duration_seconds": 8
+  },
+  {
+    "story_id": "MC-025",
+    "opener": "asmr_walk_to_cauldron",
+    "closer": "asmr_ladle_taste",
+    "opener_start": 0.87,
+    "closer_start": 0.82,
+    "switch_seconds": 4,
+    "duration_seconds": 8
+  },
+  {
+    "story_id": "MC-008",
+    "opener": "asmr_cauldron_stir",
+    "closer": "asmr_flask_mixing",
+    "opener_start": 0.6,
+    "closer_start": 0.1,
+    "switch_seconds": 4,
+    "duration_seconds": 8
+  },
+  {
+    "story_id": "MC-009",
+    "opener": "asmr_walk_to_cauldron",
+    "closer": "asmr_flask_mixing",
+    "opener_start": 0.15,
+    "closer_start": 0.1,
+    "switch_seconds": 4,
+    "duration_seconds": 8
+  },
+  {
+    "story_id": "MC-010",
+    "opener": "asmr_cauldron_stir",
+    "closer": "asmr_ladle_taste",
+    "opener_start": 0.6,
+    "closer_start": 0.1,
+    "switch_seconds": 4,
+    "duration_seconds": 8
+  },
+  {
+    "story_id": "MC-013",
+    "opener": "asmr_walk_to_cauldron",
+    "closer": "asmr_ladle_taste",
+    "opener_start": 0.15,
+    "closer_start": 0.1,
+    "switch_seconds": 4,
+    "duration_seconds": 8
+  },
+  {
+    "story_id": "MC-014",
+    "opener": "asmr_cauldron_stir",
+    "closer": "asmr_flask_mixing",
+    "opener_start": 1.25,
+    "closer_start": 0.28,
+    "switch_seconds": 4,
+    "duration_seconds": 8
+  },
+  {
+    "story_id": "MC-015",
+    "opener": "asmr_walk_to_cauldron",
+    "closer": "asmr_flask_mixing",
+    "opener_start": 0.33,
+    "closer_start": 0.28,
+    "switch_seconds": 4,
+    "duration_seconds": 8
+  },
+  {
+    "story_id": "MC-016",
+    "opener": "asmr_cauldron_stir",
+    "closer": "asmr_ladle_taste",
+    "opener_start": 1.25,
+    "closer_start": 0.28,
+    "switch_seconds": 4,
+    "duration_seconds": 8
+  },
+  {
+    "story_id": "MC-017",
+    "opener": "asmr_walk_to_cauldron",
+    "closer": "asmr_ladle_taste",
+    "opener_start": 0.33,
+    "closer_start": 0.28,
+    "switch_seconds": 4,
+    "duration_seconds": 8
+  },
+  {
+    "story_id": "MC-018",
+    "opener": "asmr_cauldron_stir",
+    "closer": "asmr_flask_mixing",
+    "opener_start": 1.9,
+    "closer_start": 0.46,
+    "switch_seconds": 4,
+    "duration_seconds": 8
+  },
+  {
+    "story_id": "MC-019",
+    "opener": "asmr_walk_to_cauldron",
+    "closer": "asmr_flask_mixing",
+    "opener_start": 0.51,
+    "closer_start": 0.46,
+    "switch_seconds": 4,
+    "duration_seconds": 8
+  },
+  {
+    "story_id": "MC-020",
+    "opener": "asmr_cauldron_stir",
+    "closer": "asmr_ladle_taste",
+    "opener_start": 1.9,
+    "closer_start": 0.46,
+    "switch_seconds": 4,
+    "duration_seconds": 8
+  },
+  {
+    "story_id": "MC-024",
+    "opener": "asmr_walk_to_cauldron",
+    "closer": "asmr_ladle_taste",
+    "opener_start": 0.51,
+    "closer_start": 0.46,
+    "switch_seconds": 4,
+    "duration_seconds": 8
+  },
+  {
+    "story_id": "MC-028",
+    "opener": "asmr_cauldron_stir",
+    "closer": "asmr_flask_mixing",
+    "opener_start": 2.55,
+    "closer_start": 0.64,
+    "switch_seconds": 4,
+    "duration_seconds": 8
+  },
+  {
+    "story_id": "MC-029",
+    "opener": "asmr_walk_to_cauldron",
+    "closer": "asmr_flask_mixing",
+    "opener_start": 0.69,
+    "closer_start": 0.64,
+    "switch_seconds": 4,
+    "duration_seconds": 8
+  },
+  {
+    "story_id": "MC-030",
+    "opener": "asmr_cauldron_stir",
+    "closer": "asmr_ladle_taste",
+    "opener_start": 2.55,
+    "closer_start": 0.64,
+    "switch_seconds": 4,
+    "duration_seconds": 8
+  },
+  {
+    "story_id": "MC-031",
+    "opener": "asmr_walk_to_cauldron",
+    "closer": "asmr_ladle_taste",
+    "opener_start": 0.69,
+    "closer_start": 0.64,
+    "switch_seconds": 4,
+    "duration_seconds": 8
+  },
+  {
+    "story_id": "MC-032",
+    "opener": "asmr_cauldron_stir",
+    "closer": "asmr_flask_mixing",
+    "opener_start": 3.2,
+    "closer_start": 0.82,
+    "switch_seconds": 4,
+    "duration_seconds": 8
+  },
+  {
+    "story_id": "MC-034",
+    "opener": "asmr_walk_to_cauldron",
+    "closer": "asmr_flask_mixing",
+    "opener_start": 0.87,
+    "closer_start": 0.82,
+    "switch_seconds": 4,
+    "duration_seconds": 8
+  },
+  {
+    "story_id": "MC-036",
+    "opener": "asmr_cauldron_stir",
+    "closer": "asmr_ladle_taste",
+    "opener_start": 3.2,
+    "closer_start": 0.82,
+    "switch_seconds": 4,
+    "duration_seconds": 8
+  },
+  {
+    "story_id": "MC-037",
+    "opener": "asmr_walk_to_cauldron",
+    "closer": "asmr_ladle_taste",
+    "opener_start": 0.87,
+    "closer_start": 0.82,
+    "switch_seconds": 4,
+    "duration_seconds": 8
+  },
+  {
+    "story_id": "MC-038",
+    "opener": "asmr_cauldron_stir",
+    "closer": "asmr_flask_mixing",
+    "opener_start": 0.6,
+    "closer_start": 0.1,
+    "switch_seconds": 4,
+    "duration_seconds": 8
+  },
+  {
+    "story_id": "MC-039",
+    "opener": "asmr_walk_to_cauldron",
+    "closer": "asmr_flask_mixing",
+    "opener_start": 0.15,
+    "closer_start": 0.1,
+    "switch_seconds": 4,
+    "duration_seconds": 8
+  },
+  {
+    "story_id": "MC-040",
+    "opener": "asmr_cauldron_stir",
+    "closer": "asmr_ladle_taste",
+    "opener_start": 0.6,
+    "closer_start": 0.1,
+    "switch_seconds": 4,
+    "duration_seconds": 8
+  },
+  {
+    "story_id": "MC-041",
+    "opener": "asmr_walk_to_cauldron",
+    "closer": "asmr_ladle_taste",
+    "opener_start": 0.15,
+    "closer_start": 0.1,
+    "switch_seconds": 4,
+    "duration_seconds": 8
+  },
+  {
+    "story_id": "MC-042",
+    "opener": "asmr_cauldron_stir",
+    "closer": "asmr_flask_mixing",
+    "opener_start": 1.25,
+    "closer_start": 0.28,
+    "switch_seconds": 4,
+    "duration_seconds": 8
+  },
+  {
+    "story_id": "MC-044",
+    "opener": "asmr_walk_to_cauldron",
+    "closer": "asmr_flask_mixing",
+    "opener_start": 0.33,
+    "closer_start": 0.28,
+    "switch_seconds": 4,
+    "duration_seconds": 8
+  },
+  {
+    "story_id": "MC-045",
+    "opener": "asmr_cauldron_stir",
+    "closer": "asmr_ladle_taste",
+    "opener_start": 1.25,
+    "closer_start": 0.28,
+    "switch_seconds": 4,
+    "duration_seconds": 8
+  },
+  {
+    "story_id": "MC-049",
+    "opener": "asmr_walk_to_cauldron",
+    "closer": "asmr_ladle_taste",
+    "opener_start": 0.33,
+    "closer_start": 0.28,
+    "switch_seconds": 4,
+    "duration_seconds": 8
+  },
+  {
+    "story_id": "MC-051",
+    "opener": "asmr_cauldron_stir",
+    "closer": "asmr_flask_mixing",
+    "opener_start": 1.9,
+    "closer_start": 0.46,
+    "switch_seconds": 4,
+    "duration_seconds": 8
+  },
+  {
+    "story_id": "MC-052",
+    "opener": "asmr_walk_to_cauldron",
+    "closer": "asmr_flask_mixing",
+    "opener_start": 0.51,
+    "closer_start": 0.46,
+    "switch_seconds": 4,
+    "duration_seconds": 8
+  }
+]

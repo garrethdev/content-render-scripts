@@ -1,0 +1,602 @@
+[
+  {
+    "title": "The organ that was already there",
+    "source": "p134, slides 2–6, 10",
+    "glow_words": "new organ",
+    "screen_1": "A new organ. Already inside you. In 2017, the mesentery made headlines after researchers described it as one continuous structure. Anatomists had seen the tissue for centuries. They had been looking at it differently.",
+    "screen_2": "What looked like separate folds was a connected structure supporting your intestines, carrying blood vessels, nerves and lymphatics. The discovery did not add something to the body. It changed how we understood what was there.",
+    "id": "MC-006",
+    "word_counts": [
+      34,
+      35
+    ]
+  },
+  {
+    "title": "The woman writing medicine in the 1100s",
+    "source": "p136, slides 2–9",
+    "glow_words": "900 years",
+    "screen_1": "She wrote about digestion. Sleep. Food. Nearly 900 years ago. Hildegard of Bingen was a German abbess writing about the body while women rarely held that kind of authority in medicine.",
+    "screen_2": "Her books catalogued plants and explored illness, emotion and daily habits. She also corresponded with powerful church leaders and rulers. Centuries before wellness had an industry, this woman had already filled books with her questions.",
+    "id": "MC-007",
+    "word_counts": [
+      31,
+      35
+    ]
+  },
+  {
+    "title": "The vineyard prescription",
+    "source": "p124, slides 2–10",
+    "glow_words": "grape cure",
+    "screen_1": "The destination was a vineyard. The plan was a grape cure. In nineteenth-century Europe, patients travelled to resorts for weeks of grapes, walking, fresh air and rest under a physician’s supervision.",
+    "screen_2": "But the fruit came with a completely different life: outdoor walks, regular meals and afternoon rest. That leaves the best question in the story. How much was the grapes—and how much was escaping everything else?",
+    "id": "MC-008",
+    "word_counts": [
+      31,
+      36
+    ]
+  },
+  {
+    "title": "The toothbrush that grew on a tree",
+    "source": "p101, slides 2–4",
+    "glow_words": "tree twig",
+    "screen_1": "No plastic handle. No factory. A tree twig. Across parts of Africa, Asia and the Middle East, people cleaned their teeth with miswak long before modern toothbrushes became bathroom essentials.",
+    "screen_2": "Chew the end and the wood separates into tiny fibres, forming a brush. The twig also contains naturally occurring plant compounds. What looks like a makeshift toothbrush has a surprisingly clever structure built into it.",
+    "id": "MC-009",
+    "word_counts": [
+      30,
+      35
+    ]
+  },
+  {
+    "title": "The herbalist who challenged nineteenth-century medicine",
+    "source": "p146, slides 2–3, 6–11",
+    "glow_words": "Bloodletting. Mercury.",
+    "screen_1": "Bloodletting. Mercury. That was part of medicine in the early 1800s. Samuel Thomson, a self-taught American herbalist, offered something different. People distrustful of conventional treatment started following his system instead.",
+    "screen_2": "His approach used herbs and steam baths, built around his belief that warmth restored health. Thomsonian medicine spread widely. Its rise tells a striking story about what happens when patients stop trusting the treatment they are offered.",
+    "id": "MC-010",
+    "word_counts": [
+      30,
+      37
+    ]
+  },
+  {
+    "title": "The forest showed up in their bloodwork",
+    "source": "p056, slides 2–8",
+    "glow_words": "Three days.",
+    "screen_1": "Twelve men. Three days. A forest in Japan. Researcher Qing Li collected samples around the trip to see what changed inside their bodies. The interesting part came when his team examined immune-cell activity.",
+    "screen_2": "They reported increased activity in natural killer cells after the forest visit. A city-trip comparison did not show the same increase. Trees suddenly became more than scenery in the story: their airborne compounds became part of the investigation.",
+    "id": "MC-011",
+    "word_counts": [
+      33,
+      38
+    ]
+  },
+  {
+    "title": "The bottle had not changed. The microscope had.",
+    "source": "p095, slides 4–6",
+    "glow_words": "Invisible plastic.",
+    "screen_1": "Clear water. Invisible plastic. In 2024, researchers used a new imaging method to look deeper into bottled water. They found particles previous tests could miss. The average count was roughly 240,000 per litre in the samples studied.",
+    "screen_2": "Most were nanoplastics, smaller than the particles people usually picture. The striking part was the timing: the water had not suddenly transformed overnight. Scientists had developed a way to see much more of what was already there.",
+    "id": "MC-012",
+    "word_counts": [
+      38,
+      37
+    ]
+  },
+  {
+    "title": "The light you cannot see",
+    "source": "p130, slides 3–8",
+    "glow_words": "emit light",
+    "screen_1": "You cannot see it. Instruments can. Living cells emit light so faint it disappears beneath ordinary vision. Researchers call these tiny emissions biophotons. That discovery opens a question stranger than the glow itself.",
+    "screen_2": "Could some of that light carry information between cells? Researchers are investigating the possibility. The emissions are measurable; the communication idea is still a question. Even without the answer, the body turns out to be less dark than it looks.",
+    "id": "MC-013",
+    "word_counts": [
+      33,
+      40
+    ]
+  },
+  {
+    "title": "The pool of oil",
+    "source": "p065, slides 2–7",
+    "glow_words": "Warm oil.",
+    "screen_1": "A ring of dough. Warm oil. Right around the navel. It looks like an unusual spa treatment, but Nabhi Vasti comes from Ayurveda, where this part of the body carries a particular significance.",
+    "screen_2": "The dough forms a small reservoir that holds the oil in place. In the tradition, the navel is associated with digestion and vitality. What looks like a strange little pool is a ritual built around warmth, stillness and care.",
+    "id": "MC-014",
+    "word_counts": [
+      33,
+      39
+    ]
+  },
+  {
+    "title": "When the beach was part of the treatment",
+    "source": "p092, slides 2–6",
+    "glow_words": "Sea bathing.",
+    "screen_1": "Sea bathing. Doctor recommended. During the eighteenth and nineteenth centuries, patients travelled to coastal towns because physicians believed ocean air and salt water could help recovery. Some hospitals were built with the sea in view.",
+    "screen_2": "The setting brought more than water: fresh air, gentle movement and a different daily rhythm. Today, researchers call these environments blue spaces. The beach holiday has a longer medical backstory than the postcard ever tells you.",
+    "id": "MC-015",
+    "word_counts": [
+      35,
+      36
+    ]
+  },
+  {
+    "title": "The missing mineral",
+    "source": "p072, slides 2–8; source-reported case",
+    "glow_words": "Copper deficiency.",
+    "screen_1": "He was 46. Walking became difficult. His hands and feet went numb. Doctors considered neurological disorders. Then a nutritional test revealed a different clue. Copper deficiency. Severe enough to affect his nerves and blood cells.",
+    "screen_2": "His zinc was elevated too. Excess zinc can interfere with copper absorption. After copper treatment, his blood counts and some symptoms improved, but not all the nerve damage resolved. The missing mineral was only half the story.",
+    "id": "MC-016",
+    "word_counts": [
+      35,
+      37
+    ]
+  },
+  {
+    "title": "One clue behind a growing list",
+    "source": "p074, slides 2–8; source-reported case",
+    "glow_words": "Eighteen years.",
+    "screen_1": "Eighteen years. Already a growing medical file. Infections kept returning. Anemia persisted. Wounds healed poorly. In the case described by Holisticentral, separate treatments had not explained why so many problems were happening together.",
+    "screen_2": "Testing revealed a significant zinc deficiency. After supervised treatment, several problems improved. The turning point was finding a nutritional clue connecting the symptoms. One case, with a surprisingly small piece missing from a much bigger picture.",
+    "id": "MC-017",
+    "word_counts": [
+      33,
+      36
+    ]
+  },
+  {
+    "title": "The recycling crew inside your cells",
+    "source": "p057, slides 2, 5–7",
+    "glow_words": "Damaged mitochondria.",
+    "screen_1": "Damaged mitochondria. Your cells can dismantle them. Scientist Anurag Singh has spent years studying this recycling process and what happens as it falters with age. Energy production has a maintenance problem hiding behind it.",
+    "screen_2": "The process is called mitophagy: cells selectively remove worn-out mitochondria while renewing their machinery. The body does more than make energy. It also has to look after the tiny structures doing the work.",
+    "id": "MC-018",
+    "word_counts": [
+      34,
+      33
+    ]
+  },
+  {
+    "title": "The ovaries had not gone quiet",
+    "source": "p083, slides 3–7",
+    "glow_words": "Still active.",
+    "screen_1": "Still active. After reproduction ended. Researchers studying aging mice found ovaries with changing immune cells and immune-related gene activity. The organ’s reproductive role had faded, but its biology had not simply switched off.",
+    "screen_2": "The question became whether aging ovaries take on different roles. Researchers are exploring that possibility, including early human observations. This is a story about a possible change of function—not ovaries restarting fertility after menopause.",
+    "id": "MC-019",
+    "word_counts": [
+      33,
+      35
+    ]
+  },
+  {
+    "title": "The fast that still included food",
+    "source": "p079, slides 2–8",
+    "glow_words": "Still eating.",
+    "screen_1": "Five days. Still eating. Researcher Valter Longo wanted to study fasting-like effects without a water-only fast. His team developed a low-calorie, plant-based program, then investigated what repeated monthly cycles changed inside the body.",
+    "screen_2": "In a small MRI subgroup, researchers observed reductions in liver and visceral fat after three cycles. The interesting twist was the design: participants were eating throughout an experiment built to imitate aspects of going without food.",
+    "id": "MC-020",
+    "word_counts": [
+      33,
+      36
+    ]
+  },
+  {
+    "title": "The surgeon who studied electricity",
+    "source": "Holisticentral batch 2 · p110",
+    "glow_words": "regrow limbs",
+    "screen_1": "Salamanders regrow limbs. Humans do not. Surgeon Robert O. Becker wanted to understand the difference. His research led him toward something you cannot see at a wound: the electrical signals produced by living tissue.",
+    "screen_2": "He investigated how those signals relate to healing and regeneration, then explored the ideas in his 1985 book, The Body Electric. A missing limb raised a bigger question: how does a body know what to rebuild?",
+    "id": "MC-021",
+    "word_counts": [
+      34,
+      36
+    ]
+  },
+  {
+    "title": "The cancer clue that became an image",
+    "source": "Holisticentral batch 2 · p132",
+    "glow_words": "Oxygen available.",
+    "screen_1": "Oxygen available. Cells behaving strangely. Otto Warburg studied how cancer cells processed glucose even when oxygen was present. The unusual pattern became known as the Warburg effect. Decades later, it would help doctors look inside the body.",
+    "screen_2": "Many cancer cells take up more glucose than surrounding tissue. Some PET scans use a radioactive glucose tracer to make that activity visible. A question about how cells fuel themselves became part of how doctors find disease.",
+    "id": "MC-022",
+    "word_counts": [
+      37,
+      37
+    ]
+  },
+  {
+    "title": "The mineral that went into the salt",
+    "source": "Holisticentral batch 2 · p138",
+    "glow_words": "missing mineral",
+    "screen_1": "Swollen necks. A missing mineral. In the early twentieth century, iodine deficiency was common in many regions. Without enough iodine, the thyroid could enlarge into a goiter. One response ended up on ordinary kitchen tables.",
+    "screen_2": "Iodine was added to salt. A familiar ingredient became a way to reach whole populations, helping reduce deficiency and related goiter. The public-health breakthrough travelled through kitchens, one salt shaker at a time.",
+    "id": "MC-023",
+    "word_counts": [
+      35,
+      33
+    ]
+  },
+  {
+    "title": "Chocolate went into the lab",
+    "source": "Holisticentral batch 2 · p104",
+    "glow_words": "Chocolate. Arteries.",
+    "screen_1": "Chocolate. Arteries. An unexpected experiment. Researchers studying cocoa looked beyond its taste to compounds called flavanols. In human studies, they examined what happened to the thin lining inside blood vessels after people consumed flavanol-rich cocoa products.",
+    "screen_2": "Some studies found improved vessel function. The focus was cocoa compounds and nitric oxide, a signal that helps blood vessels relax. Processing changes flavanol levels, so the intriguing discovery was more specific than the word chocolate on a wrapper.",
+    "id": "MC-024",
+    "word_counts": [
+      36,
+      39
+    ]
+  },
+  {
+    "title": "Twenty years watching a Finnish habit",
+    "source": "Holisticentral batch 2 · p150",
+    "glow_words": "Twenty years.",
+    "screen_1": "Hot rooms. Quiet routines. Twenty years. Researchers followed more than 2,300 middle-aged Finnish men and compared their sauna habits with later health outcomes. A familiar part of everyday life became the subject of a long-running investigation.",
+    "screen_2": "Men who used saunas more frequently had lower rates of cardiovascular death in the study. That association could not prove sauna caused the difference. But it gave researchers a reason to look harder at what repeated heat does inside the body.",
+    "id": "MC-025",
+    "word_counts": [
+      37,
+      41
+    ]
+  },
+  {
+    "source": "p41, slides 2–4, 10–12; user-approved Finsen direction",
+    "title": "The Nobel Prize made of light",
+    "glow_words": "concentrated light",
+    "screen_1": "He treated skin with concentrated light. He won a Nobel Prize. The year was 1903. Niels Finsen was exploring light as medicine long before glowing skincare panels appeared in anyone’s bathroom.",
+    "screen_2": "His target was skin tuberculosis. His treatment concentrated light onto diseased skin. More than a century later, light therapy looks futuristic. Finsen’s story reminds you how far back that idea actually goes.",
+    "id": "MC-026",
+    "word_counts": [
+      31,
+      32
+    ]
+  },
+  {
+    "source": "p052, slides 2–12",
+    "title": "The immune cell with a fuel problem",
+    "glow_words": "Creatine. Immunity.",
+    "screen_1": "Creatine. Immunity. An unexpected connection. UCLA researchers investigated how immune cells inside tumors power their work. When they removed the cells’ creatine transporter in experiments, those cells struggled to activate and rally other defenses.",
+    "screen_2": "The twist was energy. These immune cells use machinery associated with the familiar muscle compound. Mouse and laboratory findings opened a different question: what happens when the cells fighting a tumor cannot get enough fuel?",
+    "id": "MC-027",
+    "word_counts": [
+      34,
+      35
+    ]
+  },
+  {
+    "source": "p053, slides 2–6",
+    "title": "The supplement with a hospital identity",
+    "glow_words": "hospital antidote",
+    "screen_1": "A supplement bottle. A hospital antidote. The same molecule has two very different settings. Acetylcysteine, also called NAC, is used by medical teams treating acetaminophen poisoning, when a familiar pain medicine threatens the liver.",
+    "screen_2": "The overdose can deplete glutathione, a protective molecule. Medical NAC supplies a building block that helps restore it. This is emergency treatment under medical care—a story about helping the liver rebuild a defense it urgently needs.",
+    "id": "MC-028",
+    "word_counts": [
+      34,
+      37
+    ]
+  },
+  {
+    "source": "p058, slides 2–9, 13",
+    "title": "Dinner has more guests than you think",
+    "glow_words": "trillions more",
+    "screen_1": "One person eating. Yet trillions more are involved. Nutrition researcher Tim Spector helped bring the gut microbiome into the food conversation. The meal on your plate is also feeding an enormous community you cannot see.",
+    "screen_2": "Some plant fibers reach the colon, where microbes transform them into active compounds. Those compounds interact with the body. Dinner keeps changing after you swallow it—and some of the cooking happens inside your gut.",
+    "id": "MC-029",
+    "word_counts": [
+      35,
+      35
+    ]
+  },
+  {
+    "source": "p061, slides 2–7",
+    "title": "The unexpected finding across 70 studies",
+    "glow_words": "Seventy studies.",
+    "screen_1": "Seventy studies. Twenty-six countries. Researchers pulled together reports on intestinal parasites and colorectal cancer. Across the patients studied, roughly one in five had evidence of a parasitic infection. The number opened a difficult question.",
+    "screen_2": "Was infection contributing to disease, following it, or sharing other risk factors? The pooled finding did not settle that. It put another possible player into the investigation of what happens inside a diseased gut.",
+    "id": "MC-030",
+    "word_counts": [
+      34,
+      34
+    ]
+  },
+  {
+    "source": "p067, slides 2–6",
+    "title": "The yellow compound and the energy sensor",
+    "glow_words": "Bright yellow.",
+    "screen_1": "Bright yellow. Hidden inside plants. Berberine had a long history in traditional medicine before researchers began tracing its effects on metabolism. One path led to AMPK, a system cells use to respond to low energy.",
+    "screen_2": "Scientists also study its interactions with gut microbes and blood-sugar regulation. A plant compound pulled researchers into several connected systems. The surprise is how many parts of the metabolic story can meet around one molecule.",
+    "id": "MC-031",
+    "word_counts": [
+      35,
+      35
+    ]
+  },
+  {
+    "source": "p071, slides 2–5",
+    "title": "The molecule hiding in your retina",
+    "glow_words": "Your retina.",
+    "screen_1": "Your heart. Your brain. Your retina. Taurine is already found throughout the body. Researchers then asked whether this familiar compound could influence something else: metabolic markers in adults living with type 2 diabetes.",
+    "screen_2": "Several small trials reported improvements in insulin-resistance markers over eight weeks. Larger studies are still needed. The interesting starting point was not an exotic plant: it was a molecule already present in some of our busiest tissues.",
+    "id": "MC-032",
+    "word_counts": [
+      33,
+      37
+    ]
+  },
+  {
+    "source": "p093, slide 5",
+    "title": "The Nobel Prize for cellular recycling",
+    "glow_words": "recycle themselves",
+    "screen_1": "Your cells recycle themselves. A scientist helped explain how. In 2016, Yoshinori Ohsumi received a Nobel Prize for discoveries about autophagy, the process cells use to break down and reuse parts of their own contents.",
+    "screen_2": "Damaged components can become material for renewal. Researchers now investigate how nutrients, exercise and other conditions influence the process. Inside living cells, taking something apart can be one of the ways to keep going.",
+    "id": "MC-033",
+    "word_counts": [
+      35,
+      34
+    ]
+  },
+  {
+    "source": "p097, slides 5–9",
+    "title": "The chemistry hiding in a handful of soil",
+    "glow_words": "Dead leaves.",
+    "screen_1": "Dead leaves. Living chemistry. As plants and other organic matter decompose, they help form complex humic and fulvic substances in soil. Researchers study how those substances interact with minerals and the microbes surrounding plant roots.",
+    "screen_2": "What looks like the end of a plant’s story becomes part of the next plant’s environment. Beneath the surface, decomposition keeps changing how nutrients move. A handful of soil holds far more activity than it shows.",
+    "id": "MC-034",
+    "word_counts": [
+      35,
+      36
+    ]
+  },
+  {
+    "source": "p099, slides 2–5",
+    "title": "The hum that showed up in the measurements",
+    "glow_words": "They hummed.",
+    "screen_1": "They hummed. Researchers measured. In a small pilot study comparing several activities, humming produced the lowest stress index derived from heart-rate variability. A simple sound had become something scientists could examine in the body’s signals.",
+    "screen_2": "The idea already had a history. Yogic Bee Breath uses a long humming exhalation. Researchers are exploring how slower breathing and vibration affect the nervous system. An old practice had found its way onto a modern measurement screen.",
+    "id": "MC-035",
+    "word_counts": [
+      35,
+      38
+    ]
+  },
+  {
+    "source": "p100, slides 2–9",
+    "title": "The tree resin that entered a cancer lab",
+    "glow_words": "Tree resin.",
+    "screen_1": "Tree resin. Cancer cells. The meeting happened in a laboratory. Researchers tested mastic gum, a resin long used in traditional practices, against cultured human cancer cells. Some experiments found slower growth and increased programmed cell death.",
+    "screen_2": "The cells were outside a human body, so the finding did not establish a cancer treatment. It gave scientists compounds to investigate. Something collected from a tree had become the starting point for a much more specific question.",
+    "id": "MC-036",
+    "word_counts": [
+      36,
+      38
+    ]
+  },
+  {
+    "source": "p103, slides 2–6, 8",
+    "title": "The brain-building clue inside an egg",
+    "glow_words": "One egg.",
+    "screen_1": "One egg. A brain-building clue. Eggs contain choline, a nutrient used in cell membranes and nerve signaling. Researchers studying pregnancy began asking whether differences in choline intake could show up later in a baby’s development.",
+    "screen_2": "Some studies found differences in attention or information processing; others did not. Timing, overall nutrition and individual biology still matter. The striking part is that a familiar breakfast contains material used before a baby ever sees the world.",
+    "id": "MC-037",
+    "word_counts": [
+      35,
+      38
+    ]
+  },
+  {
+    "source": "p108, slides 2–7",
+    "title": "Plastic crossed into the samples",
+    "glow_words": "Human blood.",
+    "screen_1": "Human blood. Lung tissue. Placental tissue. Researchers have detected tiny plastic particles in places far beyond oceans and landfills. The pollution story moved into biological samples, raising questions a photograph of a floating bottle could never answer.",
+    "screen_2": "Finding particles reveals exposure; it does not, by itself, reveal the damage they cause. Scientists are studying size, shape and chemistry to understand the differences. The next chapter is about what happens after plastic gets inside.",
+    "id": "MC-038",
+    "word_counts": [
+      37,
+      36
+    ]
+  },
+  {
+    "source": "p112, slides 2–5, 8",
+    "title": "The organ behind the vitamin delivery",
+    "glow_words": "Fat. Vitamins.",
+    "screen_1": "Fat. Vitamins. A hidden dependency. Your liver makes bile, which helps you digest fats and absorb vitamins A, D, E and K. The nutrients can be on the plate while another organ handles an essential part of their journey.",
+    "screen_2": "The liver also stores fuel, processes nutrients and makes important proteins. Calling it a filter captures only a fraction of its work. Behind an ordinary meal is an organ doing several different jobs at once.",
+    "id": "MC-039",
+    "word_counts": [
+      39,
+      35
+    ]
+  },
+  {
+    "source": "p113, slides 2–4, 6–7",
+    "title": "Your eyes are telling the time",
+    "glow_words": "Time signals.",
+    "screen_1": "Your eyes collect more than pictures. Time signals. Specialized receptors respond to light and send information to the brain’s internal clock. Morning can reach your biology before you have checked a phone or looked at a watch.",
+    "screen_2": "That clock helps coordinate sleep, alertness and other daily rhythms. Modern evenings can bring bright screens into hours that once stayed dark. The same light that helps you see can also tell your body what time it thinks it is.",
+    "id": "MC-040",
+    "word_counts": [
+      37,
+      40
+    ]
+  },
+  {
+    "source": "p114, slides 2–6",
+    "title": "An old food met a laboratory question",
+    "glow_words": "Moringa leaves.",
+    "screen_1": "Moringa leaves. Familiar food. Unfamiliar questions. A plant used across parts of Asia and Africa drew researchers into its mixture of natural compounds. In laboratory experiments, extracts changed growth and cell-death pathways in some cancer cell lines.",
+    "screen_2": "Those were controlled experiments, not proof that eating moringa treats cancer. Scientists are investigating which compounds do what. A plant can be an everyday food in one setting and a collection of unanswered questions in another.",
+    "id": "MC-041",
+    "word_counts": [
+      37,
+      36
+    ]
+  },
+  {
+    "source": "p116, slides 2–7",
+    "title": "The second word on the magnesium bottle",
+    "glow_words": "Same mineral.",
+    "screen_1": "Same mineral. Different companions. Magnesium bottles carry names like citrate, glycinate and malate. Those extra words identify different chemical forms. The surprise is that the word everyone skips can help explain why products behave differently.",
+    "screen_2": "Magnesium citrate, for example, can draw water into the intestines. Other forms pair magnesium with compounds such as glycine or malic acid. Two bottles can share a headline ingredient without being interchangeable copies of the same thing.",
+    "id": "MC-042",
+    "word_counts": [
+      35,
+      37
+    ]
+  },
+  {
+    "source": "p118, slides 2–5",
+    "title": "The old metal with an invisible effect",
+    "glow_words": "Copper vessels.",
+    "screen_1": "Copper vessels. Centuries before microscopes. People stored water in a metal that can interfere with microbes. Researchers later described how copper ions damage microbial membranes, proteins and genetic material. The container had chemistry of its own.",
+    "screen_2": "That antimicrobial behavior also drew interest in copper touch surfaces. An old material acquired a modern explanation. Its appearance was never the whole story: tiny interactions were happening on a scale nobody could see.",
+    "id": "MC-043",
+    "word_counts": [
+      36,
+      34
+    ]
+  },
+  {
+    "source": "p120, slides 5–7",
+    "title": "Your cells can feel a push",
+    "glow_words": "Cells feel.",
+    "screen_1": "Cells feel. In a physical sense. Inside them, tiny protein frameworks help translate mechanical forces into biochemical signals. A push or stretch can become information. The process has a long name: mechanotransduction.",
+    "screen_2": "Researchers study how those signals influence cell behavior. The body is responding to chemistry and to physical forces around it. Movement does not stop at muscles and joints; its effects can reach into the way individual cells respond.",
+    "id": "MC-044",
+    "word_counts": [
+      32,
+      38
+    ]
+  },
+  {
+    "source": "p126, slides 2–7",
+    "title": "The herb with a dramatic nickname",
+    "glow_words": "Stone Breaker.",
+    "screen_1": "Stone Breaker. A dramatic name for a small herb. Chanca piedra has a long history in traditional practices around kidney stones. Researchers turned that reputation into a narrower question: could the plant influence crystals or stone passage?",
+    "screen_2": "One twelve-week study reported changes in small stones and certain urine measurements. Larger trials remain needed. Behind the nickname is an investigation into how tiny mineral crystals form, gather together and sometimes become an enormous source of pain.",
+    "id": "MC-045",
+    "word_counts": [
+      37,
+      38
+    ]
+  },
+  {
+    "source": "p128, slides 4–8",
+    "title": "The lawn weed in the cancer lab",
+    "glow_words": "Forty-eight hours.",
+    "screen_1": "Forty-eight hours. A concentrated extract. At the University of Windsor, researchers exposed colorectal cancer cells to dandelion root preparations. In the laboratory, they observed extensive programmed cell death. The familiar lawn weed had become an experiment.",
+    "screen_2": "The preparation was much more concentrated than ordinary tea, and the experiment did not establish a human treatment. What mattered was the research lead: a plant people routinely pull from the ground contained chemistry worth examining more closely.",
+    "id": "MC-046",
+    "word_counts": [
+      36,
+      38
+    ]
+  },
+  {
+    "source": "p144, slides 2–8",
+    "title": "The vitamin trial with a second chapter",
+    "glow_words": "Brain scans.",
+    "screen_1": "Three vitamins. Brain scans. In the VITACOG study, older adults with mild cognitive impairment received B vitamins, and researchers observed slower brain shrinkage. But the measurements left a second mystery: what was changing underneath?",
+    "screen_2": "A later analysis examined blood samples and found changes in metabolic pathways linked to brain function. The story moved from the size of an organ to the chemistry surrounding it. The scans showed one part; the blood offered another.",
+    "id": "MC-047",
+    "word_counts": [
+      34,
+      39
+    ]
+  },
+  {
+    "source": "p07, slides 2–4, 6–8",
+    "title": "The box that became a controversy",
+    "glow_words": "A box.",
+    "screen_1": "A box. A claimed life force. In 1940, Wilhelm Reich built an accumulator from layers of metal and organic material. He believed it collected an energy he called orgone. People sat inside, hoping it would help them.",
+    "screen_2": "His medical claims were not established. The controversy escalated into legal action, destruction of materials and imprisonment. The extraordinary part of this history is the collision of belief, medicine and authority—not evidence that the box could cure disease.",
+    "id": "MC-048",
+    "word_counts": [
+      37,
+      39
+    ]
+  },
+  {
+    "source": "p08, slides 2–9",
+    "title": "Three weeks of light, a year of follow-up",
+    "glow_words": "Ninety-eight women.",
+    "screen_1": "Ninety-eight women. An added light treatment. Researchers studying Hashimoto thyroiditis compared standard care with and without a specific near-infrared protocol. The light sessions lasted three weeks. The follow-up continued for a year.",
+    "screen_2": "The study reported differences in thyroid antibodies, medication requirements and gland measurements. This was a controlled treatment setting, not a home-panel experiment. A short course of light had given researchers months of changes to investigate.",
+    "id": "MC-049",
+    "word_counts": [
+      32,
+      35
+    ]
+  },
+  {
+    "source": "p11, slides 2–4",
+    "title": "From a hospital bed to a marathon",
+    "glow_words": "transplanted heart",
+    "screen_1": "A cancer diagnosis. Later, a transplanted heart. Then a marathon. Physician Dawn Mussallem’s story passes through all three. The future doctor became a patient early in medical school, when she developed aggressive non-Hodgkin lymphoma.",
+    "screen_2": "She survived cancer and later underwent a heart transplant. Eventually, she ran a marathon. Behind the finish line was a medical history that makes those miles mean something very different. Her story did not end at the hospital bed.",
+    "id": "MC-050",
+    "word_counts": [
+      34,
+      39
+    ]
+  },
+  {
+    "source": "p27, slides 2–5",
+    "title": "The memory and the alarm",
+    "glow_words": "Same memory.",
+    "screen_1": "Same memory. A different alarm. Exercise researchers study how movement affects brain systems involved in fear and emotional regulation. The question reaches beyond whether someone feels better after a workout: can the response to a memory change?",
+    "screen_2": "Movement can influence growth-related signals and the networks that regulate emotion. A memory does not have to disappear for its impact to change. That possibility is part of why researchers investigate exercise alongside other approaches to recovery.",
+    "id": "MC-051",
+    "word_counts": [
+      37,
+      37
+    ]
+  },
+  {
+    "source": "p32, slides 3–6, 8",
+    "title": "The pharmacy before the pill shelf",
+    "glow_words": "Bark. Flowers.",
+    "screen_1": "Bark. Flowers. Bundles of dried plants. Hospital dispensaries once prepared remedies from materials like willow bark, foxglove and cinchona. A medicine room could look closer to an herb store than the pharmacy counter we recognize today.",
+    "screen_2": "The surroundings mattered too: clean sheets, nursing, nourishment and rest. This history is full of both useful discoveries and treatments later abandoned. Behind a modern medicine cabinet sits a much older world of observation, preparation and trial.",
+    "id": "MC-052",
+    "word_counts": [
+      36,
+      37
+    ]
+  },
+  {
+    "source": "p37, slides 3–7",
+    "title": "The virus delivered into a tumor",
+    "glow_words": "A virus.",
+    "screen_1": "A virus. Delivered into a tumor. T-VEC is a treatment for certain melanoma lesions that uses a modified virus. The needle puts therapy directly where researchers want it to act. The unusual part is what the virus does next.",
+    "screen_2": "It is designed to replicate preferentially in tumor cells and help stimulate an immune response against cancer. Something usually associated with causing illness became a carefully engineered part of treatment. The target changes the entire story.",
+    "id": "MC-053",
+    "word_counts": [
+      39,
+      36
+    ]
+  },
+  {
+    "source": "p42, slides 2–3",
+    "title": "The exercise result inside the brain scan",
+    "glow_words": "It grew.",
+    "screen_1": "It grew. In older adults. Researchers compared a year of aerobic exercise with a stretching program and measured the hippocampus, a brain region involved in memory. The exercise group showed an increase in its volume.",
+    "screen_2": "The stretching group showed a decline. The result did not mean the whole brain had reversed aging. It showed that an aging memory-related structure could still change—and that a physical activity experiment could leave a measurable trace in a brain scan.",
+    "id": "MC-054",
+    "word_counts": [
+      35,
+      42
+    ]
+  },
+  {
+    "source": "p148, slides 5–11",
+    "title": "The tiny sprouts in a pollution study",
+    "glow_words": "Tiny sprouts.",
+    "screen_1": "Tiny sprouts. Polluted air. Researchers in China tested a broccoli-sprout beverage and measured what participants excreted. Some compounds linked to airborne pollutants left the body in greater amounts. A food experiment had crossed into environmental exposure.",
+    "screen_2": "The focus was sprout compounds and the body’s processing pathways. It did not mean the drink cleared every toxin. The intriguing question was narrower: could something in a young plant change how people handle particular chemicals around them?",
+    "id": "MC-055",
+    "word_counts": [
+      36,
+      38
+    ]
+  }
+]

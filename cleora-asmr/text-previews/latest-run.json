@@ -1,0 +1,2202 @@
+[
+  {
+    "story_id": "MC-026",
+    "file": "/Users/garreth/.codex/.chatgpt-projects/g-p-6aa04c3f9b8081919a18f7f1dc51a98c/outputs/miss-cleo-production/text-previews/MC-026.mp4",
+    "layouts": [
+      {
+        "font_size": 58,
+        "lines": 8,
+        "text_top": 426,
+        "text_bottom": 1034,
+        "highlight_boxes": [
+          [
+            146,
+            502,
+            514,
+            578
+          ],
+          [
+            526,
+            502,
+            664,
+            578
+          ]
+        ],
+        "backdrop_overlay": {
+          "color": "#000000",
+          "alpha": 130,
+          "opacity": 0.5098039215686274
+        }
+      },
+      {
+        "font_size": 58,
+        "lines": 8,
+        "text_top": 426,
+        "text_bottom": 1034,
+        "highlight_boxes": [],
+        "backdrop_overlay": {
+          "color": "#000000",
+          "alpha": 130,
+          "opacity": 0.5098039215686274
+        }
+      }
+    ],
+    "status": "overlays_ready"
+  },
+  {
+    "story_id": "MC-021",
+    "file": "/Users/garreth/.codex/.chatgpt-projects/g-p-6aa04c3f9b8081919a18f7f1dc51a98c/outputs/miss-cleo-production/text-previews/MC-021.mp4",
+    "layouts": [
+      {
+        "font_size": 58,
+        "lines": 8,
+        "text_top": 426,
+        "text_bottom": 1034,
+        "highlight_boxes": [
+          [
+            520,
+            426,
+            714,
+            502
+          ],
+          [
+            726,
+            426,
+            888,
+            502
+          ]
+        ],
+        "backdrop_overlay": {
+          "color": "#000000",
+          "alpha": 130,
+          "opacity": 0.5098039215686274
+        }
+      },
+      {
+        "font_size": 58,
+        "lines": 8,
+        "text_top": 426,
+        "text_bottom": 1034,
+        "highlight_boxes": [],
+        "backdrop_overlay": {
+          "color": "#000000",
+          "alpha": 130,
+          "opacity": 0.5098039215686274
+        }
+      }
+    ],
+    "status": "overlays_ready"
+  },
+  {
+    "story_id": "MC-050",
+    "file": "/Users/garreth/.codex/.chatgpt-projects/g-p-6aa04c3f9b8081919a18f7f1dc51a98c/outputs/miss-cleo-production/text-previews/MC-050.mp4",
+    "layouts": [
+      {
+        "font_size": 58,
+        "lines": 9,
+        "text_top": 388,
+        "text_bottom": 1072,
+        "highlight_boxes": [
+          [
+            180,
+            464,
+            525,
+            540
+          ],
+          [
+            537,
+            464,
+            696,
+            540
+          ]
+        ],
+        "backdrop_overlay": {
+          "color": "#000000",
+          "alpha": 130,
+          "opacity": 0.5098039215686274
+        }
+      },
+      {
+        "font_size": 58,
+        "lines": 9,
+        "text_top": 388,
+        "text_bottom": 1072,
+        "highlight_boxes": [],
+        "backdrop_overlay": {
+          "color": "#000000",
+          "alpha": 130,
+          "opacity": 0.5098039215686274
+        }
+      }
+    ],
+    "status": "overlays_ready"
+  },
+  {
+    "story_id": "MC-027",
+    "file": "/Users/garreth/.codex/.chatgpt-projects/g-p-6aa04c3f9b8081919a18f7f1dc51a98c/outputs/miss-cleo-production/text-previews/MC-027.mp4",
+    "layouts": [
+      {
+        "font_size": 58,
+        "lines": 10,
+        "text_top": 350,
+        "text_bottom": 1110,
+        "highlight_boxes": [
+          [
+            222,
+            350,
+            472,
+            426
+          ],
+          [
+            484,
+            350,
+            756,
+            426
+          ]
+        ],
+        "backdrop_overlay": {
+          "color": "#000000",
+          "alpha": 130,
+          "opacity": 0.5098039215686274
+        }
+      },
+      {
+        "font_size": 58,
+        "lines": 9,
+        "text_top": 388,
+        "text_bottom": 1072,
+        "highlight_boxes": [],
+        "backdrop_overlay": {
+          "color": "#000000",
+          "alpha": 130,
+          "opacity": 0.5098039215686274
+        }
+      }
+    ],
+    "status": "overlays_ready"
+  },
+  {
+    "story_id": "MC-053",
+    "file": "/Users/garreth/.codex/.chatgpt-projects/g-p-6aa04c3f9b8081919a18f7f1dc51a98c/outputs/miss-cleo-production/text-previews/MC-053.mp4",
+    "layouts": [
+      {
+        "font_size": 58,
+        "lines": 8,
+        "text_top": 426,
+        "text_bottom": 1034,
+        "highlight_boxes": [
+          [
+            222,
+            426,
+            263,
+            502
+          ],
+          [
+            275,
+            426,
+            423,
+            502
+          ]
+        ],
+        "backdrop_overlay": {
+          "color": "#000000",
+          "alpha": 130,
+          "opacity": 0.5098039215686274
+        }
+      },
+      {
+        "font_size": 58,
+        "lines": 9,
+        "text_top": 388,
+        "text_bottom": 1072,
+        "highlight_boxes": [],
+        "backdrop_overlay": {
+          "color": "#000000",
+          "alpha": 130,
+          "opacity": 0.5098039215686274
+        }
+      }
+    ],
+    "status": "overlays_ready"
+  },
+  {
+    "story_id": "MC-033",
+    "file": "/Users/garreth/.codex/.chatgpt-projects/g-p-6aa04c3f9b8081919a18f7f1dc51a98c/outputs/miss-cleo-production/text-previews/MC-033.mp4",
+    "layouts": [
+      {
+        "font_size": 58,
+        "lines": 9,
+        "text_top": 388,
+        "text_bottom": 1072,
+        "highlight_boxes": [
+          [
+            561,
+            388,
+            762,
+            464
+          ],
+          [
+            226,
+            464,
+            554,
+            540
+          ]
+        ],
+        "backdrop_overlay": {
+          "color": "#000000",
+          "alpha": 130,
+          "opacity": 0.5098039215686274
+        }
+      },
+      {
+        "font_size": 58,
+        "lines": 9,
+        "text_top": 388,
+        "text_bottom": 1072,
+        "highlight_boxes": [],
+        "backdrop_overlay": {
+          "color": "#000000",
+          "alpha": 130,
+          "opacity": 0.5098039215686274
+        }
+      }
+    ],
+    "status": "overlays_ready"
+  },
+  {
+    "story_id": "MC-046",
+    "file": "/Users/garreth/.codex/.chatgpt-projects/g-p-6aa04c3f9b8081919a18f7f1dc51a98c/outputs/miss-cleo-production/text-previews/MC-046.mp4",
+    "layouts": [
+      {
+        "font_size": 56,
+        "lines": 10,
+        "text_top": 365,
+        "text_bottom": 1095,
+        "highlight_boxes": [
+          [
+            270,
+            365,
+            564,
+            438
+          ],
+          [
+            576,
+            365,
+            740,
+            438
+          ]
+        ],
+        "backdrop_overlay": {
+          "color": "#000000",
+          "alpha": 130,
+          "opacity": 0.5098039215686274
+        }
+      },
+      {
+        "font_size": 58,
+        "lines": 10,
+        "text_top": 350,
+        "text_bottom": 1110,
+        "highlight_boxes": [],
+        "backdrop_overlay": {
+          "color": "#000000",
+          "alpha": 130,
+          "opacity": 0.5098039215686274
+        }
+      }
+    ],
+    "status": "overlays_ready"
+  },
+  {
+    "story_id": "MC-012",
+    "file": "/Users/garreth/.codex/.chatgpt-projects/g-p-6aa04c3f9b8081919a18f7f1dc51a98c/outputs/miss-cleo-production/text-previews/MC-012.mp4",
+    "layouts": [
+      {
+        "font_size": 58,
+        "lines": 9,
+        "text_top": 388,
+        "text_bottom": 1072,
+        "highlight_boxes": [
+          [
+            476,
+            388,
+            702,
+            464
+          ],
+          [
+            714,
+            388,
+            912,
+            464
+          ]
+        ],
+        "backdrop_overlay": {
+          "color": "#000000",
+          "alpha": 130,
+          "opacity": 0.5098039215686274
+        }
+      },
+      {
+        "font_size": 58,
+        "lines": 9,
+        "text_top": 388,
+        "text_bottom": 1072,
+        "highlight_boxes": [],
+        "backdrop_overlay": {
+          "color": "#000000",
+          "alpha": 130,
+          "opacity": 0.5098039215686274
+        }
+      }
+    ],
+    "status": "overlays_ready"
+  },
+  {
+    "story_id": "MC-011",
+    "file": "/Users/garreth/.codex/.chatgpt-projects/g-p-6aa04c3f9b8081919a18f7f1dc51a98c/outputs/miss-cleo-production/text-previews/MC-011.mp4",
+    "layouts": [
+      {
+        "font_size": 58,
+        "lines": 8,
+        "text_top": 426,
+        "text_bottom": 1034,
+        "highlight_boxes": [
+          [
+            518,
+            426,
+            672,
+            502
+          ],
+          [
+            684,
+            426,
+            830,
+            502
+          ]
+        ],
+        "backdrop_overlay": {
+          "color": "#000000",
+          "alpha": 130,
+          "opacity": 0.5098039215686274
+        }
+      },
+      {
+        "font_size": 58,
+        "lines": 9,
+        "text_top": 388,
+        "text_bottom": 1072,
+        "highlight_boxes": [],
+        "backdrop_overlay": {
+          "color": "#000000",
+          "alpha": 130,
+          "opacity": 0.5098039215686274
+        }
+      }
+    ],
+    "status": "overlays_ready"
+  },
+  {
+    "story_id": "MC-035",
+    "file": "/Users/garreth/.codex/.chatgpt-projects/g-p-6aa04c3f9b8081919a18f7f1dc51a98c/outputs/miss-cleo-production/text-previews/MC-035.mp4",
+    "layouts": [
+      {
+        "font_size": 58,
+        "lines": 10,
+        "text_top": 350,
+        "text_bottom": 1110,
+        "highlight_boxes": [
+          [
+            163,
+            350,
+            296,
+            426
+          ],
+          [
+            308,
+            350,
+            563,
+            426
+          ]
+        ],
+        "backdrop_overlay": {
+          "color": "#000000",
+          "alpha": 130,
+          "opacity": 0.5098039215686274
+        }
+      },
+      {
+        "font_size": 58,
+        "lines": 9,
+        "text_top": 388,
+        "text_bottom": 1072,
+        "highlight_boxes": [],
+        "backdrop_overlay": {
+          "color": "#000000",
+          "alpha": 130,
+          "opacity": 0.5098039215686274
+        }
+      }
+    ],
+    "status": "overlays_ready"
+  },
+  {
+    "story_id": "MC-022",
+    "file": "/Users/garreth/.codex/.chatgpt-projects/g-p-6aa04c3f9b8081919a18f7f1dc51a98c/outputs/miss-cleo-production/text-previews/MC-022.mp4",
+    "layouts": [
+      {
+        "font_size": 58,
+        "lines": 9,
+        "text_top": 388,
+        "text_bottom": 1072,
+        "highlight_boxes": [
+          [
+            216,
+            388,
+            432,
+            464
+          ],
+          [
+            444,
+            388,
+            706,
+            464
+          ]
+        ],
+        "backdrop_overlay": {
+          "color": "#000000",
+          "alpha": 130,
+          "opacity": 0.5098039215686274
+        }
+      },
+      {
+        "font_size": 58,
+        "lines": 9,
+        "text_top": 388,
+        "text_bottom": 1072,
+        "highlight_boxes": [],
+        "backdrop_overlay": {
+          "color": "#000000",
+          "alpha": 130,
+          "opacity": 0.5098039215686274
+        }
+      }
+    ],
+    "status": "overlays_ready"
+  },
+  {
+    "story_id": "MC-054",
+    "file": "/Users/garreth/.codex/.chatgpt-projects/g-p-6aa04c3f9b8081919a18f7f1dc51a98c/outputs/miss-cleo-production/text-previews/MC-054.mp4",
+    "layouts": [
+      {
+        "font_size": 58,
+        "lines": 9,
+        "text_top": 388,
+        "text_bottom": 1072,
+        "highlight_boxes": [
+          [
+            232,
+            388,
+            270,
+            464
+          ],
+          [
+            282,
+            388,
+            436,
+            464
+          ]
+        ],
+        "backdrop_overlay": {
+          "color": "#000000",
+          "alpha": 130,
+          "opacity": 0.5098039215686274
+        }
+      },
+      {
+        "font_size": 58,
+        "lines": 10,
+        "text_top": 350,
+        "text_bottom": 1110,
+        "highlight_boxes": [],
+        "backdrop_overlay": {
+          "color": "#000000",
+          "alpha": 130,
+          "opacity": 0.5098039215686274
+        }
+      }
+    ],
+    "status": "overlays_ready"
+  },
+  {
+    "story_id": "MC-043",
+    "file": "/Users/garreth/.codex/.chatgpt-projects/g-p-6aa04c3f9b8081919a18f7f1dc51a98c/outputs/miss-cleo-production/text-previews/MC-043.mp4",
+    "layouts": [
+      {
+        "font_size": 58,
+        "lines": 10,
+        "text_top": 350,
+        "text_bottom": 1110,
+        "highlight_boxes": [
+          [
+            182,
+            350,
+            387,
+            426
+          ],
+          [
+            399,
+            350,
+            615,
+            426
+          ]
+        ],
+        "backdrop_overlay": {
+          "color": "#000000",
+          "alpha": 130,
+          "opacity": 0.5098039215686274
+        }
+      },
+      {
+        "font_size": 58,
+        "lines": 9,
+        "text_top": 388,
+        "text_bottom": 1072,
+        "highlight_boxes": [],
+        "backdrop_overlay": {
+          "color": "#000000",
+          "alpha": 130,
+          "opacity": 0.5098039215686274
+        }
+      }
+    ],
+    "status": "overlays_ready"
+  },
+  {
+    "story_id": "MC-023",
+    "file": "/Users/garreth/.codex/.chatgpt-projects/g-p-6aa04c3f9b8081919a18f7f1dc51a98c/outputs/miss-cleo-production/text-previews/MC-023.mp4",
+    "layouts": [
+      {
+        "font_size": 58,
+        "lines": 8,
+        "text_top": 426,
+        "text_bottom": 1034,
+        "highlight_boxes": [
+          [
+            652,
+            426,
+            858,
+            502
+          ],
+          [
+            143,
+            502,
+            361,
+            578
+          ]
+        ],
+        "backdrop_overlay": {
+          "color": "#000000",
+          "alpha": 130,
+          "opacity": 0.5098039215686274
+        }
+      },
+      {
+        "font_size": 58,
+        "lines": 9,
+        "text_top": 388,
+        "text_bottom": 1072,
+        "highlight_boxes": [],
+        "backdrop_overlay": {
+          "color": "#000000",
+          "alpha": 130,
+          "opacity": 0.5098039215686274
+        }
+      }
+    ],
+    "status": "overlays_ready"
+  },
+  {
+    "story_id": "MC-055",
+    "file": "/Users/garreth/.codex/.chatgpt-projects/g-p-6aa04c3f9b8081919a18f7f1dc51a98c/outputs/miss-cleo-production/text-previews/MC-055.mp4",
+    "layouts": [
+      {
+        "font_size": 58,
+        "lines": 10,
+        "text_top": 350,
+        "text_bottom": 1110,
+        "highlight_boxes": [
+          [
+            196,
+            350,
+            311,
+            426
+          ],
+          [
+            323,
+            350,
+            544,
+            426
+          ]
+        ],
+        "backdrop_overlay": {
+          "color": "#000000",
+          "alpha": 130,
+          "opacity": 0.5098039215686274
+        }
+      },
+      {
+        "font_size": 58,
+        "lines": 10,
+        "text_top": 350,
+        "text_bottom": 1110,
+        "highlight_boxes": [],
+        "backdrop_overlay": {
+          "color": "#000000",
+          "alpha": 130,
+          "opacity": 0.5098039215686274
+        }
+      }
+    ],
+    "status": "overlays_ready"
+  },
+  {
+    "story_id": "MC-048",
+    "file": "/Users/garreth/.codex/.chatgpt-projects/g-p-6aa04c3f9b8081919a18f7f1dc51a98c/outputs/miss-cleo-production/text-previews/MC-048.mp4",
+    "layouts": [
+      {
+        "font_size": 58,
+        "lines": 8,
+        "text_top": 426,
+        "text_bottom": 1034,
+        "highlight_boxes": [
+          [
+            149,
+            426,
+            190,
+            502
+          ],
+          [
+            202,
+            426,
+            326,
+            502
+          ]
+        ],
+        "backdrop_overlay": {
+          "color": "#000000",
+          "alpha": 130,
+          "opacity": 0.5098039215686274
+        }
+      },
+      {
+        "font_size": 58,
+        "lines": 10,
+        "text_top": 350,
+        "text_bottom": 1110,
+        "highlight_boxes": [],
+        "backdrop_overlay": {
+          "color": "#000000",
+          "alpha": 130,
+          "opacity": 0.5098039215686274
+        }
+      }
+    ],
+    "status": "overlays_ready"
+  },
+  {
+    "story_id": "MC-047",
+    "file": "/Users/garreth/.codex/.chatgpt-projects/g-p-6aa04c3f9b8081919a18f7f1dc51a98c/outputs/miss-cleo-production/text-previews/MC-047.mp4",
+    "layouts": [
+      {
+        "font_size": 58,
+        "lines": 10,
+        "text_top": 350,
+        "text_bottom": 1110,
+        "highlight_boxes": [
+          [
+            542,
+            350,
+            682,
+            426
+          ],
+          [
+            694,
+            350,
+            866,
+            426
+          ]
+        ],
+        "backdrop_overlay": {
+          "color": "#000000",
+          "alpha": 130,
+          "opacity": 0.5098039215686274
+        }
+      },
+      {
+        "font_size": 58,
+        "lines": 9,
+        "text_top": 388,
+        "text_bottom": 1072,
+        "highlight_boxes": [],
+        "backdrop_overlay": {
+          "color": "#000000",
+          "alpha": 130,
+          "opacity": 0.5098039215686274
+        }
+      }
+    ],
+    "status": "overlays_ready"
+  },
+  {
+    "story_id": "MC-006",
+    "file": "/Users/garreth/.codex/.chatgpt-projects/g-p-6aa04c3f9b8081919a18f7f1dc51a98c/outputs/miss-cleo-production/text-previews/MC-006.mp4",
+    "layouts": [
+      {
+        "font_size": 58,
+        "lines": 8,
+        "text_top": 426,
+        "text_bottom": 1034,
+        "highlight_boxes": [
+          [
+            216,
+            426,
+            330,
+            502
+          ],
+          [
+            342,
+            426,
+            518,
+            502
+          ]
+        ],
+        "backdrop_overlay": {
+          "color": "#000000",
+          "alpha": 130,
+          "opacity": 0.5098039215686274
+        }
+      },
+      {
+        "font_size": 58,
+        "lines": 9,
+        "text_top": 388,
+        "text_bottom": 1072,
+        "highlight_boxes": [],
+        "backdrop_overlay": {
+          "color": "#000000",
+          "alpha": 130,
+          "opacity": 0.5098039215686274
+        }
+      }
+    ],
+    "status": "overlays_ready"
+  },
+  {
+    "story_id": "MC-007",
+    "file": "/Users/garreth/.codex/.chatgpt-projects/g-p-6aa04c3f9b8081919a18f7f1dc51a98c/outputs/miss-cleo-production/text-previews/MC-007.mp4",
+    "layouts": [
+      {
+        "font_size": 58,
+        "lines": 7,
+        "text_top": 464,
+        "text_bottom": 996,
+        "highlight_boxes": [
+          [
+            654,
+            540,
+            764,
+            616
+          ],
+          [
+            776,
+            540,
+            922,
+            616
+          ]
+        ],
+        "backdrop_overlay": {
+          "color": "#000000",
+          "alpha": 130,
+          "opacity": 0.5098039215686274
+        }
+      },
+      {
+        "font_size": 58,
+        "lines": 9,
+        "text_top": 388,
+        "text_bottom": 1072,
+        "highlight_boxes": [],
+        "backdrop_overlay": {
+          "color": "#000000",
+          "alpha": 130,
+          "opacity": 0.5098039215686274
+        }
+      }
+    ],
+    "status": "overlays_ready"
+  },
+  {
+    "story_id": "MC-025",
+    "file": "/Users/garreth/.codex/.chatgpt-projects/g-p-6aa04c3f9b8081919a18f7f1dc51a98c/outputs/miss-cleo-production/text-previews/MC-025.mp4",
+    "layouts": [
+      {
+        "font_size": 58,
+        "lines": 9,
+        "text_top": 388,
+        "text_bottom": 1072,
+        "highlight_boxes": [
+          [
+            174,
+            464,
+            376,
+            540
+          ],
+          [
+            388,
+            464,
+            552,
+            540
+          ]
+        ],
+        "backdrop_overlay": {
+          "color": "#000000",
+          "alpha": 130,
+          "opacity": 0.5098039215686274
+        }
+      },
+      {
+        "font_size": 58,
+        "lines": 9,
+        "text_top": 388,
+        "text_bottom": 1072,
+        "highlight_boxes": [],
+        "backdrop_overlay": {
+          "color": "#000000",
+          "alpha": 130,
+          "opacity": 0.5098039215686274
+        }
+      }
+    ],
+    "status": "overlays_ready"
+  },
+  {
+    "story_id": "MC-008",
+    "file": "/Users/garreth/.codex/.chatgpt-projects/g-p-6aa04c3f9b8081919a18f7f1dc51a98c/outputs/miss-cleo-production/text-previews/MC-008.mp4",
+    "layouts": [
+      {
+        "font_size": 58,
+        "lines": 8,
+        "text_top": 426,
+        "text_bottom": 1034,
+        "highlight_boxes": [
+          [
+            348,
+            578,
+            504,
+            654
+          ],
+          [
+            516,
+            578,
+            654,
+            654
+          ]
+        ],
+        "backdrop_overlay": {
+          "color": "#000000",
+          "alpha": 130,
+          "opacity": 0.5098039215686274
+        }
+      },
+      {
+        "font_size": 58,
+        "lines": 8,
+        "text_top": 426,
+        "text_bottom": 1034,
+        "highlight_boxes": [],
+        "backdrop_overlay": {
+          "color": "#000000",
+          "alpha": 130,
+          "opacity": 0.5098039215686274
+        }
+      }
+    ],
+    "status": "overlays_ready"
+  },
+  {
+    "story_id": "MC-009",
+    "file": "/Users/garreth/.codex/.chatgpt-projects/g-p-6aa04c3f9b8081919a18f7f1dc51a98c/outputs/miss-cleo-production/text-previews/MC-009.mp4",
+    "layouts": [
+      {
+        "font_size": 58,
+        "lines": 7,
+        "text_top": 464,
+        "text_bottom": 996,
+        "highlight_boxes": [
+          [
+            225,
+            540,
+            334,
+            616
+          ],
+          [
+            346,
+            540,
+            482,
+            616
+          ]
+        ],
+        "backdrop_overlay": {
+          "color": "#000000",
+          "alpha": 130,
+          "opacity": 0.5098039215686274
+        }
+      },
+      {
+        "font_size": 58,
+        "lines": 8,
+        "text_top": 426,
+        "text_bottom": 1034,
+        "highlight_boxes": [],
+        "backdrop_overlay": {
+          "color": "#000000",
+          "alpha": 130,
+          "opacity": 0.5098039215686274
+        }
+      }
+    ],
+    "status": "overlays_ready"
+  },
+  {
+    "story_id": "MC-010",
+    "file": "/Users/garreth/.codex/.chatgpt-projects/g-p-6aa04c3f9b8081919a18f7f1dc51a98c/outputs/miss-cleo-production/text-previews/MC-010.mp4",
+    "layouts": [
+      {
+        "font_size": 58,
+        "lines": 9,
+        "text_top": 388,
+        "text_bottom": 1072,
+        "highlight_boxes": [
+          [
+            160,
+            388,
+            514,
+            464
+          ],
+          [
+            526,
+            388,
+            770,
+            464
+          ]
+        ],
+        "backdrop_overlay": {
+          "color": "#000000",
+          "alpha": 130,
+          "opacity": 0.5098039215686274
+        }
+      },
+      {
+        "font_size": 58,
+        "lines": 9,
+        "text_top": 388,
+        "text_bottom": 1072,
+        "highlight_boxes": [],
+        "backdrop_overlay": {
+          "color": "#000000",
+          "alpha": 130,
+          "opacity": 0.5098039215686274
+        }
+      }
+    ],
+    "status": "overlays_ready"
+  },
+  {
+    "story_id": "MC-013",
+    "file": "/Users/garreth/.codex/.chatgpt-projects/g-p-6aa04c3f9b8081919a18f7f1dc51a98c/outputs/miss-cleo-production/text-previews/MC-013.mp4",
+    "layouts": [
+      {
+        "font_size": 58,
+        "lines": 8,
+        "text_top": 426,
+        "text_bottom": 1034,
+        "highlight_boxes": [
+          [
+            574,
+            502,
+            695,
+            578
+          ],
+          [
+            707,
+            502,
+            828,
+            578
+          ]
+        ],
+        "backdrop_overlay": {
+          "color": "#000000",
+          "alpha": 130,
+          "opacity": 0.5098039215686274
+        }
+      },
+      {
+        "font_size": 58,
+        "lines": 9,
+        "text_top": 388,
+        "text_bottom": 1072,
+        "highlight_boxes": [],
+        "backdrop_overlay": {
+          "color": "#000000",
+          "alpha": 130,
+          "opacity": 0.5098039215686274
+        }
+      }
+    ],
+    "status": "overlays_ready"
+  },
+  {
+    "story_id": "MC-014",
+    "file": "/Users/garreth/.codex/.chatgpt-projects/g-p-6aa04c3f9b8081919a18f7f1dc51a98c/outputs/miss-cleo-production/text-previews/MC-014.mp4",
+    "layouts": [
+      {
+        "font_size": 58,
+        "lines": 7,
+        "text_top": 464,
+        "text_bottom": 996,
+        "highlight_boxes": [
+          [
+            614,
+            464,
+            776,
+            540
+          ],
+          [
+            788,
+            464,
+            870,
+            540
+          ]
+        ],
+        "backdrop_overlay": {
+          "color": "#000000",
+          "alpha": 130,
+          "opacity": 0.5098039215686274
+        }
+      },
+      {
+        "font_size": 58,
+        "lines": 8,
+        "text_top": 426,
+        "text_bottom": 1034,
+        "highlight_boxes": [],
+        "backdrop_overlay": {
+          "color": "#000000",
+          "alpha": 130,
+          "opacity": 0.5098039215686274
+        }
+      }
+    ],
+    "status": "overlays_ready"
+  },
+  {
+    "story_id": "MC-015",
+    "file": "/Users/garreth/.codex/.chatgpt-projects/g-p-6aa04c3f9b8081919a18f7f1dc51a98c/outputs/miss-cleo-production/text-previews/MC-015.mp4",
+    "layouts": [
+      {
+        "font_size": 58,
+        "lines": 9,
+        "text_top": 388,
+        "text_bottom": 1072,
+        "highlight_boxes": [
+          [
+            265,
+            388,
+            366,
+            464
+          ],
+          [
+            378,
+            388,
+            603,
+            464
+          ]
+        ],
+        "backdrop_overlay": {
+          "color": "#000000",
+          "alpha": 130,
+          "opacity": 0.5098039215686274
+        }
+      },
+      {
+        "font_size": 58,
+        "lines": 9,
+        "text_top": 388,
+        "text_bottom": 1072,
+        "highlight_boxes": [],
+        "backdrop_overlay": {
+          "color": "#000000",
+          "alpha": 130,
+          "opacity": 0.5098039215686274
+        }
+      }
+    ],
+    "status": "overlays_ready"
+  },
+  {
+    "story_id": "MC-016",
+    "file": "/Users/garreth/.codex/.chatgpt-projects/g-p-6aa04c3f9b8081919a18f7f1dc51a98c/outputs/miss-cleo-production/text-previews/MC-016.mp4",
+    "layouts": [
+      {
+        "font_size": 58,
+        "lines": 9,
+        "text_top": 388,
+        "text_bottom": 1072,
+        "highlight_boxes": [
+          [
+            172,
+            844,
+            378,
+            920
+          ],
+          [
+            390,
+            844,
+            694,
+            920
+          ]
+        ],
+        "backdrop_overlay": {
+          "color": "#000000",
+          "alpha": 130,
+          "opacity": 0.5098039215686274
+        }
+      },
+      {
+        "font_size": 58,
+        "lines": 9,
+        "text_top": 388,
+        "text_bottom": 1072,
+        "highlight_boxes": [],
+        "backdrop_overlay": {
+          "color": "#000000",
+          "alpha": 130,
+          "opacity": 0.5098039215686274
+        }
+      }
+    ],
+    "status": "overlays_ready"
+  },
+  {
+    "story_id": "MC-017",
+    "file": "/Users/garreth/.codex/.chatgpt-projects/g-p-6aa04c3f9b8081919a18f7f1dc51a98c/outputs/miss-cleo-production/text-previews/MC-017.mp4",
+    "layouts": [
+      {
+        "font_size": 58,
+        "lines": 10,
+        "text_top": 350,
+        "text_bottom": 1110,
+        "highlight_boxes": [
+          [
+            195,
+            350,
+            433,
+            426
+          ],
+          [
+            445,
+            350,
+            609,
+            426
+          ]
+        ],
+        "backdrop_overlay": {
+          "color": "#000000",
+          "alpha": 130,
+          "opacity": 0.5098039215686274
+        }
+      },
+      {
+        "font_size": 58,
+        "lines": 10,
+        "text_top": 350,
+        "text_bottom": 1110,
+        "highlight_boxes": [],
+        "backdrop_overlay": {
+          "color": "#000000",
+          "alpha": 130,
+          "opacity": 0.5098039215686274
+        }
+      }
+    ],
+    "status": "overlays_ready"
+  },
+  {
+    "story_id": "MC-018",
+    "file": "/Users/garreth/.codex/.chatgpt-projects/g-p-6aa04c3f9b8081919a18f7f1dc51a98c/outputs/miss-cleo-production/text-previews/MC-018.mp4",
+    "layouts": [
+      {
+        "font_size": 58,
+        "lines": 9,
+        "text_top": 388,
+        "text_bottom": 1072,
+        "highlight_boxes": [
+          [
+            136,
+            388,
+            396,
+            464
+          ],
+          [
+            408,
+            388,
+            790,
+            464
+          ]
+        ],
+        "backdrop_overlay": {
+          "color": "#000000",
+          "alpha": 130,
+          "opacity": 0.5098039215686274
+        }
+      },
+      {
+        "font_size": 58,
+        "lines": 8,
+        "text_top": 426,
+        "text_bottom": 1034,
+        "highlight_boxes": [],
+        "backdrop_overlay": {
+          "color": "#000000",
+          "alpha": 130,
+          "opacity": 0.5098039215686274
+        }
+      }
+    ],
+    "status": "overlays_ready"
+  },
+  {
+    "story_id": "MC-019",
+    "file": "/Users/garreth/.codex/.chatgpt-projects/g-p-6aa04c3f9b8081919a18f7f1dc51a98c/outputs/miss-cleo-production/text-previews/MC-019.mp4",
+    "layouts": [
+      {
+        "font_size": 58,
+        "lines": 9,
+        "text_top": 388,
+        "text_bottom": 1072,
+        "highlight_boxes": [
+          [
+            306,
+            388,
+            410,
+            464
+          ],
+          [
+            422,
+            388,
+            608,
+            464
+          ]
+        ],
+        "backdrop_overlay": {
+          "color": "#000000",
+          "alpha": 130,
+          "opacity": 0.5098039215686274
+        }
+      },
+      {
+        "font_size": 58,
+        "lines": 10,
+        "text_top": 350,
+        "text_bottom": 1110,
+        "highlight_boxes": [],
+        "backdrop_overlay": {
+          "color": "#000000",
+          "alpha": 130,
+          "opacity": 0.5098039215686274
+        }
+      }
+    ],
+    "status": "overlays_ready"
+  },
+  {
+    "story_id": "MC-020",
+    "file": "/Users/garreth/.codex/.chatgpt-projects/g-p-6aa04c3f9b8081919a18f7f1dc51a98c/outputs/miss-cleo-production/text-previews/MC-020.mp4",
+    "layouts": [
+      {
+        "font_size": 58,
+        "lines": 9,
+        "text_top": 388,
+        "text_bottom": 1072,
+        "highlight_boxes": [
+          [
+            514,
+            388,
+            616,
+            464
+          ],
+          [
+            628,
+            388,
+            816,
+            464
+          ]
+        ],
+        "backdrop_overlay": {
+          "color": "#000000",
+          "alpha": 130,
+          "opacity": 0.5098039215686274
+        }
+      },
+      {
+        "font_size": 58,
+        "lines": 10,
+        "text_top": 350,
+        "text_bottom": 1110,
+        "highlight_boxes": [],
+        "backdrop_overlay": {
+          "color": "#000000",
+          "alpha": 130,
+          "opacity": 0.5098039215686274
+        }
+      }
+    ],
+    "status": "overlays_ready"
+  },
+  {
+    "story_id": "MC-024",
+    "file": "/Users/garreth/.codex/.chatgpt-projects/g-p-6aa04c3f9b8081919a18f7f1dc51a98c/outputs/miss-cleo-production/text-previews/MC-024.mp4",
+    "layouts": [
+      {
+        "font_size": 56,
+        "lines": 10,
+        "text_top": 365,
+        "text_bottom": 1095,
+        "highlight_boxes": [
+          [
+            228,
+            365,
+            516,
+            438
+          ],
+          [
+            528,
+            365,
+            752,
+            438
+          ]
+        ],
+        "backdrop_overlay": {
+          "color": "#000000",
+          "alpha": 130,
+          "opacity": 0.5098039215686274
+        }
+      },
+      {
+        "font_size": 58,
+        "lines": 10,
+        "text_top": 350,
+        "text_bottom": 1110,
+        "highlight_boxes": [],
+        "backdrop_overlay": {
+          "color": "#000000",
+          "alpha": 130,
+          "opacity": 0.5098039215686274
+        }
+      }
+    ],
+    "status": "overlays_ready"
+  },
+  {
+    "story_id": "MC-028",
+    "file": "/Users/garreth/.codex/.chatgpt-projects/g-p-6aa04c3f9b8081919a18f7f1dc51a98c/outputs/miss-cleo-production/text-previews/MC-028.mp4",
+    "layouts": [
+      {
+        "font_size": 58,
+        "lines": 10,
+        "text_top": 350,
+        "text_bottom": 1110,
+        "highlight_boxes": [
+          [
+            162,
+            426,
+            380,
+            502
+          ],
+          [
+            392,
+            426,
+            638,
+            502
+          ]
+        ],
+        "backdrop_overlay": {
+          "color": "#000000",
+          "alpha": 130,
+          "opacity": 0.5098039215686274
+        }
+      },
+      {
+        "font_size": 58,
+        "lines": 9,
+        "text_top": 388,
+        "text_bottom": 1072,
+        "highlight_boxes": [],
+        "backdrop_overlay": {
+          "color": "#000000",
+          "alpha": 130,
+          "opacity": 0.5098039215686274
+        }
+      }
+    ],
+    "status": "overlays_ready"
+  },
+  {
+    "story_id": "MC-029",
+    "file": "/Users/garreth/.codex/.chatgpt-projects/g-p-6aa04c3f9b8081919a18f7f1dc51a98c/outputs/miss-cleo-production/text-previews/MC-029.mp4",
+    "layouts": [
+      {
+        "font_size": 58,
+        "lines": 9,
+        "text_top": 388,
+        "text_bottom": 1072,
+        "highlight_boxes": [
+          [
+            181,
+            464,
+            382,
+            540
+          ],
+          [
+            394,
+            464,
+            535,
+            540
+          ]
+        ],
+        "backdrop_overlay": {
+          "color": "#000000",
+          "alpha": 130,
+          "opacity": 0.5098039215686274
+        }
+      },
+      {
+        "font_size": 58,
+        "lines": 9,
+        "text_top": 388,
+        "text_bottom": 1072,
+        "highlight_boxes": [],
+        "backdrop_overlay": {
+          "color": "#000000",
+          "alpha": 130,
+          "opacity": 0.5098039215686274
+        }
+      }
+    ],
+    "status": "overlays_ready"
+  },
+  {
+    "story_id": "MC-030",
+    "file": "/Users/garreth/.codex/.chatgpt-projects/g-p-6aa04c3f9b8081919a18f7f1dc51a98c/outputs/miss-cleo-production/text-previews/MC-030.mp4",
+    "layouts": [
+      {
+        "font_size": 58,
+        "lines": 9,
+        "text_top": 388,
+        "text_bottom": 1072,
+        "highlight_boxes": [
+          [
+            156,
+            388,
+            380,
+            464
+          ],
+          [
+            392,
+            388,
+            604,
+            464
+          ]
+        ],
+        "backdrop_overlay": {
+          "color": "#000000",
+          "alpha": 130,
+          "opacity": 0.5098039215686274
+        }
+      },
+      {
+        "font_size": 58,
+        "lines": 8,
+        "text_top": 426,
+        "text_bottom": 1034,
+        "highlight_boxes": [],
+        "backdrop_overlay": {
+          "color": "#000000",
+          "alpha": 130,
+          "opacity": 0.5098039215686274
+        }
+      }
+    ],
+    "status": "overlays_ready"
+  },
+  {
+    "story_id": "MC-031",
+    "file": "/Users/garreth/.codex/.chatgpt-projects/g-p-6aa04c3f9b8081919a18f7f1dc51a98c/outputs/miss-cleo-production/text-previews/MC-031.mp4",
+    "layouts": [
+      {
+        "font_size": 58,
+        "lines": 8,
+        "text_top": 426,
+        "text_bottom": 1034,
+        "highlight_boxes": [
+          [
+            162,
+            426,
+            327,
+            502
+          ],
+          [
+            339,
+            426,
+            535,
+            502
+          ]
+        ],
+        "backdrop_overlay": {
+          "color": "#000000",
+          "alpha": 130,
+          "opacity": 0.5098039215686274
+        }
+      },
+      {
+        "font_size": 58,
+        "lines": 9,
+        "text_top": 388,
+        "text_bottom": 1072,
+        "highlight_boxes": [],
+        "backdrop_overlay": {
+          "color": "#000000",
+          "alpha": 130,
+          "opacity": 0.5098039215686274
+        }
+      }
+    ],
+    "status": "overlays_ready"
+  },
+  {
+    "story_id": "MC-032",
+    "file": "/Users/garreth/.codex/.chatgpt-projects/g-p-6aa04c3f9b8081919a18f7f1dc51a98c/outputs/miss-cleo-production/text-previews/MC-032.mp4",
+    "layouts": [
+      {
+        "font_size": 58,
+        "lines": 9,
+        "text_top": 388,
+        "text_bottom": 1072,
+        "highlight_boxes": [
+          [
+            762,
+            388,
+            892,
+            464
+          ],
+          [
+            212,
+            464,
+            386,
+            540
+          ]
+        ],
+        "backdrop_overlay": {
+          "color": "#000000",
+          "alpha": 130,
+          "opacity": 0.5098039215686274
+        }
+      },
+      {
+        "font_size": 58,
+        "lines": 9,
+        "text_top": 388,
+        "text_bottom": 1072,
+        "highlight_boxes": [],
+        "backdrop_overlay": {
+          "color": "#000000",
+          "alpha": 130,
+          "opacity": 0.5098039215686274
+        }
+      }
+    ],
+    "status": "overlays_ready"
+  },
+  {
+    "story_id": "MC-034",
+    "file": "/Users/garreth/.codex/.chatgpt-projects/g-p-6aa04c3f9b8081919a18f7f1dc51a98c/outputs/miss-cleo-production/text-previews/MC-034.mp4",
+    "layouts": [
+      {
+        "font_size": 58,
+        "lines": 9,
+        "text_top": 388,
+        "text_bottom": 1072,
+        "highlight_boxes": [
+          [
+            274,
+            388,
+            416,
+            464
+          ],
+          [
+            428,
+            388,
+            620,
+            464
+          ]
+        ],
+        "backdrop_overlay": {
+          "color": "#000000",
+          "alpha": 130,
+          "opacity": 0.5098039215686274
+        }
+      },
+      {
+        "font_size": 58,
+        "lines": 8,
+        "text_top": 426,
+        "text_bottom": 1034,
+        "highlight_boxes": [],
+        "backdrop_overlay": {
+          "color": "#000000",
+          "alpha": 130,
+          "opacity": 0.5098039215686274
+        }
+      }
+    ],
+    "status": "overlays_ready"
+  },
+  {
+    "story_id": "MC-036",
+    "file": "/Users/garreth/.codex/.chatgpt-projects/g-p-6aa04c3f9b8081919a18f7f1dc51a98c/outputs/miss-cleo-production/text-previews/MC-036.mp4",
+    "layouts": [
+      {
+        "font_size": 58,
+        "lines": 10,
+        "text_top": 350,
+        "text_bottom": 1110,
+        "highlight_boxes": [
+          [
+            164,
+            350,
+            284,
+            426
+          ],
+          [
+            296,
+            350,
+            444,
+            426
+          ]
+        ],
+        "backdrop_overlay": {
+          "color": "#000000",
+          "alpha": 130,
+          "opacity": 0.5098039215686274
+        }
+      },
+      {
+        "font_size": 58,
+        "lines": 9,
+        "text_top": 388,
+        "text_bottom": 1072,
+        "highlight_boxes": [],
+        "backdrop_overlay": {
+          "color": "#000000",
+          "alpha": 130,
+          "opacity": 0.5098039215686274
+        }
+      }
+    ],
+    "status": "overlays_ready"
+  },
+  {
+    "story_id": "MC-037",
+    "file": "/Users/garreth/.codex/.chatgpt-projects/g-p-6aa04c3f9b8081919a18f7f1dc51a98c/outputs/miss-cleo-production/text-previews/MC-037.mp4",
+    "layouts": [
+      {
+        "font_size": 58,
+        "lines": 9,
+        "text_top": 388,
+        "text_bottom": 1072,
+        "highlight_boxes": [
+          [
+            196,
+            388,
+            310,
+            464
+          ],
+          [
+            322,
+            388,
+            442,
+            464
+          ]
+        ],
+        "backdrop_overlay": {
+          "color": "#000000",
+          "alpha": 130,
+          "opacity": 0.5098039215686274
+        }
+      },
+      {
+        "font_size": 58,
+        "lines": 10,
+        "text_top": 350,
+        "text_bottom": 1110,
+        "highlight_boxes": [],
+        "backdrop_overlay": {
+          "color": "#000000",
+          "alpha": 130,
+          "opacity": 0.5098039215686274
+        }
+      }
+    ],
+    "status": "overlays_ready"
+  },
+  {
+    "story_id": "MC-038",
+    "file": "/Users/garreth/.codex/.chatgpt-projects/g-p-6aa04c3f9b8081919a18f7f1dc51a98c/outputs/miss-cleo-production/text-previews/MC-038.mp4",
+    "layouts": [
+      {
+        "font_size": 58,
+        "lines": 10,
+        "text_top": 350,
+        "text_bottom": 1110,
+        "highlight_boxes": [
+          [
+            180,
+            350,
+            372,
+            426
+          ],
+          [
+            384,
+            350,
+            560,
+            426
+          ]
+        ],
+        "backdrop_overlay": {
+          "color": "#000000",
+          "alpha": 130,
+          "opacity": 0.5098039215686274
+        }
+      },
+      {
+        "font_size": 58,
+        "lines": 9,
+        "text_top": 388,
+        "text_bottom": 1072,
+        "highlight_boxes": [],
+        "backdrop_overlay": {
+          "color": "#000000",
+          "alpha": 130,
+          "opacity": 0.5098039215686274
+        }
+      }
+    ],
+    "status": "overlays_ready"
+  },
+  {
+    "story_id": "MC-039",
+    "file": "/Users/garreth/.codex/.chatgpt-projects/g-p-6aa04c3f9b8081919a18f7f1dc51a98c/outputs/miss-cleo-production/text-previews/MC-039.mp4",
+    "layouts": [
+      {
+        "font_size": 58,
+        "lines": 8,
+        "text_top": 426,
+        "text_bottom": 1034,
+        "highlight_boxes": [
+          [
+            225,
+            426,
+            327,
+            502
+          ],
+          [
+            339,
+            426,
+            593,
+            502
+          ]
+        ],
+        "backdrop_overlay": {
+          "color": "#000000",
+          "alpha": 130,
+          "opacity": 0.5098039215686274
+        }
+      },
+      {
+        "font_size": 58,
+        "lines": 8,
+        "text_top": 426,
+        "text_bottom": 1034,
+        "highlight_boxes": [],
+        "backdrop_overlay": {
+          "color": "#000000",
+          "alpha": 130,
+          "opacity": 0.5098039215686274
+        }
+      }
+    ],
+    "status": "overlays_ready"
+  },
+  {
+    "story_id": "MC-040",
+    "file": "/Users/garreth/.codex/.chatgpt-projects/g-p-6aa04c3f9b8081919a18f7f1dc51a98c/outputs/miss-cleo-production/text-previews/MC-040.mp4",
+    "layouts": [
+      {
+        "font_size": 58,
+        "lines": 9,
+        "text_top": 388,
+        "text_bottom": 1072,
+        "highlight_boxes": [
+          [
+            476,
+            464,
+            608,
+            540
+          ],
+          [
+            620,
+            464,
+            824,
+            540
+          ]
+        ],
+        "backdrop_overlay": {
+          "color": "#000000",
+          "alpha": 130,
+          "opacity": 0.5098039215686274
+        }
+      },
+      {
+        "font_size": 58,
+        "lines": 9,
+        "text_top": 388,
+        "text_bottom": 1072,
+        "highlight_boxes": [],
+        "backdrop_overlay": {
+          "color": "#000000",
+          "alpha": 130,
+          "opacity": 0.5098039215686274
+        }
+      }
+    ],
+    "status": "overlays_ready"
+  },
+  {
+    "story_id": "MC-041",
+    "file": "/Users/garreth/.codex/.chatgpt-projects/g-p-6aa04c3f9b8081919a18f7f1dc51a98c/outputs/miss-cleo-production/text-previews/MC-041.mp4",
+    "layouts": [
+      {
+        "font_size": 58,
+        "lines": 10,
+        "text_top": 350,
+        "text_bottom": 1110,
+        "highlight_boxes": [
+          [
+            209,
+            350,
+            435,
+            426
+          ],
+          [
+            447,
+            350,
+            639,
+            426
+          ]
+        ],
+        "backdrop_overlay": {
+          "color": "#000000",
+          "alpha": 130,
+          "opacity": 0.5098039215686274
+        }
+      },
+      {
+        "font_size": 58,
+        "lines": 9,
+        "text_top": 388,
+        "text_bottom": 1072,
+        "highlight_boxes": [],
+        "backdrop_overlay": {
+          "color": "#000000",
+          "alpha": 130,
+          "opacity": 0.5098039215686274
+        }
+      }
+    ],
+    "status": "overlays_ready"
+  },
+  {
+    "story_id": "MC-042",
+    "file": "/Users/garreth/.codex/.chatgpt-projects/g-p-6aa04c3f9b8081919a18f7f1dc51a98c/outputs/miss-cleo-production/text-previews/MC-042.mp4",
+    "layouts": [
+      {
+        "font_size": 58,
+        "lines": 10,
+        "text_top": 350,
+        "text_bottom": 1110,
+        "highlight_boxes": [
+          [
+            216,
+            350,
+            368,
+            426
+          ],
+          [
+            380,
+            350,
+            598,
+            426
+          ]
+        ],
+        "backdrop_overlay": {
+          "color": "#000000",
+          "alpha": 130,
+          "opacity": 0.5098039215686274
+        }
+      },
+      {
+        "font_size": 58,
+        "lines": 9,
+        "text_top": 388,
+        "text_bottom": 1072,
+        "highlight_boxes": [],
+        "backdrop_overlay": {
+          "color": "#000000",
+          "alpha": 130,
+          "opacity": 0.5098039215686274
+        }
+      }
+    ],
+    "status": "overlays_ready"
+  },
+  {
+    "story_id": "MC-044",
+    "file": "/Users/garreth/.codex/.chatgpt-projects/g-p-6aa04c3f9b8081919a18f7f1dc51a98c/outputs/miss-cleo-production/text-previews/MC-044.mp4",
+    "layouts": [
+      {
+        "font_size": 58,
+        "lines": 9,
+        "text_top": 388,
+        "text_bottom": 1072,
+        "highlight_boxes": [
+          [
+            144,
+            388,
+            278,
+            464
+          ],
+          [
+            290,
+            388,
+            410,
+            464
+          ]
+        ],
+        "backdrop_overlay": {
+          "color": "#000000",
+          "alpha": 130,
+          "opacity": 0.5098039215686274
+        }
+      },
+      {
+        "font_size": 58,
+        "lines": 9,
+        "text_top": 388,
+        "text_bottom": 1072,
+        "highlight_boxes": [],
+        "backdrop_overlay": {
+          "color": "#000000",
+          "alpha": 130,
+          "opacity": 0.5098039215686274
+        }
+      }
+    ],
+    "status": "overlays_ready"
+  },
+  {
+    "story_id": "MC-045",
+    "file": "/Users/garreth/.codex/.chatgpt-projects/g-p-6aa04c3f9b8081919a18f7f1dc51a98c/outputs/miss-cleo-production/text-previews/MC-045.mp4",
+    "layouts": [
+      {
+        "font_size": 58,
+        "lines": 9,
+        "text_top": 388,
+        "text_bottom": 1072,
+        "highlight_boxes": [
+          [
+            182,
+            388,
+            343,
+            464
+          ],
+          [
+            355,
+            388,
+            584,
+            464
+          ]
+        ],
+        "backdrop_overlay": {
+          "color": "#000000",
+          "alpha": 130,
+          "opacity": 0.5098039215686274
+        }
+      },
+      {
+        "font_size": 58,
+        "lines": 10,
+        "text_top": 350,
+        "text_bottom": 1110,
+        "highlight_boxes": [],
+        "backdrop_overlay": {
+          "color": "#000000",
+          "alpha": 130,
+          "opacity": 0.5098039215686274
+        }
+      }
+    ],
+    "status": "overlays_ready"
+  },
+  {
+    "story_id": "MC-049",
+    "file": "/Users/garreth/.codex/.chatgpt-projects/g-p-6aa04c3f9b8081919a18f7f1dc51a98c/outputs/miss-cleo-production/text-previews/MC-049.mp4",
+    "layouts": [
+      {
+        "font_size": 58,
+        "lines": 10,
+        "text_top": 350,
+        "text_bottom": 1110,
+        "highlight_boxes": [
+          [
+            202,
+            350,
+            544,
+            426
+          ],
+          [
+            556,
+            350,
+            774,
+            426
+          ]
+        ],
+        "backdrop_overlay": {
+          "color": "#000000",
+          "alpha": 130,
+          "opacity": 0.5098039215686274
+        }
+      },
+      {
+        "font_size": 58,
+        "lines": 10,
+        "text_top": 350,
+        "text_bottom": 1110,
+        "highlight_boxes": [],
+        "backdrop_overlay": {
+          "color": "#000000",
+          "alpha": 130,
+          "opacity": 0.5098039215686274
+        }
+      }
+    ],
+    "status": "overlays_ready"
+  },
+  {
+    "story_id": "MC-051",
+    "file": "/Users/garreth/.codex/.chatgpt-projects/g-p-6aa04c3f9b8081919a18f7f1dc51a98c/outputs/miss-cleo-production/text-previews/MC-051.mp4",
+    "layouts": [
+      {
+        "font_size": 58,
+        "lines": 10,
+        "text_top": 350,
+        "text_bottom": 1110,
+        "highlight_boxes": [
+          [
+            181,
+            350,
+            333,
+            426
+          ],
+          [
+            345,
+            350,
+            587,
+            426
+          ]
+        ],
+        "backdrop_overlay": {
+          "color": "#000000",
+          "alpha": 130,
+          "opacity": 0.5098039215686274
+        }
+      },
+      {
+        "font_size": 58,
+        "lines": 10,
+        "text_top": 350,
+        "text_bottom": 1110,
+        "highlight_boxes": [],
+        "backdrop_overlay": {
+          "color": "#000000",
+          "alpha": 130,
+          "opacity": 0.5098039215686274
+        }
+      }
+    ],
+    "status": "overlays_ready"
+  },
+  {
+    "story_id": "MC-052",
+    "file": "/Users/garreth/.codex/.chatgpt-projects/g-p-6aa04c3f9b8081919a18f7f1dc51a98c/outputs/miss-cleo-production/text-previews/MC-052.mp4",
+    "layouts": [
+      {
+        "font_size": 58,
+        "lines": 9,
+        "text_top": 388,
+        "text_bottom": 1072,
+        "highlight_boxes": [
+          [
+            196,
+            388,
+            338,
+            464
+          ],
+          [
+            350,
+            388,
+            578,
+            464
+          ]
+        ],
+        "backdrop_overlay": {
+          "color": "#000000",
+          "alpha": 130,
+          "opacity": 0.5098039215686274
+        }
+      },
+      {
+        "font_size": 58,
+        "lines": 10,
+        "text_top": 350,
+        "text_bottom": 1110,
+        "highlight_boxes": [],
+        "backdrop_overlay": {
+          "color": "#000000",
+          "alpha": 130,
+          "opacity": 0.5098039215686274
+        }
+      }
+    ],
+    "status": "overlays_ready"
+  }
+]
