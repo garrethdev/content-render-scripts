@@ -16,3 +16,9 @@ audio/
 renders/
 projects/
 *.log
+
+# music beds are tracked in git (small, load-bearing for every render)
+!assets_music/
+!assets_music/*.mp3
+!assets_music/*.wav
+!assets_music/beds_selected.json
