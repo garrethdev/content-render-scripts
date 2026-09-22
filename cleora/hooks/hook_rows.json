@@ -1,0 +1,304 @@
+[
+ {
+  "hook_key": "hook01",
+  "name": "cleora_orb_open_dramatic -> eyes_dilated_purple",
+  "status": "active",
+  "shot_a": "cleora_orb_open_dramatic",
+  "shot_b": "eyes_dilated_purple",
+  "in_a": 0,
+  "cut_a": 2.4,
+  "in_b": 0.9,
+  "cut_b": 3.0,
+  "transition": "cut",
+  "move_a": {
+   "zf": 1,
+   "zt": 1.4,
+   "fx": 0.5,
+   "fy": 0.6
+  },
+  "move_b": {
+   "zf": 1.25,
+   "zt": 1,
+   "fx": 0.5,
+   "fy": 0.6
+  },
+  "hook_y": 70,
+  "shot_a_desc": "A claymation fortune teller gazes into a crystal ball that suddenly flares with intense purple light, illuminating her face.",
+  "shot_b_desc": "The camera slowly pushes in on an extreme close-up of a wide-eyed, startled claymation face surrounded by purple smoke.",
+  "cut_reads_as": "revelation of a vision",
+  "emotional_arc": "calm mystery -> alarm",
+  "energy": "medium",
+  "subject_of_b": "a sick person",
+  "fits_stories_about": [
+   "shocking historical beauty practices",
+   "terrifying medical treatments",
+   "fear-inducing anti-aging methods",
+   "startling historical revelations"
+  ],
+  "avoid_for_stories_about": [
+   "modern scientific breakthroughs",
+   "peaceful wellness routines",
+   "uplifting historical anecdotes"
+  ],
+  "card_safe_zone": "top",
+  "gemini_notes": "The cut to the extreme close-up is abrupt, but the continuous purple lighting and smoke effectively bridge the two shots to imply we are seeing a vision emerging from the crystal ball.",
+  "owner_note": null,
+  "used_count": 0
+ },
+ {
+  "hook_key": "hook02",
+  "name": "Portal to sick man",
+  "status": "active",
+  "shot_a": "cleora_orb_open_dramatic",
+  "shot_b": "female_doctor",
+  "in_a": 0,
+  "cut_a": 2.6,
+  "in_b": 0,
+  "cut_b": 2.0,
+  "transition": "portal",
+  "move_a": {
+   "zf": 1,
+   "zt": 2.4,
+   "fx": 0.5,
+   "fy": 0.6
+  },
+  "move_b": {
+   "zf": 2.4,
+   "zt": 1,
+   "fx": 0.5,
+   "fy": 0.6
+  },
+  "hook_y": 70,
+  "shot_a_desc": "A claymation fortune teller gazes into a glowing purple crystal ball as the camera rapidly zooms in and the lighting intensifies.",
+  "shot_b_desc": "A claymation woman in historical clothing touches the forehead of a sweating, crying man lying in bed as the camera slowly pulls back.",
+  "cut_reads_as": "travel into another world",
+  "emotional_arc": "mystical intrigue -> grim concern",
+  "energy": "medium",
+  "subject_of_b": "a sick person",
+  "fits_stories_about": [
+   "historical medical tragedies",
+   "ancient disease outbreaks",
+   "desperate historical cures",
+   "the dark origins of medicine"
+  ],
+  "avoid_for_stories_about": [
+   "modern cosmetic procedures",
+   "upbeat beauty routines",
+   "futuristic anti-aging tech"
+  ],
+  "card_safe_zone": "top",
+  "gemini_notes": "The rapid zoom and lighting change in the first shot effectively sell the cut as diving into a crystal ball vision, making the transition to a completely different historical setting feel intentional rather than disconnected.",
+  "owner_note": "Any footage that showcases a sick man",
+  "used_count": 0
+ },
+ {
+  "hook_key": "hook03",
+  "name": "wide shot/glowing orb",
+  "status": "active",
+  "shot_a": "wide_closed_eye",
+  "shot_b": "cleora_orb_open_dramatic",
+  "in_a": 0,
+  "cut_a": 2.4,
+  "in_b": 0,
+  "cut_b": 3.7,
+  "transition": "cut",
+  "move_a": null,
+  "move_b": null,
+  "hook_y": 120,
+  "shot_a_desc": "A wide shot slowly pushes in on a claymation fortune teller sitting in a detailed, root-ceilinged apothecary, her hands hovering over a glowing crystal ball.",
+  "shot_b_desc": "A close-up on the fortune teller shows the crystal ball suddenly flaring with intense purple light, illuminating her shocked expression as the background fades to black.",
+  "cut_reads_as": "scale change on the same subject",
+  "emotional_arc": "calm mystery to shocking revelation",
+  "energy": "medium",
+  "subject_of_b": "cleora",
+  "fits_stories_about": [
+   "shocking historical discoveries",
+   "dark beauty secrets",
+   "mystical remedies",
+   "uncovering hidden truths"
+  ],
+  "avoid_for_stories_about": [
+   "modern clinical science",
+   "lighthearted comedic anecdotes",
+   "mundane daily routines"
+  ],
+  "card_safe_zone": "top",
+  "gemini_notes": "The shots clearly read as the same location, but the dramatic shift to heavy purple lighting in the close-up establishes a sudden, intense tone.",
+  "owner_note": null,
+  "used_count": 0
+ },
+ {
+  "hook_key": "hook04",
+  "name": "Reading book, and surprised",
+  "status": "active",
+  "shot_a": "ancient_book_close",
+  "shot_b": "eyes_dilated_zoom_reveal",
+  "in_a": 0,
+  "cut_a": 1.8,
+  "in_b": 0,
+  "cut_b": 2.0,
+  "transition": "cut",
+  "move_a": {
+   "zf": 1,
+   "zt": 1.1,
+   "fx": 0.5,
+   "fy": 0.6
+  },
+  "move_b": {
+   "zf": 1.25,
+   "zt": 1,
+   "fx": 0.5,
+   "fy": 0.6
+  },
+  "hook_y": 300,
+  "shot_a_desc": "A claymation fortune-teller sits at a candlelit table reading a mystical book, and the camera slowly pushes in as she looks up.",
+  "shot_b_desc": "The camera cuts to an extreme close-up of the fortune-teller's face with wide, shocked eyes, then slowly pulls back.",
+  "cut_reads_as": "sudden revelation and reaction to what was just read",
+  "emotional_arc": "calm mystery to sudden alarm",
+  "energy": "medium",
+  "subject_of_b": "cleora",
+  "fits_stories_about": [
+   "horrifying historical beauty practices",
+   "dangerous anti-aging secrets",
+   "shocking medical discoveries",
+   "dark truths about cosmetics"
+  ],
+  "avoid_for_stories_about": [
+   "gentle natural healing",
+   "modern scientific breakthroughs",
+   "peaceful wellness routines"
+  ],
+  "card_safe_zone": "top",
+  "gemini_notes": "The cut is an intentionally jarring jump to an extreme close-up that reads perfectly as a sudden, horrifying realization about whatever she was just reading.",
+  "owner_note": null,
+  "used_count": 0
+ },
+ {
+  "hook_key": "hook05",
+  "name": "Reading book, and surprised",
+  "status": "active",
+  "shot_a": "ancient_book_close",
+  "shot_b": "eyes_dilated_zoom_reveal",
+  "in_a": 0,
+  "cut_a": 1.9,
+  "in_b": 0,
+  "cut_b": 2.0,
+  "transition": "cut",
+  "move_a": {
+   "zf": 1,
+   "zt": 1.1,
+   "fx": 0.5,
+   "fy": 0.6
+  },
+  "move_b": {
+   "zf": 1.25,
+   "zt": 1,
+   "fx": 0.5,
+   "fy": 0.6
+  },
+  "hook_y": 300,
+  "shot_a_desc": "A medium shot shows a claymation fortune-teller reading a mystical book by candlelight before looking up slightly.",
+  "shot_b_desc": "An extreme close-up on the fortune-teller's wide, staring eyes pulls back to reveal her shocked expression.",
+  "cut_reads_as": "reaction to what was just seen and a dramatic scale change on the same subject",
+  "emotional_arc": "calm mystery to sudden alarm",
+  "energy": "medium",
+  "subject_of_b": "cleora",
+  "fits_stories_about": [
+   "shocking medical history",
+   "horrifying beauty treatments",
+   "dangerous anti-aging secrets",
+   "dark historical truths"
+  ],
+  "avoid_for_stories_about": [
+   "peaceful natural remedies",
+   "modern clinical science",
+   "uplifting historical figures"
+  ],
+  "card_safe_zone": "top",
+  "gemini_notes": "The jump cut from the medium shot to the extreme close-up is intentionally jarring to emphasize a shocking discovery, though both shots clearly feature the same character.",
+  "owner_note": null,
+  "used_count": 0
+ },
+ {
+  "hook_key": "hook06",
+  "name": "brewing surprised",
+  "status": "active",
+  "shot_a": "healer_brew_med",
+  "shot_b": "eyes_dilated_zoom_reveal",
+  "in_a": 0,
+  "cut_a": 2.6,
+  "in_b": 0,
+  "cut_b": 2.0,
+  "transition": "cut",
+  "move_a": null,
+  "move_b": null,
+  "hook_y": 300,
+  "shot_a_desc": "A claymation fortune-teller sits with closed eyes in a dimly lit, potion-filled room, her hands hovering over a smoking cauldron as the camera slowly pushes in.",
+  "shot_b_desc": "An extreme close-up of the fortune-teller's face shows her eyes suddenly snapping wide open in shock as the camera slightly pulls back.",
+  "cut_reads_as": "a sudden, shocking realization or terrifying vision",
+  "emotional_arc": "calm mystery to sudden shock",
+  "energy": "medium",
+  "subject_of_b": "cleora",
+  "fits_stories_about": [
+   "shocking historical beauty practices",
+   "toxic vintage cosmetics",
+   "terrifying anti-aging treatments",
+   "startling medical discoveries"
+  ],
+  "avoid_for_stories_about": [
+   "gentle natural remedies",
+   "peaceful wellness routines",
+   "modern clinical science"
+  ],
+  "card_safe_zone": "top",
+  "gemini_notes": "The abrupt jump from a wide shot to an extreme close-up creates an intentionally jarring shock effect, accompanied by a noticeable shift to dramatic purple lighting.",
+  "owner_note": null,
+  "used_count": 0
+ },
+ {
+  "hook_key": "hook07",
+  "name": "healer_brew_med -> eyes_dilated_purple",
+  "status": "active",
+  "shot_a": "healer_brew_med",
+  "shot_b": "eyes_dilated_purple",
+  "in_a": 0,
+  "cut_a": 4.1,
+  "in_b": 0,
+  "cut_b": 2.6,
+  "transition": "cut",
+  "move_a": {
+   "zf": 1,
+   "zt": 1.1,
+   "fx": 0.5,
+   "fy": 0.6
+  },
+  "move_b": {
+   "zf": 1.25,
+   "zt": 1,
+   "fx": 0.5,
+   "fy": 0.6
+  },
+  "hook_y": 300,
+  "shot_a_desc": "A claymation fortune-teller with closed eyes sits in a dimly lit, potion-filled room stirring a smoking cauldron as the camera slowly pushes in.",
+  "shot_b_desc": "An extreme close-up of the fortune-teller's face as her eyes suddenly snap wide open to stare directly at the viewer while the camera continues to push in.",
+  "cut_reads_as": "scale change on the same subject creating a sudden shock or realization",
+  "emotional_arc": "calm mystery to sudden alarm",
+  "energy": "medium",
+  "subject_of_b": "cleora",
+  "fits_stories_about": [
+   "shocking historical beauty practices",
+   "dangerous anti-aging secrets",
+   "startling medical revelations",
+   "hidden historical horrors"
+  ],
+  "avoid_for_stories_about": [
+   "gentle natural remedies",
+   "modern clinical dermatology",
+   "peaceful wellness routines"
+  ],
+  "card_safe_zone": "top",
+  "gemini_notes": "The cut is a very jarring jump in scale from a wide shot to a macro close-up, designed to startle the viewer when her eyes snap open.",
+  "owner_note": null,
+  "used_count": 0
+ }
+]

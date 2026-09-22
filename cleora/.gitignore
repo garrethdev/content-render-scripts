@@ -1,0 +1,18 @@
+# secrets
+.eleven_key.env
+*.key
+.env
+# python
+__pycache__/
+*.pyc
+.venv/
+# media + render artifacts
+*.wav
+*.mp3
+*.mp4
+*.png
+*.jpg
+audio/
+renders/
+projects/
+*.log

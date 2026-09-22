@@ -1,0 +1,171 @@
+[
+ {
+  "hook_key": "hook01",
+  "name": "cleora_orb_open_dramatic -> eyes_dilated_purple",
+  "shots": 2,
+  "transition": "cut",
+  "hook_y": 70,
+  "shot_a": "cleora_orb_open_dramatic",
+  "shot_b": "eyes_dilated_purple",
+  "shot_a_url": "https://qlcmgxgwpzmiebzxflai.supabase.co/storage/v1/object/public/cleora-clips/_library/cleora_orb_open_dramatic.mp4",
+  "shot_b_url": "https://qlcmgxgwpzmiebzxflai.supabase.co/storage/v1/object/public/cleora-clips/eyes_dilated_purple.mp4",
+  "in_a": 0,
+  "cut_a": 2.4,
+  "in_b": 0.9,
+  "cut_b": 3.0,
+  "move_a": {
+   "zf": 1,
+   "zt": 1.4,
+   "fx": 0.5,
+   "fy": 0.6
+  },
+  "move_b": {
+   "zf": 1.25,
+   "zt": 1,
+   "fx": 0.5,
+   "fy": 0.6
+  }
+ },
+ {
+  "hook_key": "hook02",
+  "name": "Portal to sick man",
+  "shots": 2,
+  "transition": "portal",
+  "hook_y": 70,
+  "shot_a": "cleora_orb_open_dramatic",
+  "shot_b": "female_doctor",
+  "shot_a_url": "https://qlcmgxgwpzmiebzxflai.supabase.co/storage/v1/object/public/cleora-clips/_library/cleora_orb_open_dramatic.mp4",
+  "shot_b_url": "https://qlcmgxgwpzmiebzxflai.supabase.co/storage/v1/object/public/cleora-clips/_library/female_doctor.mp4",
+  "in_a": 0,
+  "cut_a": 2.6,
+  "in_b": 0,
+  "cut_b": 2.0,
+  "move_a": {
+   "zf": 1,
+   "zt": 2.4,
+   "fx": 0.5,
+   "fy": 0.6
+  },
+  "move_b": {
+   "zf": 2.4,
+   "zt": 1,
+   "fx": 0.5,
+   "fy": 0.6
+  }
+ },
+ {
+  "hook_key": "hook03",
+  "name": "wide shot/glowing orb",
+  "shots": 2,
+  "transition": "cut",
+  "hook_y": 120,
+  "shot_a": "wide_closed_eye",
+  "shot_b": "cleora_orb_open_dramatic",
+  "shot_a_url": "https://qlcmgxgwpzmiebzxflai.supabase.co/storage/v1/object/public/cleora-clips/wide_closed_eye.mp4",
+  "shot_b_url": "https://qlcmgxgwpzmiebzxflai.supabase.co/storage/v1/object/public/cleora-clips/_library/cleora_orb_open_dramatic.mp4",
+  "in_a": 0,
+  "cut_a": 2.4,
+  "in_b": 0,
+  "cut_b": 3.7,
+  "move_a": null,
+  "move_b": null
+ },
+ {
+  "hook_key": "hook04",
+  "name": "Reading book, and surprised",
+  "shots": 2,
+  "transition": "cut",
+  "hook_y": 300,
+  "shot_a": "ancient_book_close",
+  "shot_b": "eyes_dilated_zoom_reveal",
+  "shot_a_url": "https://qlcmgxgwpzmiebzxflai.supabase.co/storage/v1/object/public/cleora-clips/_library/ancient_book_close.mp4",
+  "shot_b_url": "https://qlcmgxgwpzmiebzxflai.supabase.co/storage/v1/object/public/cleora-clips/eyes_dilated_zoom_reveal.mp4",
+  "in_a": 0,
+  "cut_a": 1.8,
+  "in_b": 0,
+  "cut_b": 2.0,
+  "move_a": {
+   "zf": 1,
+   "zt": 1.1,
+   "fx": 0.5,
+   "fy": 0.6
+  },
+  "move_b": {
+   "zf": 1.25,
+   "zt": 1,
+   "fx": 0.5,
+   "fy": 0.6
+  }
+ },
+ {
+  "hook_key": "hook05",
+  "name": "Reading book, and surprised",
+  "shots": 2,
+  "transition": "cut",
+  "hook_y": 300,
+  "shot_a": "ancient_book_close",
+  "shot_b": "eyes_dilated_zoom_reveal",
+  "shot_a_url": "https://qlcmgxgwpzmiebzxflai.supabase.co/storage/v1/object/public/cleora-clips/_library/ancient_book_close.mp4",
+  "shot_b_url": "https://qlcmgxgwpzmiebzxflai.supabase.co/storage/v1/object/public/cleora-clips/eyes_dilated_zoom_reveal.mp4",
+  "in_a": 0,
+  "cut_a": 1.9,
+  "in_b": 0,
+  "cut_b": 2.0,
+  "move_a": {
+   "zf": 1,
+   "zt": 1.1,
+   "fx": 0.5,
+   "fy": 0.6
+  },
+  "move_b": {
+   "zf": 1.25,
+   "zt": 1,
+   "fx": 0.5,
+   "fy": 0.6
+  }
+ },
+ {
+  "hook_key": "hook06",
+  "name": "brewing surprised",
+  "shots": 2,
+  "transition": "cut",
+  "hook_y": 300,
+  "shot_a": "healer_brew_med",
+  "shot_b": "eyes_dilated_zoom_reveal",
+  "shot_a_url": "https://qlcmgxgwpzmiebzxflai.supabase.co/storage/v1/object/public/cleora-clips/_library/healer_brew_med.mp4",
+  "shot_b_url": "https://qlcmgxgwpzmiebzxflai.supabase.co/storage/v1/object/public/cleora-clips/eyes_dilated_zoom_reveal.mp4",
+  "in_a": 0,
+  "cut_a": 2.6,
+  "in_b": 0,
+  "cut_b": 2.0,
+  "move_a": null,
+  "move_b": null
+ },
+ {
+  "hook_key": "hook07",
+  "name": "healer_brew_med -> eyes_dilated_purple",
+  "shots": 2,
+  "transition": "cut",
+  "hook_y": 300,
+  "shot_a": "healer_brew_med",
+  "shot_b": "eyes_dilated_purple",
+  "shot_a_url": "https://qlcmgxgwpzmiebzxflai.supabase.co/storage/v1/object/public/cleora-clips/_library/healer_brew_med.mp4",
+  "shot_b_url": "https://qlcmgxgwpzmiebzxflai.supabase.co/storage/v1/object/public/cleora-clips/eyes_dilated_purple.mp4",
+  "in_a": 0,
+  "cut_a": 4.1,
+  "in_b": 0,
+  "cut_b": 2.6,
+  "move_a": {
+   "zf": 1,
+   "zt": 1.1,
+   "fx": 0.5,
+   "fy": 0.6
+  },
+  "move_b": {
+   "zf": 1.25,
+   "zt": 1,
+   "fx": 0.5,
+   "fy": 0.6
+  }
+ }
+]
