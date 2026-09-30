@@ -28,6 +28,7 @@ Supabase storage. Nothing secret is hardcoded; everything loads from env via
 | Char 3 Jealousy Treadmill video | `renderers/char3_jealousy_treadmill/` | `render_jealousy_treadmill.py` | Treadmill before/after with wrap-around contour captions + mid-after punch-in; handles after-only rows. |
 | Lavish Life 2 video | `renderers/lavish-life-2/` | `lavish_stitch.py` | Lavish-lifestyle stitch (+ `pen_insert.py`, `yara_run*.py` drivers). |
 | Viral Filler Mover video | `renderers/viral_filler_mover/` | `filler_mover.py` | Full-screen filler + seeded drifting character cutout + top caption (the newer non-split-screen filler format). |
+| 3-Slide Journey carousel (Character 6) | `renderers/journey_3slide/` | `render_journey_3slide.py [J3-###] [--dry-run]` | Before + hook / constant "Directed by Robert B. Weide" / after. Pillow port of the Figma template; rows from `journey_3slide_carousel`; slide 2 constant lives in storage; Gotham Bold via `JOURNEY_FONT_PATH`. |
 
 **Not in this repo (no renderer exists yet):** Eat Whatever video, Peptide Question deck.
 **BA main video** is a Claude-skill pipeline (Sheets-based), not a standalone script.
