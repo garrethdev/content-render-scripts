@@ -18,7 +18,8 @@ Staleness is measured the only way that matters downstream: an EDL whose cut
 count no longer matches its script's beat count was cast against an older script
 and would put the wrong clip on every line after the divergence.
 """
-import json, os, re, subprocess, sys, time
+import hashlib, json, os, re, subprocess, sys, threading, time
+from collections import Counter
 from concurrent.futures import ThreadPoolExecutor
 
 HERE = os.path.dirname(os.path.abspath(__file__))
@@ -195,11 +196,27 @@ def align_by_index(d, n):
     return {'ok': True, 'assign': out, 'note': ''}
 
 
-def fallback_hook(url_map, sec_map, reason):
-    return {'hook_key': None, 'shots': 1, 'shot_a': FALLBACK_SHOT, 'shot_a_url': url_map.get(FALLBACK_SHOT),
-            'in_a': 0, 'cut_a': min(5, sec_map.get(FALLBACK_SHOT, 5)), 'shot_b': None, 'shot_b_url': None,
+def solo_hook(shot, url_map, sec_map, reason):
+    """A single-shot opener. `solo` tells the renderer to open on exactly this clip (see
+    build_new_episode_mac.py) instead of rotating by episode number."""
+    return {'hook_key': None, 'shots': 1, 'solo': True, 'shot_a': shot, 'shot_a_url': url_map.get(shot),
+            'in_a': 0, 'cut_a': min(5, sec_map.get(shot, 5)), 'shot_b': None, 'shot_b_url': None,
             'in_b': 0, 'cut_b': 0, 'transition': 'none', 'move_a': None, 'move_b': None,
             'hook_y': 70, 'reason': reason}
+
+
+def fallback_hook(url_map, sec_map, reason):
+    return solo_hook(FALLBACK_SHOT, url_map, sec_map, reason)
+
+
+def pair_hook(h, url_map, said):
+    return {'hook_key': h['hook_key'], 'name': h.get('name'), 'shots': 2,
+            'shot_a': h['shot_a'], 'shot_a_url': url_map[h['shot_a']],
+            'in_a': float(h.get('in_a') or 0), 'cut_a': float(h.get('cut_a') or 2.4),
+            'shot_b': h['shot_b'], 'shot_b_url': url_map[h['shot_b']],
+            'in_b': float(h.get('in_b') or 0), 'cut_b': float(h.get('cut_b') or 2.5),
+            'transition': h.get('transition') or 'cut', 'move_a': h.get('move_a'), 'move_b': h.get('move_b'),
+            'hook_y': float(h.get('hook_y') or 300), 'reason': said or 'director pick'}
 
 
 def resolve_hook(d, hook_map, url_map, sec_map, title):
@@ -217,13 +234,69 @@ def resolve_hook(d, hook_map, url_map, sec_map, title):
             return fallback_hook(url_map, sec_map, f'{key} rejected: episode matches its avoid list ({a})')
     if not url_map.get(h.get('shot_a')) or not url_map.get(h.get('shot_b')):
         return fallback_hook(url_map, sec_map, f'{key} rejected: a shot is missing from the library')
-    return {'hook_key': h['hook_key'], 'name': h.get('name'), 'shots': 2,
-            'shot_a': h['shot_a'], 'shot_a_url': url_map[h['shot_a']],
-            'in_a': float(h.get('in_a') or 0), 'cut_a': float(h.get('cut_a') or 2.4),
-            'shot_b': h['shot_b'], 'shot_b_url': url_map[h['shot_b']],
-            'in_b': float(h.get('in_b') or 0), 'cut_b': float(h.get('cut_b') or 2.5),
-            'transition': h.get('transition') or 'cut', 'move_a': h.get('move_a'), 'move_b': h.get('move_b'),
-            'hook_y': float(h.get('hook_y') or 300), 'reason': said or 'director pick'}
+    return pair_hook(h, url_map, said)
+
+
+# ------------------------------------------------------- opener variety governor
+# The model picks a hook per episode with no memory of its earlier picks, and hook03's "fits" tags
+# (shocking discoveries / dark secrets / hidden truths) match almost any buried-cure story: 83 of 104
+# episodes opened on the identical wide_closed_eye frame. An account whose every video starts on the
+# same first frame looks templated and is liable to be down-ranked or flagged. So this is a HARD cap
+# applied AFTER the model's pick, not a prompt suggestion: one first frame may open at most
+# OPENER_MAX_IN_WINDOW of the last OPENER_WINDOW episodes, and never two in a row. When the pick is
+# over the cap it is swapped for the least-used eligible opener: an owner-built hook that is not on
+# its own avoid list first, else one of the owner's can_open single shots.
+OPENER_WINDOW = 10
+OPENER_MAX_IN_WINDOW = 2
+_OPENER_LOCK = threading.Lock()
+_OPENER_LOG = []            # first-frame shot_keys, oldest first; seeded from the database in main()
+
+
+def seed_opener_log(exclude_content_ids=()):
+    rows = sb_get('cleora_content?select=content_id,edl,scripted_at&edl=not.is.null'
+                  '&order=scripted_at.desc.nullslast&limit=%d' % (OPENER_WINDOW + len(exclude_content_ids) + 5))
+    if not isinstance(rows, list):
+        return
+    ex = set(exclude_content_ids)
+    shots = [((r.get('edl') or {}).get('hook') or {}).get('shot_a') for r in rows
+             if r.get('content_id') not in ex]
+    with _OPENER_LOCK:
+        _OPENER_LOG[:] = [x for x in shots if x][:OPENER_WINDOW][::-1]
+
+
+def govern_hook(hook, p):
+    first = hook.get('shot_a')
+    with _OPENER_LOCK:
+        window = _OPENER_LOG[-OPENER_WINDOW:]
+        used, last = Counter(window), (window[-1] if window else None)
+        ok = lambda k: bool(k) and used[k] < OPENER_MAX_IN_WINDOW and k != last            # noqa: E731
+        final = hook
+        if not ok(first):
+            title = str(p['title'] or '').lower()
+            cands = []                                         # (first_frame, kind, payload)
+            for h in p['hook_map'].values():
+                if any(str(a or '').strip() and str(a).lower().strip() in title
+                       for a in (h.get('avoid_for_stories_about') or [])):
+                    continue
+                if p['url_map'].get(h.get('shot_a')) and p['url_map'].get(h.get('shot_b')):
+                    cands.append((h['shot_a'], 0, h))
+            for c in p['lib_slim']:
+                if c.get('can_open') and p['url_map'].get(c['shot_key']):
+                    cands.append((c['shot_key'], 1, c['shot_key']))
+            tie = lambda f: hashlib.md5(f'{p["content_id"]}|{f}'.encode()).hexdigest()      # noqa: E731
+            pool = sorted((c for c in cands if ok(c[0])), key=lambda c: (used[c[0]], c[1], tie(c[0])))
+            if not pool:                                       # everything capped: least-used, not the last
+                pool = sorted((c for c in cands if c[0] != last), key=lambda c: (used[c[0]], c[1], tie(c[0])))
+            if pool:
+                f, kind, pay = pool[0]
+                why = (f"variety governor: {first} already opened {used[first]} of the last {len(window)} "
+                       f"episodes (cap {OPENER_MAX_IN_WINDOW}); using {f}. Model chose: {hook.get('reason')}")
+                final = (pair_hook(pay, p['url_map'], why) if kind == 0
+                         else solo_hook(pay, p['url_map'], p['sec_map'], why))
+        if final.get('shots') == 1:
+            final['solo'] = True                               # renderer must open on this exact clip
+        _OPENER_LOG.append(final.get('shot_a'))
+    return final
 
 
 def build_edl(p, text):
@@ -235,7 +308,7 @@ def build_edl(p, text):
     vo_pool = [c['shot_key'] for c in lib if c.get('vo_safe')]
     d = parse_json(text)
     music = music_for(d, p['content_id'] or p['id'])
-    hook = resolve_hook(d or {}, p['hook_map'], url_map, sec_map, p['title'])
+    hook = govern_hook(resolve_hook(d or {}, p['hook_map'], url_map, sec_map, p['title']), p)
     al = align_by_index(d, len(beats))
     assign = al['assign'] if al['ok'] else [None] * len(beats)
 
@@ -319,6 +392,7 @@ def main(argv):
         print('nothing to cast')
         return 0
     system = open(os.path.join(HERE, 'system_prompt.txt')).read()
+    seed_opener_log(want)
     lib = sb_get('cleora_clips?select=shot_key,beat_role,mood,vo_safe,talk_capable,can_open,'
                  'subject_gender,duration_seconds,action,video_public_url&status=eq.active')
     hooks = sb_get('cleora_hooks?select=*&status=eq.active&order=hook_key.asc')

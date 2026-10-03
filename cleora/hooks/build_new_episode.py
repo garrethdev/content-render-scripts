@@ -139,7 +139,14 @@ def opener_set():
                    ('cleora_tight',  f'{SBASE}/cleora_tight.mp4',            f'min(1.0+0.12*{T},1.45)')]
 OPENERS=opener_set()
 _epn=int(''.join(ch for ch in EP if ch.isdigit()) or 0)
-_ok,_ou,_ozx=OPENERS[_epn % len(OPENERS)]
+_hook = (row.get('edl') or {}).get('hook') or {}
+if _hook.get('solo') and _hook.get('shot_a') and _hook.get('shot_a_url'):
+    # The Director's variety governor (cast.py) picked this exact single-shot opener to keep the account's
+    # first frames varied. Honour it; rotating by episode number here would silently override that pick.
+    _ok,_ou=_hook['shot_a'],_hook['shot_a_url']
+    _ozx=next((z for k,u,z in OPENERS if k==_ok), f'min(1.0+0.10*{T},1.40)')
+else:
+    _ok,_ou,_ozx=OPENERS[_epn % len(OPENERS)]
 be.OPENER_SRC[EP]=(dl(_ok,_ou), _ozx, 0.5, 0.45)
 _lay=f'{BATCH}/opener_layout.json'                      # composition-aware hook card (see build_from_director)
 if os.path.exists(_lay):
