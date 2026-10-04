@@ -12,8 +12,11 @@ ids=sys.argv[1:] or [r["content_id"] for r in rest("cleora_opener_plan?select=co
 os.makedirs(f"{ST}/frames",exist_ok=True)
 env=dict(os.environ); env["PATH"]=f"{CR}/OpenMontage/.venv/bin:"+env["PATH"]
 for cid in ids:
-    n=int(cid.rsplit("-",1)[1]); ep=f"ep{n:03d}"; t0=time.time()
-    rc=subprocess.run(["python",f"{CR}/content-render-scripts/cleora/mac/build_new_episode_mac.py",ep,cid,f"{CR}/tts_{ep}.json"],cwd=f"{CR}/cleora-batch",env=env,
+    n=int(cid.rsplit("-",1)[1]); b=cid.split("-")[1]
+    # B6 keeps ep001-060 and tts_epNNN.json; B4/B5 get ep4NNN/ep5NNN so they never collide with a B6 number
+    ep=f"ep{n:03d}" if b=="B6" else f"ep{b[1:]}{n:03d}"
+    tts=f"{CR}/tts_{ep}.json" if b=="B6" else f"{CR}/tts_b45/{cid}.json"; t0=time.time()
+    rc=subprocess.run(["python",f"{CR}/content-render-scripts/cleora/mac/build_new_episode_mac.py",ep,cid,tts],cwd=f"{CR}/cleora-batch",env=env,
                       stdout=open(f"/tmp/{ep}_render.log","w"),stderr=subprocess.STDOUT,timeout=900).returncode
     outs=sorted(glob.glob(f"{CR}/OpenMontage/projects/cleora-{ep}-*/renders/{ep}_*.mp4"),key=os.path.getmtime)
     ok=rc==0 and outs and os.path.getmtime(outs[-1])>t0
