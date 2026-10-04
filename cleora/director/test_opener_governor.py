@@ -43,3 +43,9 @@ back2back = sum(1 for a, b in zip(out, out[1:]) if a == b)
 print(f'distinct first frames: {len(set(out))}   max in any 10-episode window: {worst}   back-to-back repeats: {back2back}')
 assert worst <= cast.OPENER_MAX_IN_WINDOW and back2back == 0, 'governor failed'
 print('PASS')
+
+# look-alike families: no group may exceed the cap or repeat back to back
+fams = [cast.fam(x) for x in out]
+assert all(a != b for a, b in zip(fams, fams[1:])), 'look-alike opener repeated back to back'
+assert all(Counter(fams[i:i + 10])[f] <= 2 for i in range(len(fams) - 9) for f in set(fams[i:i + 10])), 'family cap broken'
+print('OK: look-alike families respect the cap and never repeat consecutively')

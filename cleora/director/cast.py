@@ -248,6 +248,10 @@ def resolve_hook(d, hook_map, url_map, sec_map, title):
 # its own avoid list first, else one of the owner's can_open single shots.
 OPENER_WINDOW = 10
 OPENER_MAX_IN_WINDOW = 2
+# First frames that look alike (measured by first-frame correlation 0.92-0.98) count as ONE opener.
+_LOOKALIKE = {'wide_closed_eye': 'wide', 'cleora_orb_wide': 'wide', 'cleora_walk': 'wide',
+              'eyes_dilated_purple': 'eyes', 'eyes_dilated_zoom_reveal': 'eyes'}
+fam = lambda k: _LOOKALIKE.get(k, k)                                                    # noqa: E731
 _OPENER_LOCK = threading.Lock()
 _OPENER_LOG = []            # first-frame shot_keys, oldest first; seeded from the database in main()
 
@@ -268,8 +272,8 @@ def govern_hook(hook, p):
     first = hook.get('shot_a')
     with _OPENER_LOCK:
         window = _OPENER_LOG[-OPENER_WINDOW:]
-        used, last = Counter(window), (window[-1] if window else None)
-        ok = lambda k: bool(k) and used[k] < OPENER_MAX_IN_WINDOW and k != last            # noqa: E731
+        used, last = Counter(fam(w) for w in window), (fam(window[-1]) if window else None)
+        ok = lambda k: bool(k) and used[fam(k)] < OPENER_MAX_IN_WINDOW and fam(k) != last   # noqa: E731
         final = hook
         if not ok(first):
             title = str(p['title'] or '').lower()
@@ -284,12 +288,12 @@ def govern_hook(hook, p):
                 if c.get('can_open') and p['url_map'].get(c['shot_key']):
                     cands.append((c['shot_key'], 1, c['shot_key']))
             tie = lambda f: hashlib.md5(f'{p["content_id"]}|{f}'.encode()).hexdigest()      # noqa: E731
-            pool = sorted((c for c in cands if ok(c[0])), key=lambda c: (used[c[0]], c[1], tie(c[0])))
+            pool = sorted((c for c in cands if ok(c[0])), key=lambda c: (used[fam(c[0])], c[1], tie(c[0])))
             if not pool:                                       # everything capped: least-used, not the last
-                pool = sorted((c for c in cands if c[0] != last), key=lambda c: (used[c[0]], c[1], tie(c[0])))
+                pool = sorted((c for c in cands if fam(c[0]) != last), key=lambda c: (used[fam(c[0])], c[1], tie(c[0])))
             if pool:
                 f, kind, pay = pool[0]
-                why = (f"variety governor: {first} already opened {used[first]} of the last {len(window)} "
+                why = (f"variety governor: {first} (look-alike group '{fam(first)}') already opened {used[fam(first)]} of the last {len(window)} "
                        f"episodes (cap {OPENER_MAX_IN_WINDOW}); using {f}. Model chose: {hook.get('reason')}")
                 final = (pair_hook(pay, p['url_map'], why) if kind == 0
                          else solo_hook(pay, p['url_map'], p['sec_map'], why))
