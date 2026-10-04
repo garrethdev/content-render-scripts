@@ -32,6 +32,9 @@ Usage
   python3 render_leanne_transformation.py --supabase --upload
   python3 render_leanne_transformation.py --supabase --carousel LEA-B1-10        # one row
   python3 render_leanne_transformation.py --supabase --all                       # ignore rendered_at
+  python3 render_leanne_transformation.py --supabase --all --include-unapproved --out ./leanne_out
+         # ^ pull EVERYTHING: renders every carousel from the latest DB copy (read-only key is enough)
+         #   and writes <out>/manifest.json (copy, captions, hashtags, slide files)
   python3 render_leanne_transformation.py --supabase --include-unapproved        # before approval (test)
   python3 render_leanne_transformation.py --supabase --carousel LEA-B1-10 --include-unapproved
          # ^ local render only (no --upload): writes PNGs + filmstrip to ./out/<id>/, touches nothing
@@ -170,12 +173,17 @@ def draw_caption(base, text, canvas, scale=1.0, pos="center"):
     return base
 
 
+_IMG_CACHE = {}   # backgrounds repeat across carousels; download each once per run
+
+
 def open_image(src):
     if isinstance(src, str) and src.lower().startswith(("http://", "https://")):
-        import requests
-        r = requests.get(src, timeout=30)
-        r.raise_for_status()
-        return Image.open(io.BytesIO(r.content))
+        if src not in _IMG_CACHE:
+            import requests
+            r = requests.get(src, timeout=60)
+            r.raise_for_status()
+            _IMG_CACHE[src] = r.content
+        return Image.open(io.BytesIO(_IMG_CACHE[src]))
     return Image.open(src)
 
 
@@ -230,9 +238,13 @@ def _load_env(path=SECRETS_ENV):
 def _sb_conn():
     env = _load_env()
     ref = env.get("CAROUSEL_SUPABASE_PROJECT", SUPABASE_PROJECT_REF)
-    key = env.get("CAROUSEL_SUPABASE_SECRET_KEY")
+    # Reads (local renders) work with the project's public anon key; only --upload needs the
+    # service/secret key (see _sb_storage).
+    key = (env.get("CAROUSEL_SUPABASE_SECRET_KEY") or env.get("SUPABASE_KEY")
+           or env.get("SUPABASE_ANON_KEY"))
     if not key:
-        sys.exit(f"! CAROUSEL_SUPABASE_SECRET_KEY not found in env or {SECRETS_ENV}")
+        sys.exit("! No Supabase key found. For a local render set SUPABASE_KEY (the project's "
+                 f"public anon key); for --upload set CAROUSEL_SUPABASE_SECRET_KEY (in env or {SECRETS_ENV}).")
     base = f"https://{ref}.supabase.co/rest/v1"
     headers = {"apikey": key, "Authorization": f"Bearer {key}"}
     return base, headers
@@ -241,7 +253,7 @@ def _sb_conn():
 def fetch_carousels(carousel_id=None, all_rows=False, include_unapproved=False):
     import requests
     base, headers = _sb_conn()
-    cols = ["carousel_id", "hook_text"] + SLIDE_COPY_COLS + SLIDE_URL_COLS
+    cols = ["carousel_id", "hook_text", "topic", "caption", "hashtags", "batch", "pillar"] + SLIDE_COPY_COLS + SLIDE_URL_COLS
     params = {"select": ",".join(cols), "order": "carousel_id"}
     if not include_unapproved:
         params["approved"] = "eq.true"
@@ -399,6 +411,7 @@ def upload_render(local_path, carousel_id, idx):
 # ---------------------------------------------------------------- driver
 def render_from_supabase(carousel_id=None, all_rows=False, upload=False,
                          include_unapproved=False, out_root=None):
+    manifest = []
     rows = fetch_carousels(carousel_id, all_rows, include_unapproved)
     if not rows:
         print("No rows to render "
@@ -446,6 +459,12 @@ def render_from_supabase(carousel_id=None, all_rows=False, upload=False,
             print(f"  · {cid}: nothing rendered (no copy or no backgrounds) — skipped")
             continue
         make_filmstrip(rendered, os.path.join(out_dir, "filmstrip.jpg"))
+        manifest.append({
+            "carousel_id": cid, "batch": row.get("batch"), "topic": row.get("topic"),
+            "pillar": row.get("pillar"), "caption": row.get("caption"), "hashtags": row.get("hashtags"),
+            "slides": [{"n": i, "text": row.get(SLIDE_COPY_COLS[i - 1]),
+                        "file": f"{cid}/slide_{i:02d}.jpg"} for i, _p in slide_paths],
+            "filmstrip": f"{cid}/filmstrip.jpg"})
         picked = f" ({len(assigned)} backgrounds auto-picked)" if assigned else ""
         print(f"  ✓ {cid}: {len(rendered)} slides -> {out_dir}{picked}")
         if upload:
@@ -459,6 +478,13 @@ def render_from_supabase(carousel_id=None, all_rows=False, upload=False,
             patch["rendered_at"] = "now()"
             persist(cid, patch)
             print(f"    ↳ uploaded {len(render_urls)} slides + stamped rendered")
+    if manifest:
+        import json as _json
+        mp = os.path.join(out_root, "manifest.json")
+        with open(mp, "w") as f:
+            _json.dump({"generated_at": __import__("datetime").datetime.utcnow().isoformat() + "Z",
+                        "count": len(manifest), "carousels": manifest}, f, indent=2, ensure_ascii=False)
+        print(f"manifest: {mp} ({len(manifest)} carousels)")
     print("Done.")
 
 
@@ -472,6 +498,7 @@ def main(argv):
             all_rows="--all" in flags,
             upload="--upload" in flags,
             include_unapproved="--include-unapproved" in flags,
+            out_root=val("--out"),
         )
         return
     print(__doc__)

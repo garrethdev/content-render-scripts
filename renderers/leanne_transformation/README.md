@@ -50,3 +50,19 @@ Secrets from `~/.config/peptide-secrets/.env`: `CAROUSEL_SUPABASE_PROJECT`,
   repetition across carousels.
 - An existing `slide_N_url` on a row is respected, so a hand-picked reveal photo
   can be set per carousel and the brain will not overwrite it.
+
+## Pull everything (latest copy from the database)
+Regenerates every Leanne carousel from the live `leanne_transformation_carousel` table, so the output is always the latest copy. A read-only key is enough:
+
+```bash
+git pull origin main
+cd renderers/leanne_transformation
+SUPABASE_KEY=<project anon key> python3 render_leanne_transformation.py \
+  --supabase --all --include-unapproved --out ~/leanne_latest
+```
+Output: `~/leanne_latest/<carousel_id>/slide_01..06.jpg` (+ `filmstrip.jpg`) and `~/leanne_latest/manifest.json`
+(copy, captions, hashtags, files). ~75 s for all 40 carousels. The anon key is in Supabase Dashboard, Project Settings,
+API Keys (project `qlcmgxgwpzmiebzxflai`). Backgrounds are seeded by `carousel_id`, so re-pulls are stable.
+
+`--upload` (store the renders in the `leanne-carousel-images` bucket and write `slide_N_url` back) additionally needs the
+service/secret key as `CAROUSEL_SUPABASE_SECRET_KEY`.
