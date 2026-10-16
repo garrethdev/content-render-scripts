@@ -1,0 +1,6 @@
+pillow
+numpy
+requests
+# optional: places text away from her head on slides 3, 5 and 6
+rembg
+onnxruntime
