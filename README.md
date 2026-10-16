@@ -28,6 +28,7 @@ Supabase storage. Nothing secret is hardcoded; everything loads from env via
 | Char 3 Jealousy Treadmill video | `renderers/char3_jealousy_treadmill/` | `render_jealousy_treadmill.py` | Treadmill before/after with wrap-around contour captions + mid-after punch-in; handles after-only rows. |
 | Lavish Life 2 video | `renderers/lavish-life-2/` | `lavish_stitch.py` | Lavish-lifestyle stitch (+ `pen_insert.py`, `yara_run*.py` drivers). |
 | Viral Filler Mover video | `renderers/viral_filler_mover/` | `filler_mover.py` | Full-screen filler + seeded drifting character cutout + top caption (the newer non-split-screen filler format). |
+| Divorce Recovery carousel (Character 6) | `renderers/divorce_recovery/` | `ingest_decks.py --decks N` then `render_divorce_recovery.py --upload` | 6 slides: expression cover, iOS lock screen with the ex's text, After/scenery/Before/After. Rows in `divorce_recovery_carousel`. |
 
 **Not in this repo (no renderer exists yet):** Eat Whatever video, Peptide Question deck.
 **BA main video** is a Claude-skill pipeline (Sheets-based), not a standalone script.
