@@ -7,7 +7,8 @@ reveal photo. It never writes copy (copy comes from the 3-call writer: hook ->
 body -> humanizer).
 
 ## Source
-- Table: `public.leanne_transformation_carousel` (Supabase `qlcmgxgwpzmiebzxflai`).
+- Table: `public.viral_theories_carousel` (Supabase `qlcmgxgwpzmiebzxflai`), content type
+  `viral_theories`. The old `leanne_transformation_carousel` table is retired.
   Reads `slide_1..slide_6` (copy) and `slide_1_url..slide_6_url` (images).
   Pulls `approved = true` and `rendered_at IS NULL` unless flags say otherwise.
 - Backgrounds: `public.carousel_images`, Character 6 approved set in bucket
@@ -23,7 +24,7 @@ body -> humanizer).
   in Python (`_tag`), not via SQL ilike.
 
 ## Output
-- Renders 1080x1350 JPGs to `out/<carousel_id>/slide_0N.jpg` + a `filmstrip.jpg`.
+- Renders 1080x1920 (9:16) JPGs to `out/<carousel_id>/slide_0N.jpg` + a `filmstrip.jpg`.
 - With `--upload`: uploads to bucket `leanne-carousel-images`
   (`renders/<id>/slide_0N.jpg`), writes `slide_N_url`, `source_images`,
   `status='rendered'`, `rendered_at`.
@@ -39,7 +40,15 @@ python3 render_leanne_transformation.py --supabase --upload
 # one row, or ignore the rendered_at filter
 python3 render_leanne_transformation.py --supabase --carousel LEA-B1-10 --upload
 python3 render_leanne_transformation.py --supabase --all
+
+# redo approved, unposted decks at the current size: look first, then swap them
+python3 render_leanne_transformation.py --supabase --rerender --out ./rerender_out
+python3 render_leanne_transformation.py --supabase --rerender --upload --out ./rerender_out
 ```
+
+`--rerender` puts the new files in `renders-9x16/` and leaves the originals in
+`renders/`. Finished slides are never reused as backgrounds, and a deck is skipped
+if its photos would differ from the ones recorded in `source_images`.
 
 Secrets from `~/.config/peptide-secrets/.env`: `CAROUSEL_SUPABASE_PROJECT`,
 `CAROUSEL_SUPABASE_SECRET_KEY`. Needs `pillow` and `requests`.
@@ -52,7 +61,7 @@ Secrets from `~/.config/peptide-secrets/.env`: `CAROUSEL_SUPABASE_PROJECT`,
   can be set per carousel and the brain will not overwrite it.
 
 ## Pull everything (latest copy from the database)
-Regenerates every Leanne carousel from the live `leanne_transformation_carousel` table, so the output is always the latest copy. A read-only key is enough:
+Regenerates every Leanne carousel from the live `viral_theories_carousel` table, so the output is always the latest copy. A read-only key is enough:
 
 ```bash
 git pull origin main

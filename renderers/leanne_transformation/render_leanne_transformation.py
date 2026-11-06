@@ -5,7 +5,7 @@ weight-loss / anti-aging TRANSFORMATION-REVEAL carousels for women over 40.
 
 Pure renderer. It burns the PRE-APPROVED, already-humanized copy onto each slide
 over a LANDSCAPE background. It NEVER writes copy: copy comes from the 3-call
-writer (hook -> body -> humanizer) and is stored in `leanne_transformation_carousel`
+writer (hook -> body -> humanizer) and is stored in `viral_theories_carousel`
 (see Obsidian Frameworks/Leanne Carousel - Writer Prompts + Leanne Humanizer - Wrapper).
 
 Backgrounds: the emphasis is the landscape / no-person images ALREADY in
@@ -17,7 +17,7 @@ stable across re-renders. An existing slide_N_url is respected (so slide 6 can
 later carry a real before/after reveal photo without the brain overwriting it).
 
 Content source (Supabase project qlcmgxgwpzmiebzxflai, story-finder):
-  leanne_transformation_carousel
+  viral_theories_carousel
     slide_1..slide_6         -> caption copy per slide (slide_1 = hook + sub)
     slide_1_url..slide_6_url -> image per slide (public URL; empty => brain picks)
     approved (bool), status, rendered_at, source_images, carousel_id
@@ -38,6 +38,9 @@ Usage
   python3 render_leanne_transformation.py --supabase --include-unapproved        # before approval (test)
   python3 render_leanne_transformation.py --supabase --carousel LEA-B1-10 --include-unapproved
          # ^ local render only (no --upload): writes PNGs + filmstrip to ./out/<id>/, touches nothing
+  python3 render_leanne_transformation.py --supabase --rerender --out ./rerender_out
+         # ^ redo approved, unposted decks at the current size. Add --upload to swap them:
+         #   new files go to renders-9x16/, the originals stay, the deck's six links change in one write
 """
 
 import io
@@ -50,24 +53,26 @@ from PIL import Image, ImageDraw, ImageFont, ImageFilter, ImageOps
 # ---------------------------------------------------------------- config
 SF_FONT_PATH = "/System/Library/Fonts/SFNS.ttf"
 SF_VARIATION = "Bold"
-DEFAULT_CANVAS = (1080, 1350)             # 4:5 IG carousel feed ratio
+DEFAULT_CANVAS = (1080, 1920)             # 9:16, same as every other Character 6 lane
 
 SUPABASE_PROJECT_REF = "qlcmgxgwpzmiebzxflai"
-TABLE = "leanne_transformation_carousel"
+TABLE = "viral_theories_carousel"         # the table the posting system reads
 IMAGE_TABLE = "carousel_images"
 STORAGE_BUCKET = "leanne-carousel-images"
 RENDER_PREFIX = "renders"
+RERENDER_PREFIX = "renders-9x16"          # --rerender: leaves the 4:5 originals where they are
 SECRETS_ENV = os.path.expanduser("~/.config/peptide-secrets/.env")
 
 SLIDE_COPY_COLS = [f"slide_{i}" for i in range(1, 7)]
 SLIDE_URL_COLS = [f"slide_{i}_url" for i in range(1, 7)]
 
-# Caption look (fractions of canvas, so it scales with size).
-CAP_FONT_FRAC = 0.045        # Leanne copy is short; slightly larger than covered_eye
+# Caption look (fractions of canvas WIDTH: a taller slide must not mean bigger text).
+CAP_FONT_FRAC = 0.05625      # Leanne copy is short; slightly larger than covered_eye
 CAP_MARGIN_X_FRAC = 0.08
 CAP_LINE_SPACING = 1.14
-SHADOW_BLUR_FRAC = 0.011
-SHADOW_OFFSET_FRAC = 0.003
+SHADOW_BLUR_FRAC = 0.01375
+SHADOW_OFFSET_FRAC = 0.00375
+EDGE_FRAC = 0.104            # text clear of the top and bottom edge, where the apps put their buttons
 JPEG_QUALITY = 92
 
 # Centered text reads best for a reflective transformation voice. Slide 1 (hook)
@@ -123,7 +128,7 @@ def draw_caption(base, text, canvas, scale=1.0, pos="center"):
     if not text:
         return base
     W, H = canvas
-    font_px = max(12, int(H * CAP_FONT_FRAC * scale))
+    font_px = max(12, int(W * CAP_FONT_FRAC * scale))
     font = load_font(font_px)
     margin_x = int(W * CAP_MARGIN_X_FRAC)
     max_text_w = W - 2 * margin_x
@@ -139,16 +144,16 @@ def draw_caption(base, text, canvas, scale=1.0, pos="center"):
             lines.extend(wrap_caption(draw, para, font, max_text_w))
     block_h = line_h * len(lines)
     if pos == "top":
-        y0 = int(H * 0.07)
+        y0 = int(H * EDGE_FRAC)
     elif pos == "bottom":
-        y0 = H - int(H * 0.07) - block_h
+        y0 = H - int(H * EDGE_FRAC) - block_h
     else:
         y0 = (H - block_h) // 2                      # vertical center
 
     # soft drop shadow on its own layer, blurred then composited
     shadow = Image.new("RGBA", (W, H), (0, 0, 0, 0))
     sdraw = ImageDraw.Draw(shadow)
-    off = int(H * SHADOW_OFFSET_FRAC)
+    off = int(W * SHADOW_OFFSET_FRAC)
     for i, ln in enumerate(lines):
         if ln == "":
             continue
@@ -156,7 +161,7 @@ def draw_caption(base, text, canvas, scale=1.0, pos="center"):
         x = (W - w) / 2
         y = y0 + i * line_h
         sdraw.text((x + off, y + off), ln, font=font, fill=(0, 0, 0, 180))
-    blur = max(1, int(H * SHADOW_BLUR_FRAC))
+    blur = max(1, int(W * SHADOW_BLUR_FRAC))
     shadow = shadow.filter(ImageFilter.GaussianBlur(blur))
     base = Image.alpha_composite(base.convert("RGBA"), shadow).convert("RGB")
 
@@ -250,15 +255,28 @@ def _sb_conn():
     return base, headers
 
 
-def fetch_carousels(carousel_id=None, all_rows=False, include_unapproved=False):
+def is_finished_slide(url):
+    """True for a slide this renderer already made. It has text burned in, so it
+    can never be used as a background: re-rendering would print text over text."""
+    return f"/{STORAGE_BUCKET}/" in (url or "")
+
+
+def fetch_carousels(carousel_id=None, all_rows=False, include_unapproved=False, rerender=False):
     import requests
     base, headers = _sb_conn()
-    cols = ["carousel_id", "hook_text", "topic", "caption", "hashtags", "batch", "pillar"] + SLIDE_COPY_COLS + SLIDE_URL_COLS
+    cols = ["carousel_id", "hook_text", "caption", "batch", "pillar", "source_images"] + SLIDE_COPY_COLS + SLIDE_URL_COLS
     params = {"select": ",".join(cols), "order": "carousel_id"}
-    if not include_unapproved:
-        params["approved"] = "eq.true"
-    if not all_rows:
-        params["rendered_at"] = "is.null"
+    if rerender:
+        # Approved decks that have not posted and are not 9:16 yet. Rejected and
+        # posted decks are left alone.
+        params["gatekeep_status"] = "eq.approved"
+        params["or"] = "(posting_status.is.null,posting_status.neq.Posted)"
+        params["slide_1_url"] = f"not.like.*/{RERENDER_PREFIX}/*"
+    else:
+        if not include_unapproved:
+            params["approved"] = "eq.true"
+        if not all_rows:
+            params["rendered_at"] = "is.null"
     if carousel_id:
         params["carousel_id"] = f"eq.{carousel_id}"
     r = requests.get(f"{base}/{TABLE}", headers=headers, params=params, timeout=30)
@@ -363,6 +381,8 @@ def assign_backgrounds(row, pools, rng):
     assigned = {}
     for i in filled:
         ucol = SLIDE_URL_COLS[i - 1]
+        if is_finished_slide(row.get(ucol)):
+            row[ucol] = None
         if row.get(ucol):
             continue
         p = apick() if i == after_slot else gpick()
@@ -393,10 +413,10 @@ def _sb_storage():
         "apikey": key, "Authorization": f"Bearer {key}"}
 
 
-def upload_render(local_path, carousel_id, idx):
+def upload_render(local_path, carousel_id, idx, prefix=RENDER_PREFIX):
     import requests
     ref, sbase, headers = _sb_storage()
-    path = f"{RENDER_PREFIX}/{carousel_id}/slide_{idx:02d}.jpg"
+    path = f"{prefix}/{carousel_id}/slide_{idx:02d}.jpg"
     with open(local_path, "rb") as f:
         data = f.read()
     r = requests.post(
@@ -410,9 +430,9 @@ def upload_render(local_path, carousel_id, idx):
 
 # ---------------------------------------------------------------- driver
 def render_from_supabase(carousel_id=None, all_rows=False, upload=False,
-                         include_unapproved=False, out_root=None):
+                         include_unapproved=False, out_root=None, rerender=False):
     manifest = []
-    rows = fetch_carousels(carousel_id, all_rows, include_unapproved)
+    rows = fetch_carousels(carousel_id, all_rows, include_unapproved, rerender)
     if not rows:
         print("No rows to render "
               f"(need {'any approval' if include_unapproved else 'approved=true'}"
@@ -428,6 +448,13 @@ def render_from_supabase(carousel_id=None, all_rows=False, upload=False,
         cid = row.get("carousel_id") or "unknown"
         rng = random.Random(cid)
         assigned = assign_backgrounds(row, (general, before, after), rng)
+        recorded = row.get("source_images") or {}
+        changed = [n for n, url in recorded.items() if assigned.get(f"slide_{n}_url") != url]
+        if rerender and changed:
+            # The seed should land on the photos this deck was made with. If it
+            # does not, the photo pool has moved: stop rather than swap her photos.
+            print(f"  ! {cid}: slides {changed} would change photo, skipped")
+            continue
         out_dir = os.path.join(out_root, cid)
         os.makedirs(out_dir, exist_ok=True)
         rendered, slide_paths = [], []
@@ -470,7 +497,8 @@ def render_from_supabase(carousel_id=None, all_rows=False, upload=False,
         if upload:
             render_urls, source_images = {}, {}
             for i, p in slide_paths:
-                render_urls[SLIDE_URL_COLS[i - 1]] = upload_render(p, cid, i)
+                render_urls[SLIDE_URL_COLS[i - 1]] = upload_render(
+                    p, cid, i, RERENDER_PREFIX if rerender else RENDER_PREFIX)
                 source_images[str(i)] = row.get(SLIDE_URL_COLS[i - 1])
             patch = dict(render_urls)
             patch["source_images"] = source_images
@@ -499,6 +527,7 @@ def main(argv):
             upload="--upload" in flags,
             include_unapproved="--include-unapproved" in flags,
             out_root=val("--out"),
+            rerender="--rerender" in flags,
         )
         return
     print(__doc__)
