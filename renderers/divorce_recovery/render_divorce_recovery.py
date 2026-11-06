@@ -24,8 +24,8 @@ Images, one rule per slide (the renderer is the brain for images):
   2  lock screen: an After photo of her alone as wallpaper + a contact photo from
      rich-life-images/divorce-recovery/contacts/
   3  After photo of her alone, NOT a selfie and NOT a close-up
-  4  scenery from rich-life-images/scenery/ (no people, no food)
-  5  always a Before photo
+  4  a Before photo of her (what the divorce did to her)
+  5  a second, different Before photo (the turn)
   6  After photo of her alone (selfies allowed)
 Picks are distinct within a carousel, least-used across the table first (from
 `source_images`), and seeded by carousel_id so a re-render gives the same picks.
@@ -270,7 +270,7 @@ def pick_images(carousel_id, pools, usage):
     picks["6"] = pick(pools["after"], portrait=True)
     picks["2"] = {"wallpaper": pick(pools["wallpaper"] or pools["after"], portrait=True),
                   "contact": pick(pools["contacts"])}
-    picks["4"] = pick(pools["scenery"])
+    picks["4"] = pick(pools["before"], portrait=True)
     picks["5"] = pick(pools["before"], portrait=True)
     return picks
 
@@ -516,7 +516,7 @@ def render_carousel(row, picks):
     slides[2] = render_lock_screen(row, picks["2"]["wallpaper"], picks["2"]["contact"], rng)
     for n in (3, 4, 5, 6):
         img = fit(load_image(picks[str(n)]))
-        top = TOP_SLOT if n == 4 else place_text(img, row[f"slide_{n}"])
+        top = place_text(img, row[f"slide_{n}"])
         slides[n] = draw_block(img, row[f"slide_{n}"], top)
     return slides
 
