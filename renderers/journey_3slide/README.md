@@ -13,7 +13,9 @@ Pillow port of the Figma "3-Slide Journey Carousel" template (`ZqDGTufoZyJX3EnRv
 - **Images:** `rich-life-images/character-6/before-basis/` (before) and `.../carousel-basis/` (after).
 - **Slide 2 constant:** `carousel-renders/journey-3slide/_assets/slide2_directed_by.png` (not committed; override with `JOURNEY_SLIDE2_URL` or a row's `slide_2_source_url`).
 - **Font:** Gotham Bold is licensed and not committed. Set `JOURNEY_FONT_PATH` or install to `~/Library/Fonts/Gotham-Bold.otf`.
-- **Env:** `SUPABASE_URL`, `SUPABASE_SERVICE_KEY` (via `common/env.py`).
+- **Env:** `SUPABASE_URL`, `SUPABASE_SERVICE_KEY` (via `common/env.py`, or `--env-file <path>` to load a local `.env`).
+- **Emoji:** hooks may contain emoji. They are drawn with the colour emoji font (`EMOJI_FONT`, default Apple Color Emoji on macOS, Noto Color Emoji on Linux); with no emoji font they are dropped, with a warning.
+- **9:16 safe zone:** output is 1080x1920. The hook block is kept between y=250 and y=1440 so TikTok's top bar and bottom caption/username area never cover it; a row's `hook_top_y` that would push text lower is moved up automatically.
 
 ```bash
 pip install -r requirements.txt

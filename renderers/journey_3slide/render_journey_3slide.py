@@ -30,8 +30,12 @@ Usage
   python render_journey_3slide.py J3-005          # one row
   python render_journey_3slide.py --dry-run       # render to ./out, no uploads/writes
   python render_journey_3slide.py --limit 5
+  python render_journey_3slide.py --env-file /path/to/.env   # load secrets from a local file
+
+Emoji in hooks are drawn with the colour emoji font (EMOJI_FONT, default Apple Color Emoji),
+and the hook block is kept between SAFE_TOP and SAFE_BOTTOM so TikTok's UI never covers it.
 """
-import argparse, io, sys
+import argparse, io, re, sys
 from datetime import datetime, timezone
 from pathlib import Path
 
@@ -47,6 +51,15 @@ W, H = 1080, 1920
 PHOTO = {"scale_w": 1.0204, "scale_h": 1.0229, "offset_x": -11, "offset_y": 0}
 HOOK = {"size": 50, "line_height": 60, "fill": "#FFFFFF", "stroke": "#000000",
         "stroke_width": 7, "max_width": 640, "default_x": 540, "default_y": 1000}
+# Keep the hook clear of TikTok's own UI on a 9:16 post: the top bar, and the caption,
+# username and music line along the bottom. A hook block that would end below SAFE_BOTTOM
+# is moved up; one that would start above SAFE_TOP is moved down.
+SAFE_TOP, SAFE_BOTTOM = 250, 1440
+EMOJI_SCALE = 1.05   # emoji height relative to the hook font size
+EMOJI_RE = re.compile(
+    "(?:[\U0001F1E6-\U0001F1FF]{2}"
+    "|[\u2600-\u27BF\u2B00-\u2BFF\U0001F000-\U0001FAFF]\uFE0F?"
+    "(?:\u200D[\u2600-\u27BF\U0001F000-\U0001FAFF]\uFE0F?)*)")
 OUT = Path(__file__).resolve().parent / "out"
 
 
@@ -82,13 +95,75 @@ def load_font():
         return ImageFont.load_default()
 
 
+_emoji_font = None
+
+
+def emoji_font():
+    """Colour emoji font. Apple Color Emoji only draws at its bitmap sizes (160 is the largest);
+    Noto Color Emoji only at 109. The glyph is drawn at that size and scaled to the hook."""
+    global _emoji_font
+    if _emoji_font is None:
+        candidates = [env.get("EMOJI_FONT"), "/System/Library/Fonts/Apple Color Emoji.ttc",
+                      "/usr/share/fonts/truetype/noto/NotoColorEmoji.ttf"]
+        for path in filter(None, candidates):
+            for size in (160, 109, 137, 96, 64):
+                try:
+                    _emoji_font = ImageFont.truetype(path, size)
+                    return _emoji_font
+                except OSError:
+                    continue
+        _emoji_font = False
+        print("WARN: no colour emoji font found; emoji in hooks will be dropped", file=sys.stderr)
+    return _emoji_font
+
+
+def emoji_image(cluster):
+    """The emoji drawn on a transparent tile, cropped to the glyph, HOOK size tall."""
+    ef = emoji_font()
+    if not ef:
+        return None
+    side = int(ef.size * 1.4)
+    tile = Image.new("RGBA", (side, side), (0, 0, 0, 0))
+    ImageDraw.Draw(tile).text((side // 2, side // 2), cluster, font=ef, embedded_color=True, anchor="mm")
+    box = tile.getbbox()
+    if not box:
+        return None
+    tile = tile.crop(box)
+    h = round(HOOK["size"] * EMOJI_SCALE)
+    return tile.resize((max(1, round(tile.width * h / tile.height)), h), Image.LANCZOS)
+
+
+def runs(text):
+    """Split a line into ("text", s) and ("emoji", cluster) runs."""
+    out, i = [], 0
+    for m in EMOJI_RE.finditer(text):
+        if m.start() > i:
+            out.append(("text", text[i:m.start()]))
+        out.append(("emoji", m.group(0)))
+        i = m.end()
+    if i < len(text):
+        out.append(("text", text[i:]))
+    return out
+
+
+def measure(d, text, font):
+    w = 0
+    for kind, s in runs(text):
+        if kind == "text":
+            w += d.textlength(s, font=font)
+        else:
+            im = emoji_image(s)
+            w += im.width if im else 0
+    return w
+
+
 def wrap_balanced(d, text, font, max_width):
     """Greedy wrap, then rebalance to the narrowest width that keeps the same line count."""
     def greedy(limit):
         lines, cur = [], ""
         for word in text.split():
             t = f"{cur} {word}".strip()
-            if cur and d.textlength(t, font=font) > limit:
+            if cur and measure(d, t, font) > limit:
                 lines.append(cur); cur = word
             else:
                 cur = t
@@ -106,9 +181,25 @@ def draw_hook(img, text, center_x=None, top_y=None):
     cx = float(center_x if center_x is not None else HOOK["default_x"])
     y = float(top_y if top_y is not None else HOOK["default_y"])
     d, font = ImageDraw.Draw(img), load_font()
-    for line in wrap_balanced(d, f'"{text}"', font, HOOK["max_width"]):
-        d.text((cx, y), line, font=font, fill=HOOK["fill"], anchor="ma",
-               stroke_width=HOOK["stroke_width"], stroke_fill=HOOK["stroke"])
+    lines = wrap_balanced(d, f'"{text}"', font, HOOK["max_width"])
+    ascent, descent = font.getmetrics()
+    block_bottom = y + (len(lines) - 1) * HOOK["line_height"] + ascent + descent + HOOK["stroke_width"]
+    if block_bottom > SAFE_BOTTOM:
+        y -= block_bottom - SAFE_BOTTOM
+    y = max(y, SAFE_TOP)
+    for line in lines:
+        x = cx - measure(d, line, font) / 2
+        baseline = y + ascent
+        for kind, s in runs(line):
+            if kind == "text":
+                d.text((x, baseline), s, font=font, fill=HOOK["fill"], anchor="ls",
+                       stroke_width=HOOK["stroke_width"], stroke_fill=HOOK["stroke"])
+                x += d.textlength(s, font=font)
+            else:
+                im = emoji_image(s)
+                if im:
+                    img.paste(im, (round(x), round(baseline - im.height * 0.86)), im)
+                    x += im.width
         y += HOOK["line_height"]
     return img
 
@@ -154,7 +245,10 @@ def main():
     ap.add_argument("carousel_id", nargs="?")
     ap.add_argument("--limit", type=int, default=10)
     ap.add_argument("--dry-run", action="store_true")
+    ap.add_argument("--env-file", help="extra .env to load (e.g. a project-local one); never committed")
     a = ap.parse_args()
+    if a.env_file:
+        env.load_env(a.env_file)
     sb, hdr = cfg()
     q = (f"{sb}/rest/v1/{TABLE}?render_status=eq.pending&before_image_url=not.is.null"
          f"&after_image_url=not.is.null&select=*&limit={a.limit}")
