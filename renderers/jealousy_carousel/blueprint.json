@@ -1,0 +1,132 @@
+{
+  "version": 1,
+  "canvas": {
+    "w": 1080,
+    "h": 1920,
+    "jpg_quality": 90,
+    "crop_anchor_y": 0.35
+  },
+  "font": {
+    "file": "assets/TikTokSans.ttf",
+    "family": "TikTok Sans"
+  },
+  "text": {
+    "side_margin": 84,
+    "line_height": 1.28,
+    "max_block_frac": 0.55,
+    "shrink_step": 3,
+    "min_size": 34,
+    "top_y": 260,
+    "bottom_margin": 430,
+    "fill": [
+      255,
+      255,
+      255,
+      255
+    ],
+    "shadow": [
+      0,
+      0,
+      0,
+      150
+    ],
+    "shadow_offset": [
+      2,
+      3
+    ]
+  },
+  "slides": {
+    "1": {
+      "position": "center",
+      "weight": "Bold",
+      "size": 68,
+      "size_long": 58,
+      "long_over_chars": 70
+    },
+    "2": {
+      "position": "bottom",
+      "weight": "SemiBold",
+      "size": 50
+    },
+    "3": {
+      "position": "bottom",
+      "weight": "SemiBold",
+      "size": 50
+    },
+    "4": {
+      "position": "bottom",
+      "weight": "SemiBold",
+      "size": 54
+    },
+    "5": {
+      "position": "bottom",
+      "weight": "SemiBold",
+      "size": 54,
+      "label": "{date} {n}lb"
+    },
+    "6": {
+      "position": "bottom",
+      "weight": "SemiBold",
+      "size": 54,
+      "label": "{date} {n}lb",
+      "label_range": [
+        146,
+        150
+      ]
+    }
+  },
+  "label": {
+    "weight": "Bold",
+    "size": 42,
+    "x": 56,
+    "y": 230,
+    "pad_x": 30,
+    "pad_y": 16,
+    "fill": [
+      255,
+      255,
+      255,
+      235
+    ],
+    "text": [
+      255,
+      255,
+      255,
+      255
+    ],
+    "backdrop": false,
+    "shadow": [
+      0,
+      0,
+      0,
+      170
+    ],
+    "shadow_offset": [
+      2,
+      3
+    ]
+  },
+  "overlay": {
+    "floor": 0.25,
+    "boost": 1.15
+  },
+  "blur": {
+    "radius": 38,
+    "feather": 10
+  },
+  "progress_dots": false,
+  "label_dates": {
+    "before_start": "2025-11",
+    "before_end": "2026-04",
+    "gap_months": [
+      3,
+      6
+    ],
+    "format": "%b %Y",
+    "loss_per_month_lb": 7,
+    "loss_jitter_lb": [
+      0,
+      3
+    ]
+  }
+}

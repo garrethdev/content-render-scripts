@@ -29,6 +29,8 @@ Supabase storage. Nothing secret is hardcoded; everything loads from env via
 | Lavish Life 2 video | `renderers/lavish-life-2/` | `lavish_stitch.py` | Lavish-lifestyle stitch (+ `pen_insert.py`, `yara_run*.py` drivers). |
 | Viral Filler Mover video | `renderers/viral_filler_mover/` | `filler_mover.py` | Full-screen filler + seeded drifting character cutout + top caption (the newer non-split-screen filler format). |
 | 3-Slide Journey carousel (Character 6) | `renderers/journey_3slide/` | `render_journey_3slide.py [J3-###] [--dry-run]` | Before + hook / constant "Directed by Robert B. Weide" / after. Pillow port of the Figma template; rows from `journey_3slide_carousel`; slide 2 constant lives in storage; Gotham Bold via `JOURNEY_FONT_PATH`. |
+| Divorce Recovery carousel (Character 6) | `renderers/divorce_recovery/` | `ingest_decks.py --decks N` then `render_divorce_recovery.py --upload` | 6 slides: expression cover, iOS lock screen with the ex's text, After/scenery/Before/After. Rows in `divorce_recovery_carousel`. |
+| Jealousy carousel (Character 6) | `renderers/jealousy_carousel/` | `stitch.py --batch <name>` then `gate.py --batch <name>` | 6 slides at 1080x1920: the villain's line over a face-blurred friend photo, then before photos, then the after. Copy and photo picks from the n8n writer + director; rows in `jealousy_carousels`. |
 
 **Not in this repo (no renderer exists yet):** Eat Whatever video, Peptide Question deck.
 **BA main video** is a Claude-skill pipeline (Sheets-based), not a standalone script.
