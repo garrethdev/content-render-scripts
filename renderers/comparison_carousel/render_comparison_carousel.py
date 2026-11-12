@@ -1,16 +1,16 @@
 """
 render_comparison_carousel.py: Pillow renderer for the Comparison Carousel (Character 6).
 
-Eight slides at 1080x1350 (4:5), JPG quality 90. Typography, placement, overlay and
+Eight slides at 1080x1920 (9:16), JPG quality 90. Typography, placement, overlay and
 weight labels follow the Jealousy Carousel Render Blueprint
 (https://claude.ai/artifact/9CN9pvUkGhyQaiPBzNy5bb): TikTok Sans only, white text with a
-drop shadow, hook centred on slide 1, story text at the bottom ending 130 px above the
-edge, a black legibility gradient, no dots, no numbers, no logos.
+drop shadow, hook centred on slide 1, story text at the bottom ending 430 px above the
+edge (clear of the app's caption and buttons), a black legibility gradient, no dots, no numbers, no logos.
 
 Copy comes from public.comparison_carousel (slide_1 = hook, slide_2..slide_8), written by the
 n8n "Comparison Carousel: copy writer". The renderer never writes copy.
 
-Weight labels (top left, 56 px from the left, 64 px from the top, "Mon YYYY Nlb"):
+Weight labels (top left, 56 px from the left, 230 px from the top, "Mon YYYY Nlb"):
   slide 5 = the Before slide, slide 6 = the After slide. Only those two carry weights.
   Dates and weights come from the carousel id, so a re-render never changes them.
 
@@ -21,12 +21,14 @@ Images, one rule per slide (the renderer is the brain for images):
   6  After photo of her (carries the After weight)
   7-8  After photos of her
 Before slide 6 she is only ever shown in Before photos. Picks are distinct inside a carousel,
-least used across the table first, and seeded by carousel_id.
+least used across the table first, and seeded by carousel_id. A row that was already rendered
+keeps the pictures stored in source_images, so a re-render only redraws; --repick picks again.
 
 Usage:
   python3 render_comparison_carousel.py                        # pending rows -> local preview
   python3 render_comparison_carousel.py --upload               # pending rows -> storage + PATCH
   python3 render_comparison_carousel.py --carousel CC-0002 --all --upload
+  python3 render_comparison_carousel.py --carousel CC-0002,CC-0005 --all   # several rows
   python3 render_comparison_carousel.py --batch cc-20261107 --limit 3
 
 Needs SUPABASE_ANON_KEY (or a service key) via common/env. Requires pillow, requests.
@@ -50,10 +52,10 @@ sys.path.insert(0, os.path.dirname(os.path.dirname(os.path.dirname(os.path.abspa
 from common import env  # noqa: E402
 
 # ---------------------------------------------------------------- blueprint
-W, H = 1080, 1350
+W, H = 1080, 1920                # 9:16, so a reel or story shows the whole slide with no crop
 JPEG_QUALITY = 90
 COL_W = 912                      # 84 px side margins
-BOTTOM_MARGIN = 130              # last line ends this far above the bottom edge
+BOTTOM_MARGIN = 430              # last line ends this far above the bottom edge (caption and buttons sit below)
 LINE_H = 1.28
 SHADOW = (0, 0, 0, 150)          # black at 59%
 SHADOW_OFF = (2, 3)
@@ -65,7 +67,7 @@ STORY = {2: ("SemiBold", 50), 3: ("SemiBold", 50), 4: ("SemiBold", 54), 5: ("Sem
          6: ("SemiBold", 54), 7: ("SemiBold", 54), 8: ("SemiBold", 54)}
 MAX_BLOCK_FRAC = 0.55            # shrink rule: block taller than 55% of the slide drops 3 px
 MIN_SIZE = 34
-LABEL = {"weight": "Bold", "size": 42, "x": 56, "y": 64}
+LABEL = {"weight": "Bold", "size": 42, "x": 56, "y": 230}
 LABEL_SLIDES = {5: "before", 6: "after"}
 AFTER_RANGE = (146, 150)
 LB_PER_MONTH = 7
@@ -107,7 +109,8 @@ def fetch_rows(carousel_id=None, batch=None, all_rows=False, limit=50):
     if not all_rows:
         params["render_status"] = "eq.pending"
     if carousel_id:
-        params["carousel_id"] = f"eq.{carousel_id}"
+        ids = [c.strip() for c in carousel_id.split(",") if c.strip()]
+        params["carousel_id"] = f"eq.{ids[0]}" if len(ids) == 1 else "in.(%s)" % ",".join(ids)
     if batch:
         params["batch"] = f"eq.{batch}"
     r = requests.get(f"{base}/rest/v1/{TABLE}", headers=h, params=params, timeout=30)
@@ -381,6 +384,7 @@ def main():
     ap.add_argument("--all", action="store_true")
     ap.add_argument("--limit", type=int, default=50)
     ap.add_argument("--upload", action="store_true")
+    ap.add_argument("--repick", action="store_true", help="pick new pictures even if the row already has some")
     ap.add_argument("--out", default=os.path.join(CACHE_DIR, "out"))
     args = ap.parse_args()
 
@@ -392,7 +396,9 @@ def main():
         cid = row["carousel_id"]
         try:
             check_row(row)
-            picks = pick_images(cid, pools, usage)
+            stored = row.get("source_images") or {}
+            keep = not args.repick and all(str(stored.get(str(n)) or "").startswith("http") for n in range(1, 9))
+            picks = {str(n): stored[str(n)] for n in range(1, 9)} if keep else pick_images(cid, pools, usage)
             labels = labels_for(cid)
             slides = {n: render_slide(n, row[f"slide_{n}"], picks[str(n)],
                                       labels.get(str(n)) if n in LABEL_SLIDES else None)
@@ -402,8 +408,9 @@ def main():
             if args.upload:
                 patch_row(cid, {"render_status": "failed", "render_error": str(e)[:500]})
             continue
-        for v in picks.values():
-            usage[v] = usage.get(v, 0) + 1
+        if not keep:  # kept pictures are already counted in the table
+            for v in picks.values():
+                usage[v] = usage.get(v, 0) + 1
         if args.upload:
             urls = {f"slide_{n}_url": upload_slide(im, cid, n) for n, im in slides.items()}
             patch_row(cid, {**urls, "source_images": {**picks, "labels": labels},
