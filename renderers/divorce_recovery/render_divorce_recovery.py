@@ -19,21 +19,25 @@ constant below is lifted from those frames:
     lines in a 760px column; her line in white boxes 131px below the card;
     flashlight + camera buttons, "Personal" focus, home bar.
 
-Images, one rule per slide (the renderer is the brain for images):
+A deck has 6 to 9 slides: the hook, his text, then the story slides (3 to the last).
+
+Images (the renderer is the brain for images):
   1  cover from rich-life-images/character-6/divorce-recovery-covers/manifest.json
   2  lock screen: an After photo of her alone as wallpaper + a contact photo from
      rich-life-images/divorce-recovery/contacts/
-  3  After photo of her alone, NOT a selfie and NOT a close-up
-  4  a Before photo of her (what the divorce did to her)
-  5  a second, different Before photo (the turn)
-  6  After photo of her alone (selfies allowed)
+  story slides: the writer tags each one `photo: before` or `photo: after` in the deck.
+     before  a Before photo of her
+     after   an After photo of her alone, NOT a selfie and NOT a close-up
+     last    always an After photo of her alone (selfies allowed)
+  Older six slide rows have no tags and keep the original rule: 3 After (not a selfie),
+  4 and 5 Before, 6 After. They re-render with the same photos as before.
 Picks are distinct within a carousel, least-used across the table first (from
 `source_images`), and seeded by carousel_id so a re-render gives the same picks.
 After/Before photos come from `public.carousel_images` (filename character-6-*).
 
-Text position on slides 3, 5 and 6 keeps off her face: the block sits low (ends at
+Text position on the story slides keeps off her face: the block sits low (ends at
 y=1720) and only moves to the top slot (y=295) when the rembg person mask puts her
-head in the lower half of the frame. Slides 1 and 4 always use the top slot.
+head in the lower half of the frame. Slide 1 always uses the top slot.
 
 Usage
 -----
@@ -245,13 +249,53 @@ def fit(img):
     return ImageOps.fit(img, (W, H), method=Image.LANCZOS, centering=(0.5, 0.5))
 
 
-def pick_images(carousel_id, pools, usage):
-    """Return {"1": cover, "2": {"wallpaper", "contact"}, "3".."6": url}. Distinct, least-used."""
+MIN_SLIDES, MAX_SLIDES = 6, 9
+# the original six slide deck, used for rows whose deck carries no photo tags
+LEGACY_KINDS = {3: "after_wide", 4: "before", 5: "before", 6: "after"}
+
+
+def slide_count(row):
+    """How many slides this row has: slide_count when set, else the last slide with text."""
+    n = row.get("slide_count")
+    if not n:
+        n = max([k for k in range(1, MAX_SLIDES + 1) if str(row.get(f"slide_{k}") or "").strip()]
+                or [MIN_SLIDES])
+    return max(MIN_SLIDES, min(MAX_SLIDES, int(n)))
+
+
+def slide_kinds(row):
+    """Photo kind for each story slide (3 to the last): before, after_wide or after.
+    The writer tags each story slide before or after. The last slide is always her now."""
+    n = slide_count(row)
+    deck = row.get("deck") if isinstance(row.get("deck"), dict) else {}
+    tags = {}
+    for s in deck.get("slides") or []:
+        try:
+            tags[int(s.get("n"))] = str(s.get("photo") or "").strip().lower()
+        except (TypeError, ValueError):
+            continue
+    if not any(tags.get(k) in ("before", "after") for k in range(3, n + 1)):
+        if n == 6:
+            return dict(LEGACY_KINDS)
+        tags = {k: ("after" if k >= n - 1 else "before") for k in range(3, n + 1)}
+    kinds = {}
+    for k in range(3, n + 1):
+        if k == n:
+            kinds[k] = "after"
+        else:
+            kinds[k] = "after_wide" if tags.get(k) == "after" else "before"
+    return kinds
+
+
+def pick_images(carousel_id, pools, usage, kinds=None):
+    """Return {"1": cover, "2": {"wallpaper", "contact"}, "3".."N": url}. Distinct, least-used.
+    kinds maps each story slide to before, after_wide or after (see slide_kinds)."""
+    kinds = kinds or dict(LEGACY_KINDS)
     rng = random.Random(carousel_id)
     taken = set()
 
-    def pick(urls, portrait=False):
-        cands = [u for u in urls if u not in taken]
+    def pick(urls, portrait=False, fallback=()):
+        cands = [u for u in urls if u not in taken] or [u for u in fallback if u not in taken]
         rng.shuffle(cands)
         cands.sort(key=lambda u: usage.get(u, 0))
         if portrait:
@@ -265,13 +309,19 @@ def pick_images(carousel_id, pools, usage):
         taken.add(cands[0])
         return cands[0]
 
+    # Same order as the original six slide version (wide After, last slide, wallpaper,
+    # Before), so re-rendering an old row draws the same photos.
     picks = {"1": pick(pools["covers"])}
-    picks["3"] = pick(pools["after_wide_pref"] or pools["after_wide"], portrait=True)
-    picks["6"] = pick(pools["after"], portrait=True)
-    picks["2"] = {"wallpaper": pick(pools["wallpaper"] or pools["after"], portrait=True),
+    for n in sorted(k for k, v in kinds.items() if v == "after_wide"):
+        picks[str(n)] = pick(pools["after_wide_pref"] or pools["after_wide"], portrait=True,
+                             fallback=pools["after_wide"] + pools["after"])
+    for n in sorted(k for k, v in kinds.items() if v == "after"):
+        picks[str(n)] = pick(pools["after"], portrait=True)
+    picks["2"] = {"wallpaper": pick(pools["wallpaper"] or pools["after"], portrait=True,
+                                    fallback=pools["after"]),
                   "contact": pick(pools["contacts"])}
-    picks["4"] = pick(pools["before"], portrait=True)
-    picks["5"] = pick(pools["before"], portrait=True)
+    for n in sorted(k for k, v in kinds.items() if v == "before"):
+        picks[str(n)] = pick(pools["before"], portrait=True)
     return picks
 
 
@@ -514,7 +564,7 @@ def render_carousel(row, picks):
     s1 = fit(load_image(picks["1"]))
     slides[1] = draw_block(s1, row["slide_1"], TOP_SLOT)
     slides[2] = render_lock_screen(row, picks["2"]["wallpaper"], picks["2"]["contact"], rng)
-    for n in (3, 4, 5, 6):
+    for n in range(3, slide_count(row) + 1):
         img = fit(load_image(picks[str(n)]))
         top = place_text(img, row[f"slide_{n}"])
         slides[n] = draw_block(img, row[f"slide_{n}"], top)
@@ -523,21 +573,26 @@ def render_carousel(row, picks):
 
 def row_from_deck(deck, carousel_id="PREVIEW"):
     """Build a row-shaped dict from one writer deck (for --deck-file previews)."""
-    s = {x["n"]: x for x in deck["slides"]}
-    return {"carousel_id": carousel_id, "slide_1": s[1].get("text"), "slide_2": s[2].get("her_line"),
-            "slide_3": s[3].get("text"), "slide_4": s[4].get("text"), "slide_5": s[5].get("text"),
-            "slide_6": s[6].get("text"), "sender_name": s[2].get("sender_name"),
-            "message_time": s[2].get("time"), "his_text": s[2].get("his_text")}
+    s = {int(x["n"]): x for x in deck["slides"]}
+    n = max(s)
+    row = {"carousel_id": carousel_id, "deck": deck, "slide_count": n,
+           "slide_1": s[1].get("text"), "slide_2": s[2].get("her_line"),
+           "sender_name": s[2].get("sender_name"), "message_time": s[2].get("time"),
+           "his_text": s[2].get("his_text")}
+    for k in range(3, n + 1):
+        row[f"slide_{k}"] = (s.get(k) or {}).get("text")
+    return row
 
 
 def check_row(row):
-    missing = [k for k in ("slide_1", "slide_2", "slide_3", "slide_4", "slide_5", "slide_6", "his_text")
+    n = slide_count(row)
+    missing = [k for k in [f"slide_{i}" for i in range(1, n + 1)] + ["his_text"]
                if not str(row.get(k) or "").strip()]
     if missing:
         raise ValueError(f"missing copy: {', '.join(missing)}")
-    for n in (1, 3, 4, 5, 6):
-        if block_height(len(block_lines(row[f"slide_{n}"]))) > 700:
-            raise ValueError(f"slide {n} text is too long for the template")
+    for i in [1] + list(range(3, n + 1)):
+        if block_height(len(block_lines(row[f"slide_{i}"]))) > 700:
+            raise ValueError(f"slide {i} text is too long for the template")
 
 
 def main():
@@ -566,19 +621,23 @@ def main():
         cid = row["carousel_id"]
         try:
             check_row(row)
-            picks = pick_images(cid, pools, usage)
+            kinds = slide_kinds(row)
+            picks = pick_images(cid, pools, usage, kinds)
             slides = render_carousel(row, picks)
         except Exception as e:  # one bad row must not stop the batch
             print(f"  {cid}: FAILED {e}")
             if args.upload and not args.deck_file:
                 patch_row(cid, {"render_status": "failed", "render_error": str(e)[:500]})
             continue
-        for v in (picks["1"], picks["3"], picks["4"], picks["5"], picks["6"],
-                  picks["2"]["wallpaper"], picks["2"]["contact"]):
+        for v in ([picks["1"], picks["2"]["wallpaper"], picks["2"]["contact"]]
+                  + [picks[str(k)] for k in kinds]):
             usage[v] = usage.get(v, 0) + 1
         if args.upload and not args.deck_file:
             urls = {f"slide_{n}_url": upload_slide(im, cid, n) for n, im in slides.items()}
-            patch_row(cid, {**urls, "source_images": picks, "render_status": "rendered",
+            # a deck that got shorter must not keep image links from its longer version
+            urls.update({f"slide_{k}_url": None for k in range(len(slides) + 1, MAX_SLIDES + 1)})
+            patch_row(cid, {**urls, "slide_count": len(slides), "source_images": picks,
+                            "render_status": "rendered",
                             "status": "rendered", "render_error": None,
                             "rendered_at": dt.datetime.now(dt.timezone.utc).isoformat()})
             print(f"  {cid}: rendered and uploaded")

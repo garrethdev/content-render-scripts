@@ -89,22 +89,31 @@ def pick_songs(n, seed):
     return picks
 
 
+MIN_SLIDES, MAX_SLIDES = 6, 9
+
+
 def deck_to_row(deck, batch, music):
-    s = {x["n"]: x for x in deck["slides"]}
+    """One table row per deck. A deck has 6 to 9 slides: the hook, his text, then the
+    story slides. Every row carries slide_3 to slide_9 (None past the last slide), so a
+    batch with decks of different lengths still inserts in one request."""
+    s = {int(x["n"]): x for x in deck["slides"]}
+    n = max(s)
+    if not MIN_SLIDES <= n <= MAX_SLIDES or sorted(s) != list(range(1, n + 1)):
+        raise SystemExit(f"Deck {deck.get('deck_index')}: slides must run 1 to N with N from "
+                         f"{MIN_SLIDES} to {MAX_SLIDES}, got {sorted(s)}")
     problems = deck.get("problems") or []
+    story = {f"slide_{k}": (s[k].get("text") if k in s else None) for k in range(3, MAX_SLIDES + 1)}
     return {
         "deck": deck,
         "hook_text": s[1].get("text"),
         "slide_1": s[1].get("text"),
         "slide_2": s[2].get("her_line"),
-        "slide_3": s[3].get("text"),
-        "slide_4": s[4].get("text"),
-        "slide_5": s[5].get("text"),
-        "slide_6": s[6].get("text"),
+        **story,
+        "slide_count": n,
         "sender_name": s[2].get("sender_name"),
         "message_time": s[2].get("time"),
         "his_text": s[2].get("his_text"),
-        "caption": s[6].get("caption") or deck.get("caption"),
+        "caption": s[n].get("caption") or deck.get("caption"),
         "music": music,
         "writer_problems": problems or None,
         "render_status": "review" if deck.get("needs_review") or problems else "pending",

@@ -2,7 +2,8 @@
 
 Pillow version of the Figma template for the Divorce Recovery carousel (file
 `y6FFRRkbtlwBD2SnZojelO`, Batch 1 frames `1:2`, `1:728`, `1:878`, `1:885`, `1:892`,
-`1:899`). Character 6, six slides at 1080x1920.
+`1:899`). Character 6, six to nine slides at 1080x1920: the hook, his text, then the
+story slides. The story-first writer (2026-11-12) returns seven to nine; older rows have six.
 
 ```
 n8n writer (MLp2no3qGDAcDuLD) ──► ingest_decks.py ──► divorce_recovery_carousel (render_status=pending)
@@ -26,7 +27,7 @@ pip install -r requirements.txt
 - Fonts are not committed. Text uses TikTok Medium (`DR_FONT_PATH`, default
   `~/Library/Fonts/TikTokDisplayMedium.otf`); the lock screen uses SF Pro, SF Pro Text
   and SF Pro Rounded from `DR_SF_DIR` (default `/Library/Fonts`).
-- rembg is optional. With it, slides 3, 5 and 6 check where her head is before placing
+- rembg is optional. With it, the story slides check where her head is before placing
   the text; without it the text sits low on those slides.
 
 ## Run
@@ -51,8 +52,13 @@ not rendered until someone sets them back to `pending`.
 | `slide_1` (`hook_text`) | 1 | Eleven years. Done on a Tuesday. Now he wants a favour. |
 | `sender_name`, `message_time`, `his_text` | 2 | Mark, 9:47 PM, "hey, hope ur ok. so steph and I..." |
 | `slide_2` | 2 | He wants me to tell our son. (her line under the notification) |
-| `slide_3` … `slide_6` | 3–6 | one line each |
+| `slide_3` … `slide_9` | 3 to the last | one line each; empty past the last slide |
+| `slide_count` | all | how many slides the deck has, 6 to 9; null means the original six |
 | `caption`, `music` | post | caption from the writer; song from `music_library` |
+
+`slide_N_url` runs to `slide_9_url` the same way. The scheduler trigger marks a row ready
+only when every slide up to `slide_count` has its link, and the `unified_posts` view hands
+all of them to the posting agent.
 
 ## Image rules
 
@@ -60,10 +66,13 @@ not rendered until someone sets them back to `pending`.
 | --- | --- | --- |
 | 1 | `character-6/divorce-recovery-covers/manifest.json` | approved expression covers |
 | 2 | wallpaper: After, her alone, portrait/selfie/mirror first; contact: `divorce-recovery/contacts/` | iOS lock screen with his Messages notification |
-| 3 | After, her alone | not a selfie, not a mirror shot, not a close-up; full-body/environmental first |
-| 4 | `scenery/` | no people, no food |
-| 5 | Before | always a Before photo |
-| 6 | After, her alone | selfies allowed |
+| story slide tagged `before` | Before | a Before photo of her |
+| story slide tagged `after` | After, her alone | not a selfie, not a mirror shot, not a close-up; full-body/environmental first |
+| last slide | After, her alone | always After; selfies allowed |
+
+The writer tags each story slide in `deck.slides[].photo`. A six slide row with no tags
+keeps the original rule (3 After and not a selfie, 4 and 5 Before, 6 After) and re-renders
+with the same photos as before.
 
 After/Before photos come from `carousel_images` (`filename like 'character-6-%'`).
 Picks are distinct within a carousel, least-used across the table first (from
