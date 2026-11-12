@@ -28,7 +28,7 @@ Images (the renderer is the brain for images):
   story slides: the writer tags each one `photo: before` or `photo: after` in the deck.
      before  a Before photo of her
      after   an After photo of her alone, NOT a selfie and NOT a close-up
-     last    always an After photo of her alone (selfies allowed)
+     last    always an After photo of her alone from the full-body set (no selfies)
   Older six slide rows have no tags and keep the original rule: 3 After (not a selfie),
   4 and 5 Before, 6 After. They re-render with the same photos as before.
 Picks are distinct within a carousel, least-used across the table first (from
@@ -309,14 +309,24 @@ def pick_images(carousel_id, pools, usage, kinds=None):
         taken.add(cands[0])
         return cands[0]
 
-    # Same order as the original six slide version (wide After, last slide, wallpaper,
-    # Before), so re-rendering an old row draws the same photos.
+    full_body = pools["after_wide_pref"] or pools["after_wide"]
     picks = {"1": pick(pools["covers"])}
-    for n in sorted(k for k, v in kinds.items() if v == "after_wide"):
-        picks[str(n)] = pick(pools["after_wide_pref"] or pools["after_wide"], portrait=True,
-                             fallback=pools["after_wide"] + pools["after"])
-    for n in sorted(k for k, v in kinds.items() if v == "after"):
-        picks[str(n)] = pick(pools["after"], portrait=True)
+    if kinds == LEGACY_KINDS:
+        # The original six slide deck, in its original order (wide After, last slide,
+        # wallpaper, Before), so re-rendering an old row draws the same photos.
+        picks["3"] = pick(full_body, portrait=True, fallback=pools["after_wide"] + pools["after"])
+        picks["6"] = pick(pools["after"], portrait=True)
+    else:
+        # Story-first decks have up to three After slides before the last one.
+        # The last slide is where she shows herself, so it takes the full-body set, which
+        # also keeps selfies with a friend and odd crops off it. That set is small, so the
+        # After slides before it draw from every After photo of her alone that is not a
+        # selfie or a close-up. That stops one batch cycling through the same few photos.
+        last = max(kinds)
+        picks[str(last)] = pick(full_body, portrait=True, fallback=pools["after_wide"] + pools["after"])
+        for n in sorted(k for k, v in kinds.items() if v == "after_wide"):
+            picks[str(n)] = pick(pools["after_wide"] or pools["after"], portrait=True,
+                                 fallback=pools["after"])
     picks["2"] = {"wallpaper": pick(pools["wallpaper"] or pools["after"], portrait=True,
                                     fallback=pools["after"]),
                   "contact": pick(pools["contacts"])}

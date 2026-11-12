@@ -67,8 +67,13 @@ all of them to the posting agent.
 | 1 | `character-6/divorce-recovery-covers/manifest.json` | approved expression covers |
 | 2 | wallpaper: After, her alone, portrait/selfie/mirror first; contact: `divorce-recovery/contacts/` | iOS lock screen with his Messages notification |
 | story slide tagged `before` | Before | a Before photo of her |
-| story slide tagged `after` | After, her alone | not a selfie, not a mirror shot, not a close-up; full-body/environmental first |
-| last slide | After, her alone | always After; selfies allowed |
+| story slide tagged `after` | After, her alone | not a selfie, not a mirror shot, not a close-up |
+| last slide | After, her alone | always After, from the full-body/environmental set, so no selfies |
+
+The full-body set is small (17 photos on 2026-11-12), so only the last slide draws from it.
+The After slides before it use every After photo of her alone that is not a selfie or a
+close-up (69 photos). In a 35 deck batch that took the middle After slides from 17 different
+photos, the most repeated one seven times, to 52 different photos, at most three times.
 
 The writer tags each story slide in `deck.slides[].photo`. A six slide row with no tags
 keeps the original rule (3 After and not a selfie, 4 and 5 Before, 6 After) and re-renders
