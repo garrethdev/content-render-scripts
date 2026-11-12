@@ -4,9 +4,16 @@ ingest_decks.py: turn Divorce Recovery writer decks into rows of
 public.divorce_recovery_carousel, ready for render_divorce_recovery.py.
 
 Copy only ever comes from the n8n writer ("Divorce Recovery: carousel copy writer",
-MLp2no3qGDAcDuLD). This script calls its webhook (or reads a saved response), then
-inserts one row per deck with the slide text, his message, the caption, and a song
-picked from music_library.
+MLp2no3qGDAcDuLD).
+
+--decks N asks the writer for N decks. A run takes about three and a half minutes, and
+n8n cloud closes a web call after about two, so the writer does not send the decks back.
+It answers at once, and when it finishes it inserts the rows itself (same mapping as
+deck_to_row below) under the batch name this script sent. The script waits for those
+rows, then gives each one a song from music_library.
+
+--from-file inserts a saved writer response (for example the Collect Decks output of a
+run started by hand in n8n), with the song, exactly as before.
 
 Decks the writer flags needs_review go in with render_status='review' so they are
 not rendered until someone looks at them; everything else is render_status='pending'.
@@ -17,13 +24,14 @@ the batch so a rerun picks the same songs. Stored as 'Artist - Title'.
 
 Usage
 -----
-  python3 ingest_decks.py --decks 5                     # call the writer, insert 5 rows
-  python3 ingest_decks.py --decks 5 --dry-run           # call the writer, print rows only
-  python3 ingest_decks.py --from-file writer_run.json   # insert a saved writer response
+  python3 ingest_decks.py --decks 5                     # writer writes 5 rows, then songs
+  python3 ingest_decks.py --decks 5 --hold              # same, rows start on posting_status Hold
   python3 ingest_decks.py --decks 10 --batch dr-launch-1
+  python3 ingest_decks.py --from-file writer_run.json   # insert a saved writer response
+  python3 ingest_decks.py --from-file writer_run.json --dry-run   # print rows, insert nothing
 
-Env: DR_WRITER_URL (default the production webhook), plus the Supabase key that
-render_divorce_recovery.py uses.
+Env: DR_WRITER_URL (default the production webhook), DR_WRITER_WAIT (seconds to wait for
+the writer's rows, default 900), plus the Supabase key that render_divorce_recovery.py uses.
 """
 
 import argparse
@@ -32,6 +40,7 @@ import json
 import os
 import random
 import sys
+import time
 
 import requests
 
@@ -53,13 +62,35 @@ def _sb():
     return f"https://{ref}.supabase.co/rest/v1", {"apikey": key, "Authorization": f"Bearer {key}"}
 
 
-def call_writer(n):
-    r = requests.post(WRITER_URL, json={"decks": n}, timeout=600)
+WRITER_WAIT = int(env.get("DR_WRITER_WAIT", "900"))
+ROW_FIELDS = "carousel_id,slide_1,sender_name,his_text,render_status,music,slide_count"
+
+
+def batch_rows(batch):
+    base, h = _sb()
+    r = requests.get(f"{base}/{TABLE}", headers=h, timeout=30,
+                     params={"select": ROW_FIELDS, "batch": f"eq.{batch}", "order": "carousel_id"})
     r.raise_for_status()
-    data = r.json()
-    if not data.get("decks"):
-        raise SystemExit(f"Writer returned no decks: {json.dumps(data)[:300]}")
-    return data
+    return r.json()
+
+
+def call_writer(n, batch, hold=False):
+    """Start a writer run and wait for the rows it inserts under this batch.
+    The writer inserts all of a run's rows in one request, so the first new rows are the whole run."""
+    before = {r["carousel_id"] for r in batch_rows(batch)}
+    r = requests.post(WRITER_URL, json={"decks": n, "save": True, "batch": batch, "hold": hold}, timeout=60)
+    r.raise_for_status()
+    print(f"writer started for {n} deck(s), batch {batch}; waiting for its rows (about 4 minutes)")
+    deadline = time.time() + WRITER_WAIT
+    while time.time() < deadline:
+        time.sleep(15)
+        rows = [x for x in batch_rows(batch) if x["carousel_id"] not in before]
+        if rows:
+            if len(rows) < n:
+                print(f"note: the writer saved {len(rows)} of {n} deck(s); a deck with missing copy is not saved")
+            return rows
+    raise SystemExit(f"No rows for batch {batch} after {WRITER_WAIT}s. Check the run in n8n "
+                     f"(workflow MLp2no3qGDAcDuLD); nothing was inserted by this script.")
 
 
 def pick_songs(n, seed):
@@ -128,10 +159,27 @@ def main():
     src.add_argument("--decks", type=int, help="how many decks to ask the writer for (1 to 10)")
     src.add_argument("--from-file", help="a saved writer response (JSON with a decks list)")
     ap.add_argument("--batch", default="dr-" + dt.datetime.now().strftime("%Y%m%d-%H%M"))
-    ap.add_argument("--dry-run", action="store_true", help="print the rows, insert nothing")
+    ap.add_argument("--dry-run", action="store_true", help="with --from-file: print the rows, insert nothing")
+    ap.add_argument("--hold", action="store_true", help="with --decks: rows start on posting_status Hold")
     args = ap.parse_args()
 
-    data = json.load(open(args.from_file)) if args.from_file else call_writer(max(1, min(10, args.decks)))
+    if args.decks:
+        if args.dry_run:
+            raise SystemExit("--dry-run needs --from-file: with --decks the writer inserts the rows itself.")
+        saved = call_writer(max(1, min(10, args.decks)), args.batch, args.hold)
+        songs = pick_songs(len(saved), args.batch)
+        base, h = _sb()
+        for row, music in zip(saved, songs):
+            r = requests.patch(f"{base}/{TABLE}", json={"music": music}, timeout=30,
+                               params={"carousel_id": f"eq.{row['carousel_id']}"},
+                               headers={**h, "Content-Type": "application/json", "Prefer": "return=minimal"})
+            r.raise_for_status()
+            print(f"[{row['render_status']}] {row['carousel_id']} ({row.get('slide_count')} slides) "
+                  f"{row['slide_1']!r} | {row['sender_name']}: {str(row['his_text'])[:60]}... | {music}")
+        print(f"{len(saved)} row(s) in batch {args.batch}: {', '.join(x['carousel_id'] for x in saved)}")
+        return
+
+    data = json.load(open(args.from_file))
     decks = data["decks"]
     songs = pick_songs(len(decks), args.batch)
     rows = [deck_to_row(d, args.batch, m) for d, m in zip(decks, songs)]
