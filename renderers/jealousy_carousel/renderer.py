@@ -12,6 +12,59 @@ def tfont(style, fs):
         f = ImageFont.truetype(TT, fs); f.set_variation_by_name(style); _fc[k] = f
     return _fc[k]
 SIZES = {"xl": 74, "l": 58, "m": 47}
+# Colour emoji in slide text (the writer's voice rules ask for some in every deck). TikTok Sans has none,
+# so each emoji is drawn with a colour emoji font at its bitmap size and scaled to the line.
+# Override with JEALOUSY_EMOJI_FONT; otherwise Apple Color Emoji (macOS) or Noto Color Emoji (Linux).
+import re
+EMOJI_SCALE = 1.0
+EMOJI_RE = re.compile(
+    "(?:[\U0001F1E6-\U0001F1FF]{2}"
+    "|[☀-➿⬀-⯿\U0001F000-\U0001FAFF]️?[\U0001F3FB-\U0001F3FF]?"
+    "(?:‍[☀-➿\U0001F000-\U0001FAFF]️?[\U0001F3FB-\U0001F3FF]?)*)")
+_ef, _etile, _eimg = None, {}, {}
+def emoji_font():
+    global _ef
+    if _ef is None:
+        _ef = False
+        for path in filter(None, [os.environ.get("JEALOUSY_EMOJI_FONT"), "/System/Library/Fonts/Apple Color Emoji.ttc",
+                                  "/usr/share/fonts/truetype/noto/NotoColorEmoji.ttf"]):
+            for size in (160, 109, 137, 96, 64):
+                try:
+                    _ef = ImageFont.truetype(path, size); return _ef
+                except OSError:
+                    continue
+        print("WARN: no colour emoji font found; emoji in slide text will be dropped", file=sys.stderr)
+    return _ef
+def emoji_image(cluster, fs):
+    """The emoji on a transparent tile cropped to the glyph, about one font size tall."""
+    k = (cluster, fs)
+    if k not in _eimg:
+        ef = emoji_font(); im = None
+        if ef:
+            if cluster not in _etile:
+                side = int(ef.size * 1.6); t = Image.new("RGBA", (side, side), (0, 0, 0, 0))
+                ImageDraw.Draw(t).text((side // 2, side // 2), cluster, font=ef, embedded_color=True, anchor="mm")
+                b = t.getbbox(); _etile[cluster] = t.crop(b) if b else None
+            t = _etile[cluster]
+            if t:
+                h = max(1, round(fs * EMOJI_SCALE)); im = t.resize((max(1, round(t.width * h / t.height)), h), Image.LANCZOS)
+        _eimg[k] = im
+    return _eimg[k]
+def runs(text):
+    """Split a line into ("text", s) and ("emoji", cluster) runs."""
+    out, i = [], 0
+    for m in EMOJI_RE.finditer(text):
+        if m.start() > i: out.append(("text", text[i:m.start()]))
+        out.append(("emoji", m.group(0))); i = m.end()
+    if i < len(text): out.append(("text", text[i:]))
+    return out
+def measure(draw, text, font):
+    w = 0
+    for kind, s in runs(text):
+        if kind == "text": w += draw.textlength(s, font=font)
+        else:
+            im = emoji_image(s, font.size); w += (im.width + round(font.size * 0.06)) if im else 0
+    return w
 here = os.path.dirname(os.path.abspath(__file__))
 def fetch(url):
     os.makedirs(os.path.join(here, "cache"), exist_ok=True)
@@ -25,7 +78,7 @@ def wrap(draw, text, font, maxw):
     words, lines, cur = text.split(), [], ""
     for w in words:
         t = (cur + " " + w).strip()
-        if draw.textlength(t, font=font) <= maxw: cur = t
+        if measure(draw, t, font) <= maxw: cur = t
         else:
             lines.append(cur); cur = w
     if cur: lines.append(cur)
@@ -91,10 +144,18 @@ def render_slide(path, text, pos, color, size, opacity, blur, n, label=None):
     elif pos == "center": y = (H - bh) // 2
     else: y = H - tx["bottom_margin"] - bh
     fill = tuple(tx["fill"]); sh = tuple(tx["shadow"]); ox_, oy_ = tx["shadow_offset"]
+    asc = font.getmetrics()[0]; gap = round(font.size * 0.06)
     for ln in lines:
-        x = (W - dr.textlength(ln, font=font)) / 2
-        dr.text((x + ox_, y + oy_), ln, font=font, fill=sh)
-        dr.text((x, y), ln, font=font, fill=fill); y += lh
+        x = (W - measure(dr, ln, font)) / 2
+        for kind, s in runs(ln):
+            if kind == "text":
+                dr.text((x + ox_, y + oy_), s, font=font, fill=sh)
+                dr.text((x, y), s, font=font, fill=fill); x += dr.textlength(s, font=font)
+            else:
+                em = emoji_image(s, font.size)
+                if em:
+                    x += gap / 2; im.paste(em, (round(x), round(y + asc - em.height * 0.88)), em); x += em.width + gap / 2
+        y += lh
     if label:
         L = BP["label"]; lf = tfont(L["weight"], L["size"]); tw = dr.textlength(label, font=lf)
         bx0, by0 = L["x"], L["y"]; bx1, by1 = bx0 + tw + 2 * L["pad_x"], by0 + L["size"] + 2 * L["pad_y"] + 6
