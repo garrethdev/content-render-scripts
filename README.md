@@ -31,6 +31,7 @@ Supabase storage. Nothing secret is hardcoded; everything loads from env via
 | 3-Slide Journey carousel (Character 6) | `renderers/journey_3slide/` | `render_journey_3slide.py [J3-###] [--dry-run]` | Before + hook / constant "Directed by Robert B. Weide" / after. Pillow port of the Figma template; rows from `journey_3slide_carousel`; slide 2 constant lives in storage; Gotham Bold via `JOURNEY_FONT_PATH`; 9:16 with emoji and a TikTok-safe hook zone. |
 | Divorce Recovery carousel (Character 6) | `renderers/divorce_recovery/` | `ingest_decks.py --decks N` then `render_divorce_recovery.py --upload` | 6 slides: expression cover, iOS lock screen with the ex's text, After/scenery/Before/After. Rows in `divorce_recovery_carousel`. |
 | Jealousy carousel (Character 6) | `renderers/jealousy_carousel/` | `stitch.py --batch <name>` then `gate.py --batch <name>` | 6 slides at 1080x1920: the villain's line over a face-blurred friend photo, then before photos, then the after. Copy and photo picks from the n8n writer + director; rows in `jealousy_carousels`. |
+| Kitchen Quote Video (Character 6) | `renderers/kitchen_quote_video/` | `render_kitchen_quote_video.py [video_id ...] [--batch B] [--dry-run]` | 10 s kitchen clip + one line over a dark fade, 1080x1920, silent (song at posting). Picks from all 33 `quote_video_clips`, blue-shirt clips included; rows in `quote_video_posts`. |
 
 **Not in this repo (no renderer exists yet):** Eat Whatever video, Peptide Question deck.
 **BA main video** is a Claude-skill pipeline (Sheets-based), not a standalone script.
