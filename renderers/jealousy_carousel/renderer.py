@@ -83,6 +83,16 @@ def wrap(draw, text, font, maxw):
             lines.append(cur); cur = w
     if cur: lines.append(cur)
     return lines
+def soft_shadow(im, items, cfg, sw=0):
+    """A blurred dark copy of the text under it (items: (text, x, y, font)). cfg: radius, offset, color, spread."""
+    if not cfg or not items: return im
+    lay = Image.new("RGBA", im.size, (0, 0, 0, 0)); d = ImageDraw.Draw(lay)
+    ox, oy = cfg.get("offset", [0, 3]); col = tuple(cfg.get("color", [0, 0, 0, 200])); spread = int(cfg.get("spread", 0)) + sw
+    for s, x, y, f in items:
+        d.text((x + ox, y + oy), s, font=f, fill=col, stroke_width=spread, stroke_fill=col)
+    lay = lay.filter(ImageFilter.GaussianBlur(cfg.get("radius", 6)))
+    return Image.alpha_composite(im, lay)
+
 def render_slide(path, text, pos, color, size, opacity, blur, n, label=None):
     im0 = Image.open(fetch(path)).convert("RGB"); ow, oh = im0.size
     if BP["canvas"].get("fit") == "blur_fill":
@@ -145,17 +155,27 @@ def render_slide(path, text, pos, color, size, opacity, blur, n, label=None):
     else: y = H - tx["bottom_margin"] - bh
     fill = tuple(tx["fill"]); sh = tuple(tx["shadow"]); ox_, oy_ = tx["shadow_offset"]
     asc = font.getmetrics()[0]; gap = round(font.size * 0.06)
+    sw = int(tx.get("stroke_width", 0)); sf = tuple(tx.get("stroke_fill", [0, 0, 0, 255]))
+    # lay out runs first, so the soft shadow and the text use the same positions
+    placed = []
     for ln in lines:
         x = (W - measure(dr, ln, font)) / 2
         for kind, s in runs(ln):
             if kind == "text":
-                dr.text((x + ox_, y + oy_), s, font=font, fill=sh)
-                dr.text((x, y), s, font=font, fill=fill); x += dr.textlength(s, font=font)
+                placed.append(("text", s, x, y)); x += dr.textlength(s, font=font)
             else:
                 em = emoji_image(s, font.size)
                 if em:
-                    x += gap / 2; im.paste(em, (round(x), round(y + asc - em.height * 0.88)), em); x += em.width + gap / 2
+                    x += gap / 2; placed.append(("emoji", em, round(x), round(y + asc - em.height * 0.88))); x += em.width + gap / 2
         y += lh
+    im = soft_shadow(im, [(s, x, y, font) for k, s, x, y in placed if k == "text"], tx.get("soft_shadow"), sw)
+    dr = ImageDraw.Draw(im)
+    for k, s, x, y in placed:
+        if k == "text":
+            if not tx.get("soft_shadow"): dr.text((x + ox_, y + oy_), s, font=font, fill=sh)
+            dr.text((x, y), s, font=font, fill=fill, stroke_width=sw, stroke_fill=sf)
+        else:
+            im.paste(s, (x, y), s)
     if label:
         L = BP["label"]; lf = tfont(L["weight"], L["size"]); tw = dr.textlength(label, font=lf)
         bx0, by0 = L["x"], L["y"]; bx1, by1 = bx0 + tw + 2 * L["pad_x"], by0 + L["size"] + 2 * L["pad_y"] + 6
@@ -163,7 +183,11 @@ def render_slide(path, text, pos, color, size, opacity, blur, n, label=None):
             dr.rounded_rectangle((bx0, by0, bx1, by1), radius=(by1 - by0) // 2, fill=tuple(L["fill"]))
             dr.text((bx0 + L["pad_x"], by0 + L["pad_y"]), label, font=lf, fill=tuple(L["text"]))
         else:
-            so = L.get("shadow_offset", [2, 3])
-            dr.text((bx0 + so[0], by0 + so[1]), label, font=lf, fill=tuple(L.get("shadow", [0, 0, 0, 170])))
-            dr.text((bx0, by0), label, font=lf, fill=tuple(L["text"]))
+            lsw = int(L.get("stroke_width", 0))
+            if L.get("soft_shadow"):
+                im = soft_shadow(im, [(label, bx0, by0, lf)], L["soft_shadow"], lsw); dr = ImageDraw.Draw(im)
+            else:
+                so = L.get("shadow_offset", [2, 3])
+                dr.text((bx0 + so[0], by0 + so[1]), label, font=lf, fill=tuple(L.get("shadow", [0, 0, 0, 170])))
+            dr.text((bx0, by0), label, font=lf, fill=tuple(L["text"]), stroke_width=lsw, stroke_fill=tuple(L.get("stroke_fill", [0, 0, 0, 255])))
     return im.convert("RGB")
