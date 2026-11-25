@@ -28,6 +28,8 @@ python3 render_story_wall.py --story 18847 --clip 12 --out out/test   # try a st
 - **Clips:** `quote_video_clips` that are at least 8 s (white 1-8, 10-13, blue 28-33). Least
   used first, her face first; a blue clip and its white source count as one scene, never back
   to back. The shared use counter goes up when a post first gets a posting date.
+- **Music:** a song name from the last 10 songs the trend refresh added to `music_library`
+  (Garreth, 2026-11-25), least used first, never twice in a row; added at posting.
 - **Checks:** every file is read back and must be 1080 x 1920 and 8 s before upload.
 - **Storage:** `kitchen-character/story-wall-video/renders/<YYYY-MM-DD>/<content_id>.mp4`.
 - **Keys:** the table has no public access, so a service key is needed even to read

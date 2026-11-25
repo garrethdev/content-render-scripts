@@ -24,6 +24,7 @@ sys.path.insert(0, HERE)
 import render_story_wall as R  # noqa: E402
 
 LANE = "story_wall_video"
+SONG_POOL = 10
 
 
 def post(table, rows):
@@ -62,8 +63,11 @@ def main():
     clip_uses = {}
     for r in existing:
         clip_uses[r["clip_no"]] = clip_uses.get(r["clip_no"], 0) + 1
+    # Garreth, 2026-11-25: music comes from the latest suggested songs only, the last 10 the
+    # trend refresh added to music_library.
     songs = [f"{s['artist']} - {s['title']}" for s in R.get("music_library", select="artist,title", is_active="eq.true",
-                                                            pillar_fit="cs.{kitchen_quote_video}", order="created_at")]
+                                                            added_by="eq.music_trend_refresh",
+                                                            order="created_at.desc", limit=SONG_POOL)]
     song_uses = {}
     for r in existing:
         if r.get("music"):
