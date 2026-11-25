@@ -33,7 +33,28 @@
     "shadow_offset": [
       2,
       3
-    ]
+    ],
+    "stroke_width": 2,
+    "stroke_fill": [
+      0,
+      0,
+      0,
+      230
+    ],
+    "soft_shadow": {
+      "radius": 7,
+      "offset": [
+        0,
+        3
+      ],
+      "color": [
+        0,
+        0,
+        0,
+        210
+      ],
+      "spread": 3
+    }
   },
   "slides": {
     "1": {
@@ -104,7 +125,28 @@
     "shadow_offset": [
       2,
       3
-    ]
+    ],
+    "stroke_width": 2,
+    "stroke_fill": [
+      0,
+      0,
+      0,
+      230
+    ],
+    "soft_shadow": {
+      "radius": 6,
+      "offset": [
+        0,
+        3
+      ],
+      "color": [
+        0,
+        0,
+        0,
+        210
+      ],
+      "spread": 3
+    }
   },
   "overlay": {
     "floor": 0.25,
