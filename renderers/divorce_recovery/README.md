@@ -24,9 +24,11 @@ pip install -r requirements.txt
 - Key: `SUPABASE_SERVICE_KEY` (or `CAROUSEL_SUPABASE_SECRET_KEY`), or `SUPABASE_ANON_KEY`,
   in `~/.config/peptide-secrets/.env` or the repo `.env`. The table and the
   `rich-life-images` bucket allow the publishable key.
-- Fonts are not committed. Text uses TikTok Medium (`DR_FONT_PATH`, default
-  `~/Library/Fonts/TikTokDisplayMedium.otf`); the lock screen uses SF Pro, SF Pro Text
-  and SF Pro Rounded from `DR_SF_DIR` (default `/Library/Fonts`).
+- Box text is Inter Medium with colour emoji, drawn by `common/slide_text.py` (the shared
+  Character 6 look; the font is in the repo at `common/fonts/Inter.ttf`). Each slide's block
+  shifts a little inside its slot and about one slide in three is tilted slightly, seeded by
+  the carousel id. The lock screen keeps the iPhone's own fonts, SF Pro, SF Pro Text and
+  SF Pro Rounded, from `DR_SF_DIR` (default `/Library/Fonts`); those are not committed.
 - rembg is optional. With it, the story slides check where her head is before placing
   the text; without it the text sits low on those slides.
 

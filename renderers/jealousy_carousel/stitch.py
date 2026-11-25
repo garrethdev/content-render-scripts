@@ -80,7 +80,8 @@ def render_row(row, cid, outdir):
     os.makedirs(outdir, exist_ok=True)
     for k in range(6):
         im = renderer.render_slide(d[k]["image_url"], s[k]["text"], d[k].get("text_position"), d[k].get("text_color"),
-                                   d[k].get("text_size"), float(d[k].get("overlay_opacity") or 0.4), d[k].get("blur_box"), k + 1, lab.get(k + 1))
+                                   d[k].get("text_size"), float(d[k].get("overlay_opacity") or 0.4), d[k].get("blur_box"), k + 1, lab.get(k + 1),
+                                   seed=cid)
         p = os.path.join(outdir, "slide%d.jpg" % (k + 1))
         im.save(p, "JPEG", quality=BP["canvas"]["jpg_quality"]); paths.append(p)
     return paths

@@ -34,9 +34,11 @@ her struggling sets `reveal_from` to 8, which holds the reveal for the last slid
 
 ## Text
 
-White TikTok Sans with a drop shadow, a light tint over the whole picture (10 to 26 percent, lighter
-on dark photos) and a soft dark glow behind the words. The hook is centred on slide 1; story text
-sits at the bottom and ends 430 px above the edge.
+The shared Character 6 look from `common/slide_text.py`: white Inter with a black outline and a soft
+shadow, colour emoji, over a light tint on the whole picture (10 to 26 percent, lighter on dark
+photos). The hook is centred on slide 1; story text sits at the bottom and ends 430 px above the
+edge. Each slide's text shifts a little inside its area (story text only upwards) and about one
+slide in three is tilted slightly; both are seeded by the story or carousel id.
 
 ## Run
 
@@ -60,7 +62,7 @@ Slides are uploaded to `rich-life-images/camera-roll-story/renders/<carousel_id>
 |---|---|
 | `SUPABASE_ANON_KEY` | Enough to read rows and the photo list |
 | `CAROUSEL_SUPABASE_SECRET_KEY` or `SUPABASE_SERVICE_KEY` | Needed for `--upload` |
-| `CR_FONT_PATH` | The TikTok Sans variable font. Default `~/Library/Fonts/TikTokSans[opsz,slnt,wdth,wght].ttf` |
+| `SLIDE_FONT_PATH` | Only to override the font. Default `common/fonts/Inter.ttf` (in the repo) |
 | `CR_CACHE_DIR` | Where downloaded photos are kept. Default `~/.cache/camera_roll_story/src` |
 
 ## Not part of this renderer

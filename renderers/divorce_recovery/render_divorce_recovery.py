@@ -10,8 +10,12 @@ Template source: Figma file y6FFRRkbtlwBD2SnZojelO, Batch 1 frames 1:2 (slide 1)
 1:728 (slide 2, lock screen), 1:878, 1:885, 1:892, 1:899 (slides 3-6). Every
 constant below is lifted from those frames:
   - canvas 1080x1920
-  - text: TikTok Medium 70px in one white box per line, box 91px tall, boxes 85px
-    apart (they overlap into one shape), radius 23, 26px side padding, black text
+  - text: 70px in one white box per line, box 91px tall, boxes 85px
+    apart (they overlap into one shape), radius 23, 26px side padding, black text.
+    Since 2026-11-26 the box text is Inter Medium with colour emoji, drawn by
+    common/slide_text.py (the shared Character 6 look); each slide's block shifts a little
+    inside its slot and about one slide in three is tilted slightly, seeded by carousel_id.
+    Her line under the lock-screen card stays put, as it hangs off the card.
   - slide 2: iOS lock screen. Status bar, date (SF Pro Semibold 55), clock
     (SF Pro Rounded Semibold 264), one Messages notification card at y=554
     (x=49, w=978, radius 60, frosted dark 60%), contact photo 128px circle,
@@ -49,8 +53,8 @@ Usage
 
 Connection: SUPABASE_SERVICE_KEY / CAROUSEL_SUPABASE_SECRET_KEY, or SUPABASE_ANON_KEY
 (the table and the rich-life-images bucket allow the publishable key), via common/env.
-Fonts: DR_FONT_PATH (default ~/Library/Fonts/TikTokDisplayMedium.otf) and
-DR_SF_DIR (default /Library/Fonts) for the SF Pro files. Fonts are not committed.
+Fonts: box text is common/fonts/Inter.ttf (in the repo; SLIDE_FONT_PATH overrides).
+DR_SF_DIR (default /Library/Fonts) for the SF Pro files of the lock screen, not committed.
 
 Requires: pillow, numpy, requests. Optional: rembg + onnxruntime (text placement).
 """
@@ -71,6 +75,7 @@ from PIL import Image, ImageDraw, ImageFilter, ImageFont, ImageOps
 
 sys.path.insert(0, os.path.dirname(os.path.dirname(os.path.dirname(os.path.abspath(__file__)))))
 from common import env  # noqa: E402
+from common import slide_text as ST  # noqa: E402
 
 # ---------------------------------------------------------------- template (from Figma)
 W, H = 1080, 1920
@@ -104,7 +109,6 @@ MESSAGES_ICON = "divorce-recovery/assets/messages_icon.png"
 RENDER_PREFIX = "divorce-recovery/renders"
 
 CACHE_DIR = os.path.expanduser(env.get("DR_CACHE_DIR", "~/.cache/divorce_recovery"))
-FONT_PATH = os.path.expanduser(env.get("DR_FONT_PATH", "~/Library/Fonts/TikTokDisplayMedium.otf"))
 SF_DIR = os.path.expanduser(env.get("DR_SF_DIR", "/Library/Fonts"))
 
 # her alone: anything that hints at another person in frame is out
@@ -345,9 +349,7 @@ def sf(name, size):
 
 
 def text_font():
-    if not os.path.exists(FONT_PATH):
-        raise SystemExit(f"Text font not found at {FONT_PATH}; set DR_FONT_PATH.")
-    return font(FONT_PATH, TEXT_PX)
+    return ST.font("Medium", TEXT_PX)
 
 
 def wrap_balanced(d, text, fnt, max_width):
@@ -356,7 +358,7 @@ def wrap_balanced(d, text, fnt, max_width):
         lines, cur = [], ""
         for word in text.split():
             t = f"{cur} {word}".strip()
-            if cur and d.textlength(t, font=fnt) > limit:
+            if cur and ST.measure(d, t, fnt) > limit:
                 lines.append(cur)
                 cur = word
             else:
@@ -382,19 +384,17 @@ def block_height(n_lines):
     return BOX_H + BOX_STEP * (n_lines - 1)
 
 
-def draw_block(img, text, top):
-    """One white rounded box per line, hugging the line, centred; black text."""
-    fnt = text_font()
-    d = ImageDraw.Draw(img)
-    lines = block_lines(text)
-    for i, line in enumerate(lines):
-        y = top + i * BOX_STEP
-        w = d.textlength(line, font=fnt) + 2 * BOX_PAD
-        x = (W - w) / 2
-        d.rounded_rectangle((x, y, x + w, y + BOX_H), radius=BOX_R, fill="white")
-    for i, line in enumerate(lines):
-        d.text((W / 2, top + i * BOX_STEP + BOX_H / 2), line, font=fnt, fill="black", anchor="mm")
-    return img
+def draw_block(img, text, top, place=ST.NO_MOVE):
+    """One white rounded box per line, hugging the line, centred; black text.
+    `place` is the slide's shift and tilt (common/slide_text.py)."""
+    return ST.draw_boxes(img, block_lines(text), text_font(), top, BOX_H, BOX_STEP, BOX_R, BOX_PAD,
+                         place=place, safe=(TOP_SLOT, BOTTOM_SLOT_END))
+
+
+def slot_move(carousel_id, n, top):
+    """Shift and tilt for slide n. The top slot only moves down and the low slot only up,
+    so the text never goes past where the template already puts it."""
+    return ST.placement(f"{carousel_id}:{n}", **(dict(up=0) if top <= TOP_SLOT else dict(down=0)))
 
 
 _rembg = None
@@ -544,8 +544,7 @@ def render_lock_screen(row, wallpaper_url, contact_url, rng):
     ld.text((COL_X + COL_W, ICON_Y + 25), "now", font=sf("SF-Pro-Display-Regular.otf", NOW_PX),
             fill=(255, 255, 255, 128), anchor="rm")
     for i, line in enumerate(body):
-        ld.text((COL_X, BODY_TOP + i * LINE_H + LINE_H / 2), line, font=body_f,
-                fill=(234, 234, 234, 255), anchor="lm")
+        text_lm(layer, (COL_X, BODY_TOP + i * LINE_H + LINE_H / 2), line, body_f, (234, 234, 234, 255))
     img.paste(layer, (0, 0), layer)
 
     bottom_controls(img)
@@ -555,11 +554,26 @@ def render_lock_screen(row, wallpaper_url, contact_url, rng):
     return img
 
 
+def text_lm(layer, xy, text, fnt, fill):
+    """Left-aligned text centred on y, with colour emoji (SF Pro has none either)."""
+    d = ImageDraw.Draw(layer)
+    x, y = xy
+    for kind, s in ST.runs(text):
+        if kind == "text":
+            d.text((x, y), s, font=fnt, fill=fill, anchor="lm")
+            x += d.textlength(s, font=fnt)
+        else:
+            im = ST.emoji_image(s, fnt.size)
+            if im:
+                layer.paste(im, (round(x + 2), round(y - im.height / 2)), im)
+                x += im.width + 4
+
+
 def wrap_greedy(d, text, fnt, width):
     lines, cur = [], ""
     for word in text.split():
         t = f"{cur} {word}".strip()
-        if cur and d.textlength(t, font=fnt) > width:
+        if cur and ST.measure(d, t, fnt) > width:
             lines.append(cur)
             cur = word
         else:
@@ -572,12 +586,12 @@ def render_carousel(row, picks):
     rng = random.Random(row["carousel_id"] + ":lock")
     slides = {}
     s1 = fit(load_image(picks["1"]))
-    slides[1] = draw_block(s1, row["slide_1"], TOP_SLOT)
+    slides[1] = draw_block(s1, row["slide_1"], TOP_SLOT, slot_move(row["carousel_id"], 1, TOP_SLOT))
     slides[2] = render_lock_screen(row, picks["2"]["wallpaper"], picks["2"]["contact"], rng)
     for n in range(3, slide_count(row) + 1):
         img = fit(load_image(picks[str(n)]))
         top = place_text(img, row[f"slide_{n}"])
-        slides[n] = draw_block(img, row[f"slide_{n}"], top)
+        slides[n] = draw_block(img, row[f"slide_{n}"], top, slot_move(row["carousel_id"], n, top))
     return slides
 
 

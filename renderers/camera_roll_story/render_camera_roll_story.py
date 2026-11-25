@@ -11,9 +11,11 @@ brings them back.
 
 Eight slides at 1080x1920 (9:16), JPG quality 90, per the Carousel Render Blueprint
 (https://claude.ai/artifact/9CN9pvUkGhyQaiPBzNy5bb). The look is the Jealousy and Comparison
-look: TikTok Sans only, white text with a drop shadow, hook centred on slide 1, story text at the
-bottom ending 430 px above the edge, a black legibility gradient, no dots, numbers or logos, and
-no weight labels. The text code is taken from renderers/comparison_carousel.
+look: the shared Character 6 text from common/slide_text.py (Inter, white with a black outline and
+a soft shadow, colour emoji), hook centred on slide 1, story text at the bottom ending 430 px above
+the edge, a black legibility gradient, no dots, numbers or logos, and no weight labels. Each slide's
+text shifts a little inside its area and about one slide in three is tilted slightly, seeded by the
+story id, so a re-render matches.
 
 Pictures: see pictures.py. A picture carries the mood of its beat, not the words of its line. Slide 1
 is her before; slides 2 to 6 are mostly pictures with no person plus one or two of her before, in an
@@ -43,6 +45,7 @@ import pictures as P
 
 sys.path.insert(0, os.path.dirname(os.path.dirname(os.path.dirname(os.path.abspath(__file__)))))
 from common import env  # noqa: E402
+from common import slide_text as ST  # noqa: E402
 
 HERE = os.path.dirname(os.path.abspath(__file__))
 W, H = 1080, 1920
@@ -50,8 +53,6 @@ JPEG_QUALITY = 90
 COL_W = 912
 BOTTOM_MARGIN = 430
 LINE_H = 1.28
-SHADOW = (0, 0, 0, 190)
-SHADOW_OFF = (2, 3)
 OVERLAY = 0.42
 TINT_MIN, TINT_MAX = 0.10, 0.26    # the light tint over the whole picture: dark photos get the low end
 OVERLAY_BOTTOM_FROM = 0.35
@@ -60,11 +61,9 @@ HOOK = {"weight": "Bold", "size": 68, "size_long": 58, "long_over": 70}
 STORY_FONT = ("SemiBold", 52)
 MAX_BLOCK_FRAC = 0.55
 MIN_SIZE = 34
-FONT_PATH = os.path.expanduser(env.get(
-    "CR_FONT_PATH", "~/Library/Fonts/TikTokSans[opsz,slnt,wdth,wght].ttf"))
 CACHE = os.path.expanduser(env.get("CR_CACHE_DIR", "~/.cache/camera_roll_story/src"))
 SUPABASE_PROJECT_REF = "qlcmgxgwpzmiebzxflai"
-BANNED = re.compile(r"[&–—]|[\U0001F300-\U0001FAFF]")
+BANNED = re.compile(r"[&–—]")                 # emoji are fine: common/slide_text.py draws them in colour
 
 
 # ---------------------------------------------------------------- pictures
@@ -165,48 +164,11 @@ def pick_story(story, pool, usage):
 
 # ---------------------------------------------------------------- text (from the Comparison renderer)
 def font(weight, size):
-    if not os.path.exists(FONT_PATH):
-        raise SystemExit(f"TikTok Sans not found at {FONT_PATH}; set CR_FONT_PATH.")
-    f = ImageFont.truetype(FONT_PATH, round(size))
-    wght = {"SemiBold": 600, "Bold": 700}[weight]
-    vals = []
-    for a in f.get_variation_axes():
-        n = a["name"] if isinstance(a["name"], str) else a["name"].decode()
-        n = n.lower()
-        if "weight" in n:
-            vals.append(wght)
-        elif "optical" in n:
-            vals.append(min(max(round(size), a["minimum"]), a["maximum"]))
-        elif "width" in n:
-            vals.append(100 if a["minimum"] <= 100 <= a["maximum"] else a["default"])
-        else:
-            vals.append(a["default"])
-    f.set_variation_by_axes(vals)
-    return f
-
-
-def wrap(d, text, fnt, width):
-    lines, cur = [], ""
-    for word in text.split():
-        t = f"{cur} {word}".strip()
-        if cur and d.textlength(t, font=fnt) > width:
-            lines.append(cur)
-            cur = word
-        else:
-            cur = t
-    return lines + [cur]
+    return ST.font(weight, size)
 
 
 def balanced(d, text, fnt, width):
-    n = len(wrap(d, text, fnt, width))
-    lo, hi = 1, width
-    while lo < hi:
-        mid = (lo + hi) // 2
-        if len(wrap(d, text, fnt, mid)) <= n:
-            hi = mid
-        else:
-            lo = mid + 1
-    return wrap(d, text, fnt, hi)
+    return ST.balanced(d, text, fnt, width)
 
 
 def gradient(img, y0, y1, darkest_y=None):
@@ -230,22 +192,11 @@ def tint(img):
     return Image.blend(img, Image.new("RGB", img.size, "black"), amount)
 
 
-def draw_text(img, lines, fnt, size, center_y=None, bottom=None):
+def draw_text(img, lines, fnt, size, center_y=None, bottom=None, place=ST.NO_MOVE):
     step = size * LINE_H
     total = step * (len(lines) - 1) + size
     top = center_y - total / 2 if center_y is not None else bottom - total
-    glow = Image.new("RGBA", (W, H), (0, 0, 0, 0))            # a soft dark edge around the letters
-    layer = Image.new("RGBA", (W, H), (0, 0, 0, 0))
-    dg, d = ImageDraw.Draw(glow), ImageDraw.Draw(layer)
-    for i, line in enumerate(lines):
-        w = d.textlength(line, font=fnt)
-        x, y = (W - w) / 2, top + i * step
-        dg.text((x, y + 1), line, font=fnt, fill=(0, 0, 0, 150))
-        d.text((x + SHADOW_OFF[0], y + SHADOW_OFF[1]), line, font=fnt, fill=SHADOW)
-        d.text((x, y), line, font=fnt, fill=(255, 255, 255, 255))
-    glow = glow.filter(ImageFilter.GaussianBlur(6))
-    img.paste(glow, (0, 0), glow)
-    img.paste(layer, (0, 0), layer)
+    ST.draw_lines(img, lines, fnt, top, step, place=place, safe=(200, H - BOTTOM_MARGIN))
 
 
 def fit_block(text, weight, size):
@@ -259,18 +210,21 @@ def fit_block(text, weight, size):
         size -= 3
 
 
-def render_slide(n, text, src):
+def render_slide(n, text, src, seed=None):
+    """`seed` (the story or carousel id) turns on the per-slide shift and tilt."""
     img = ImageOps.fit(src, (W, H), method=Image.LANCZOS, centering=(0.5, 0.35))
     img = tint(img)
     if n == 1:
         size = HOOK["size_long"] if len(text) > HOOK["long_over"] else HOOK["size"]
         lines, f, size = fit_block(text, HOOK["weight"], size)
         gradient(img, int(H * OVERLAY_CENTER[0]), int(H * OVERLAY_CENTER[1]), H // 2)
-        draw_text(img, lines, f, size, center_y=H / 2)
+        place = ST.placement(f"{seed}:{n}") if seed is not None else ST.NO_MOVE
+        draw_text(img, lines, f, size, center_y=H / 2, place=place)
     else:
         lines, f, size = fit_block(text, *STORY_FONT)
         gradient(img, int(H * OVERLAY_BOTTOM_FROM), H)
-        draw_text(img, lines, f, size, bottom=H - BOTTOM_MARGIN)
+        place = ST.placement(f"{seed}:{n}", down=0) if seed is not None else ST.NO_MOVE   # already on the lowest line
+        draw_text(img, lines, f, size, bottom=H - BOTTOM_MARGIN, place=place)
     return img
 
 
@@ -279,7 +233,7 @@ def check_story(s):
     for n in range(s.get("reveal_from", P.DEFAULT_REVEAL_FROM), 9):
         assert s["shots"][n - 1] in P.NOW, f"story {s['id']}: slide {n} must name one of {sorted(P.NOW)}"
     for t in s["slides"]:
-        assert t.strip() and not BANNED.search(t), f"story {s['id']}: empty slide, ampersand, dash or emoji"
+        assert t.strip() and not BANNED.search(t), f"story {s['id']}: empty slide, ampersand or dash"
 
 
 def sheet(out_dir, sid):
@@ -325,7 +279,7 @@ def main():
         os.makedirs(out, exist_ok=True)
         for n, (pid, _, _) in picks.items():
             assert LIBRARY in pool[pid]["image_url"], f"photo {pid} is outside the Character 6 library"
-            im = render_slide(n, s["slides"][n - 1], load_image(pool[pid]["image_url"]))
+            im = render_slide(n, s["slides"][n - 1], load_image(pool[pid]["image_url"]), seed=sid)
             assert im.size == (W, H)
             im.save(os.path.join(out, f"slide_{n:02d}.jpg"), "JPEG", quality=JPEG_QUALITY)
         json.dump({str(n): {"photo_id": pid, "shot": shot, "url": pool[pid]["image_url"],

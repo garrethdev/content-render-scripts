@@ -120,7 +120,7 @@ def main():
                 patch(cid, {"render_status": "failed", "render_error": str(e)[:500]})
     for cid, (s, picks) in plans.items():
         try:
-            imgs = {n: R.render_slide(n, s["slides"][n - 1], R.load_image(pool[pid]["image_url"]))
+            imgs = {n: R.render_slide(n, s["slides"][n - 1], R.load_image(pool[pid]["image_url"]), seed=cid)
                     for n, (pid, _, _) in picks.items()}
             assert all(im.size == (R.W, R.H) for im in imgs.values())
         except (Exception, SystemExit) as e:

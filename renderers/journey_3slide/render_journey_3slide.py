@@ -9,9 +9,11 @@ A subtle prank:
 
 Template source: Figma "3-Slide Journey Carousel" (ZqDGTufoZyJX3EnRvdJyVi). Constants lifted from it:
   canvas 1080x1920; photos at 102.04% x 102.29% of the frame, offset -1.02% left;
-  hook Gotham Bold 50px white, black outline, ~60px line height, wrapped to two balanced
-  lines; the hook position differs per sample, so it is stored per row (hook_center_x,
-  hook_top_y).
+  hook 50px white, ~60px line height, wrapped to two balanced lines; the hook position
+  differs per sample, so it is stored per row (hook_center_x, hook_top_y). Since 2026-11-26
+  the hook is the shared Character 6 text from common/slide_text.py (Inter Bold, black
+  outline, soft shadow, colour emoji, a small shift from the stored spot and sometimes a
+  slight tilt, seeded by carousel_id) instead of Gotham Bold with a 7px outline.
 
 Content: Supabase table public.journey_3slide_carousel (see schema.sql). One row = one carousel.
 Reads rows with render_status='pending' and both before/after image urls set, renders,
@@ -23,7 +25,7 @@ storage (JOURNEY_SLIDE2_URL, default carousel-renders/journey-3slide/_assets/sli
 or from a row's slide_2_source_url when set.
 
 Connection: SUPABASE_URL / SUPABASE_SERVICE_KEY via common/env.
-Font: JOURNEY_FONT_PATH (default ~/Library/Fonts/Gotham-Bold.otf). Gotham is licensed, NOT committed.
+Font: common/fonts/Inter.ttf (in the repo; SLIDE_FONT_PATH overrides).
 
 Usage
   python render_journey_3slide.py                 # all pending rows
@@ -32,7 +34,7 @@ Usage
   python render_journey_3slide.py --limit 5
   python render_journey_3slide.py --env-file /path/to/.env   # load secrets from a local file
 
-Emoji in hooks are drawn with the colour emoji font (EMOJI_FONT, default Apple Color Emoji),
+Emoji in hooks are drawn in colour (SLIDE_EMOJI_FONT, default Apple Color Emoji),
 and the hook block is kept between SAFE_TOP and SAFE_BOTTOM so TikTok's UI never covers it.
 """
 import argparse, io, re, sys
@@ -44,22 +46,17 @@ from PIL import Image, ImageDraw, ImageFont, ImageOps
 
 sys.path.insert(0, str(Path(__file__).resolve().parents[2]))
 from common import env  # noqa: E402
+from common import slide_text as ST  # noqa: E402
 
 TABLE = "journey_3slide_carousel"
 BUCKET = "carousel-renders"
 W, H = 1080, 1920
 PHOTO = {"scale_w": 1.0204, "scale_h": 1.0229, "offset_x": -11, "offset_y": 0}
-HOOK = {"size": 50, "line_height": 60, "fill": "#FFFFFF", "stroke": "#000000",
-        "stroke_width": 7, "max_width": 640, "default_x": 540, "default_y": 1000}
+HOOK = {"size": 50, "line_height": 60, "weight": "Bold", "max_width": 640, "default_x": 540, "default_y": 1000}
 # Keep the hook clear of TikTok's own UI on a 9:16 post: the top bar, and the caption,
 # username and music line along the bottom. A hook block that would end below SAFE_BOTTOM
 # is moved up; one that would start above SAFE_TOP is moved down.
 SAFE_TOP, SAFE_BOTTOM = 250, 1440
-EMOJI_SCALE = 1.05   # emoji height relative to the hook font size
-EMOJI_RE = re.compile(
-    "(?:[\U0001F1E6-\U0001F1FF]{2}"
-    "|[\u2600-\u27BF\u2B00-\u2BFF\U0001F000-\U0001FAFF]\uFE0F?"
-    "(?:\u200D[\u2600-\u27BF\U0001F000-\U0001FAFF]\uFE0F?)*)")
 OUT = Path(__file__).resolve().parent / "out"
 
 
@@ -85,76 +82,7 @@ def place_photo(img):
 
 
 def load_font():
-    p = Path(env.get("JOURNEY_FONT_PATH") or "~/Library/Fonts/Gotham-Bold.otf").expanduser()
-    if p.exists():
-        return ImageFont.truetype(str(p), HOOK["size"])
-    print(f"WARN: font not found at {p}; falling back to Pillow default", file=sys.stderr)
-    try:
-        return ImageFont.load_default(size=HOOK["size"])
-    except TypeError:
-        return ImageFont.load_default()
-
-
-_emoji_font = None
-
-
-def emoji_font():
-    """Colour emoji font. Apple Color Emoji only draws at its bitmap sizes (160 is the largest);
-    Noto Color Emoji only at 109. The glyph is drawn at that size and scaled to the hook."""
-    global _emoji_font
-    if _emoji_font is None:
-        candidates = [env.get("EMOJI_FONT"), "/System/Library/Fonts/Apple Color Emoji.ttc",
-                      "/usr/share/fonts/truetype/noto/NotoColorEmoji.ttf"]
-        for path in filter(None, candidates):
-            for size in (160, 109, 137, 96, 64):
-                try:
-                    _emoji_font = ImageFont.truetype(path, size)
-                    return _emoji_font
-                except OSError:
-                    continue
-        _emoji_font = False
-        print("WARN: no colour emoji font found; emoji in hooks will be dropped", file=sys.stderr)
-    return _emoji_font
-
-
-def emoji_image(cluster):
-    """The emoji drawn on a transparent tile, cropped to the glyph, HOOK size tall."""
-    ef = emoji_font()
-    if not ef:
-        return None
-    side = int(ef.size * 1.4)
-    tile = Image.new("RGBA", (side, side), (0, 0, 0, 0))
-    ImageDraw.Draw(tile).text((side // 2, side // 2), cluster, font=ef, embedded_color=True, anchor="mm")
-    box = tile.getbbox()
-    if not box:
-        return None
-    tile = tile.crop(box)
-    h = round(HOOK["size"] * EMOJI_SCALE)
-    return tile.resize((max(1, round(tile.width * h / tile.height)), h), Image.LANCZOS)
-
-
-def runs(text):
-    """Split a line into ("text", s) and ("emoji", cluster) runs."""
-    out, i = [], 0
-    for m in EMOJI_RE.finditer(text):
-        if m.start() > i:
-            out.append(("text", text[i:m.start()]))
-        out.append(("emoji", m.group(0)))
-        i = m.end()
-    if i < len(text):
-        out.append(("text", text[i:]))
-    return out
-
-
-def measure(d, text, font):
-    w = 0
-    for kind, s in runs(text):
-        if kind == "text":
-            w += d.textlength(s, font=font)
-        else:
-            im = emoji_image(s)
-            w += im.width if im else 0
-    return w
+    return ST.font(HOOK["weight"], HOOK["size"])
 
 
 def wrap_balanced(d, text, font, max_width):
@@ -163,7 +91,7 @@ def wrap_balanced(d, text, font, max_width):
         lines, cur = [], ""
         for word in text.split():
             t = f"{cur} {word}".strip()
-            if cur and measure(d, t, font) > limit:
+            if cur and ST.measure(d, t, font) > limit:
                 lines.append(cur); cur = word
             else:
                 cur = t
@@ -177,31 +105,21 @@ def wrap_balanced(d, text, font, max_width):
     return greedy(hi)
 
 
-def draw_hook(img, text, center_x=None, top_y=None):
+def draw_hook(img, text, center_x=None, top_y=None, seed=None):
+    """The hook at its stored spot, kept between SAFE_TOP and SAFE_BOTTOM. `seed` (the
+    carousel id) turns on the small shift and the occasional tilt."""
     cx = float(center_x if center_x is not None else HOOK["default_x"])
     y = float(top_y if top_y is not None else HOOK["default_y"])
     d, font = ImageDraw.Draw(img), load_font()
     lines = wrap_balanced(d, f'"{text}"', font, HOOK["max_width"])
     ascent, descent = font.getmetrics()
-    block_bottom = y + (len(lines) - 1) * HOOK["line_height"] + ascent + descent + HOOK["stroke_width"]
+    block_bottom = y + (len(lines) - 1) * HOOK["line_height"] + ascent + descent + ST.outline_width(font.size)
     if block_bottom > SAFE_BOTTOM:
         y -= block_bottom - SAFE_BOTTOM
     y = max(y, SAFE_TOP)
-    for line in lines:
-        x = cx - measure(d, line, font) / 2
-        baseline = y + ascent
-        for kind, s in runs(line):
-            if kind == "text":
-                d.text((x, baseline), s, font=font, fill=HOOK["fill"], anchor="ls",
-                       stroke_width=HOOK["stroke_width"], stroke_fill=HOOK["stroke"])
-                x += d.textlength(s, font=font)
-            else:
-                im = emoji_image(s)
-                if im:
-                    img.paste(im, (round(x), round(baseline - im.height * 0.86)), im)
-                    x += im.width
-        y += HOOK["line_height"]
-    return img
+    place = ST.placement(f"{seed}:1") if seed else ST.NO_MOVE
+    return ST.draw_lines(img, lines, font, y, HOOK["line_height"], cx=cx, place=place,
+                         safe=(SAFE_TOP, SAFE_BOTTOM))
 
 
 def upload(sb, hdr, img, path):
@@ -222,7 +140,7 @@ def slide2_for(sb, row):
 def render_row(sb, hdr, row, dry_run):
     cid = row["carousel_id"]
     s1 = draw_hook(place_photo(fetch_image(row["before_image_url"])), row["hook_text"],
-                   row.get("hook_center_x"), row.get("hook_top_y"))
+                   row.get("hook_center_x"), row.get("hook_top_y"), seed=cid)
     s2 = slide2_for(sb, row)
     s3 = place_photo(fetch_image(row["after_image_url"]))
     if dry_run:

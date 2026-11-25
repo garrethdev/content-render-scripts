@@ -7,8 +7,9 @@
     "crop_anchor_y": 0.35
   },
   "font": {
-    "file": "assets/TikTokSans.ttf",
-    "family": "TikTok Sans"
+    "file": "../../common/fonts/Inter.ttf",
+    "family": "Inter",
+    "note": "drawn by common/slide_text.py: white, black outline, soft shadow, colour emoji, per-slide shift and tilt"
   },
   "text": {
     "side_margin": 84,
