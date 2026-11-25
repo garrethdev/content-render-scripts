@@ -3,8 +3,10 @@ render_comparison_carousel.py: Pillow renderer for the Comparison Carousel (Char
 
 Eight slides at 1080x1920 (9:16), JPG quality 90. Typography, placement, overlay and
 weight labels follow the Jealousy Carousel Render Blueprint
-(https://claude.ai/artifact/9CN9pvUkGhyQaiPBzNy5bb): TikTok Sans only, white text with a
-drop shadow, hook centred on slide 1, story text at the bottom ending 430 px above the
+(https://claude.ai/artifact/9CN9pvUkGhyQaiPBzNy5bb), with the shared Character 6 text from
+common/slide_text.py (Inter, white with a black outline and a soft shadow, colour emoji;
+each slide's text shifts a little and about one in three is tilted slightly, seeded by the
+carousel id), hook centred on slide 1, story text at the bottom ending 430 px above the
 edge (clear of the app's caption and buttons), a black legibility gradient, no dots, no numbers, no logos.
 
 Copy comes from public.comparison_carousel (slide_1 = hook, slide_2..slide_8), written by the
@@ -32,8 +34,7 @@ Usage:
   python3 render_comparison_carousel.py --batch cc-20261107 --limit 3
 
 Needs SUPABASE_ANON_KEY (or a service key) via common/env. Requires pillow, requests.
-Font: TikTok Sans variable font, path in CC_FONT_PATH
-(default ~/Library/Fonts/TikTokSans[opsz,slnt,wdth,wght].ttf).
+Font: common/fonts/Inter.ttf (in the repo; override with SLIDE_FONT_PATH).
 """
 import argparse
 import datetime as dt
@@ -50,6 +51,7 @@ from PIL import Image, ImageDraw, ImageFont, ImageOps
 
 sys.path.insert(0, os.path.dirname(os.path.dirname(os.path.dirname(os.path.abspath(__file__)))))
 from common import env  # noqa: E402
+from common import slide_text as ST  # noqa: E402
 
 # ---------------------------------------------------------------- blueprint
 W, H = 1080, 1920                # 9:16, so a reel or story shows the whole slide with no crop
@@ -57,8 +59,8 @@ JPEG_QUALITY = 90
 COL_W = 912                      # 84 px side margins
 BOTTOM_MARGIN = 430              # last line ends this far above the bottom edge (caption and buttons sit below)
 LINE_H = 1.28
-SHADOW = (0, 0, 0, 150)          # black at 59%
-SHADOW_OFF = (2, 3)
+SHADOW = ST.SHADOW               # black at 59%
+SHADOW_OFF = ST.SHADOW_OFF
 OVERLAY = 0.40                   # legibility gradient strength (blueprint range 0.30 to 0.45)
 OVERLAY_BOTTOM_FROM = 0.35       # gradient starts 35% down, darkest at the bottom
 OVERLAY_CENTER = (0.15, 0.85)    # slide 1: darkest in the middle
@@ -82,8 +84,6 @@ BUCKET = "rich-life-images"
 COVER_MANIFEST = "character-6/divorce-recovery-covers/manifest.json"
 RENDER_PREFIX = "comparison-carousel/renders"
 CACHE_DIR = os.path.expanduser(env.get("CC_CACHE_DIR", "~/.cache/comparison_carousel"))
-FONT_PATH = os.path.expanduser(env.get(
-    "CC_FONT_PATH", "~/Library/Fonts/TikTokSans[opsz,slnt,wdth,wght].ttf"))
 
 NOT_ALONE = ("friend", "two women", "two-person", "another", "a man", "man's", "family", "group",
              "class", "couple", "baby", "child", "partner", "husband", "boyfriend", "patrons",
@@ -262,49 +262,11 @@ def labels_for(carousel_id):
 
 # ---------------------------------------------------------------- text
 def font(weight, size):
-    if not os.path.exists(FONT_PATH):
-        raise SystemExit(f"TikTok Sans not found at {FONT_PATH}; set CC_FONT_PATH.")
-    f = ImageFont.truetype(FONT_PATH, round(size))
-    axes = f.get_variation_axes()
-    wght = {"SemiBold": 600, "Bold": 700}[weight]
-    vals = []
-    for a in axes:
-        n = a["name"] if isinstance(a["name"], str) else a["name"].decode()
-        n = n.lower()
-        if "weight" in n:
-            vals.append(wght)
-        elif "optical" in n:
-            vals.append(min(max(round(size), a["minimum"]), a["maximum"]))
-        elif "width" in n:
-            vals.append(100 if a["minimum"] <= 100 <= a["maximum"] else a["default"])
-        else:
-            vals.append(a["default"])
-    f.set_variation_by_axes(vals)
-    return f
-
-
-def wrap(d, text, fnt, width):
-    lines, cur = [], ""
-    for word in text.split():
-        t = f"{cur} {word}".strip()
-        if cur and d.textlength(t, font=fnt) > width:
-            lines.append(cur)
-            cur = word
-        else:
-            cur = t
-    return lines + [cur]
+    return ST.font(weight, size)
 
 
 def balanced(d, text, fnt, width):
-    n = len(wrap(d, text, fnt, width))
-    lo, hi = 1, width
-    while lo < hi:
-        mid = (lo + hi) // 2
-        if len(wrap(d, text, fnt, mid)) <= n:
-            hi = mid
-        else:
-            lo = mid + 1
-    return wrap(d, text, fnt, hi)
+    return ST.balanced(d, text, fnt, width)
 
 
 def gradient(img, y0, y1, darkest_y=None):
@@ -321,18 +283,11 @@ def gradient(img, y0, y1, darkest_y=None):
     img.paste(Image.new("RGB", (W, H), "black"), (0, 0), mask)
 
 
-def draw_text(img, lines, fnt, size, center_y=None, bottom=None):
-    layer = Image.new("RGBA", (W, H), (0, 0, 0, 0))
-    d = ImageDraw.Draw(layer)
+def draw_text(img, lines, fnt, size, center_y=None, bottom=None, place=ST.NO_MOVE):
     step = size * LINE_H
     total = step * (len(lines) - 1) + size
     top = center_y - total / 2 if center_y is not None else bottom - total
-    for i, line in enumerate(lines):
-        w = d.textlength(line, font=fnt)
-        x, y = (W - w) / 2, top + i * step
-        d.text((x + SHADOW_OFF[0], y + SHADOW_OFF[1]), line, font=fnt, fill=SHADOW)
-        d.text((x, y), line, font=fnt, fill=(255, 255, 255, 255))
-    img.paste(layer, (0, 0), layer)
+    ST.draw_lines(img, lines, fnt, top, step, place=place, safe=(LABEL["y"] + LABEL["size"] + 40, H - BOTTOM_MARGIN))
 
 
 def fit_block(text, weight, size, floor=MIN_SIZE):
@@ -346,24 +301,28 @@ def fit_block(text, weight, size, floor=MIN_SIZE):
         size -= 3
 
 
-def render_slide(n, text, src_url, label=None):
+def render_slide(n, text, src_url, label=None, seed=None):
+    """`seed` (the carousel id) turns on the per-slide shift and tilt."""
     img = fit(load_image(src_url))
     if n == 1:
         size = HOOK["size_long"] if len(text) > HOOK["long_over"] else HOOK["size"]
         lines, f, size = fit_block(text, HOOK["weight"], size)
         gradient(img, int(H * OVERLAY_CENTER[0]), int(H * OVERLAY_CENTER[1]), H // 2)
-        draw_text(img, lines, f, size, center_y=H / 2)
+        place = ST.placement(f"{seed}:{n}") if seed else ST.NO_MOVE
+        draw_text(img, lines, f, size, center_y=H / 2, place=place)
     else:
         weight, size = STORY[n]
         lines, f, size = fit_block(text, weight, size)
         gradient(img, int(H * OVERLAY_BOTTOM_FROM), H)
-        draw_text(img, lines, f, size, bottom=H - BOTTOM_MARGIN)
+        place = ST.placement(f"{seed}:{n}", down=0) if seed else ST.NO_MOVE   # already on the lowest line
+        draw_text(img, lines, f, size, bottom=H - BOTTOM_MARGIN, place=place)
     if label:
         layer = Image.new("RGBA", (W, H), (0, 0, 0, 0))
         d = ImageDraw.Draw(layer)
         lf = font(LABEL["weight"], LABEL["size"])
         d.text((LABEL["x"] + SHADOW_OFF[0], LABEL["y"] + SHADOW_OFF[1]), label, font=lf, fill=SHADOW)
-        d.text((LABEL["x"], LABEL["y"]), label, font=lf, fill=(255, 255, 255, 255))
+        d.text((LABEL["x"], LABEL["y"]), label, font=lf, fill=(255, 255, 255, 255),
+               stroke_width=ST.outline_width(LABEL["size"]), stroke_fill=ST.OUTLINE)
         img.paste(layer, (0, 0), layer)
     return img
 
@@ -401,7 +360,7 @@ def main():
             picks = {str(n): stored[str(n)] for n in range(1, 9)} if keep else pick_images(cid, pools, usage)
             labels = labels_for(cid)
             slides = {n: render_slide(n, row[f"slide_{n}"], picks[str(n)],
-                                      labels.get(str(n)) if n in LABEL_SLIDES else None)
+                                      labels.get(str(n)) if n in LABEL_SLIDES else None, seed=cid)
                       for n in range(1, 9)}
         except Exception as e:
             print(f"  {cid}: FAILED {e}")

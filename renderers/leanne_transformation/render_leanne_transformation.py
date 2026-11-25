@@ -50,9 +50,11 @@ import random
 
 from PIL import Image, ImageDraw, ImageFont, ImageFilter, ImageOps
 
+sys.path.insert(0, os.path.dirname(os.path.dirname(os.path.dirname(os.path.abspath(__file__)))))
+from common import slide_text as ST  # noqa: E402  shared Character 6 text: Inter, outline, emoji, variation
+
 # ---------------------------------------------------------------- config
-SF_FONT_PATH = "/System/Library/Fonts/SFNS.ttf"
-SF_VARIATION = "Bold"
+CAP_WEIGHT = "Bold"                       # Inter Bold, via common/slide_text.py (was SF Pro Bold until 2026-11-26)
 DEFAULT_CANVAS = (1080, 1920)             # 9:16, same as every other Character 6 lane
 
 SUPABASE_PROJECT_REF = "qlcmgxgwpzmiebzxflai"
@@ -70,8 +72,6 @@ SLIDE_URL_COLS = [f"slide_{i}_url" for i in range(1, 7)]
 CAP_FONT_FRAC = 0.05625      # Leanne copy is short; slightly larger than covered_eye
 CAP_MARGIN_X_FRAC = 0.08
 CAP_LINE_SPACING = 1.14
-SHADOW_BLUR_FRAC = 0.01375
-SHADOW_OFFSET_FRAC = 0.00375
 EDGE_FRAC = 0.104            # text clear of the top and bottom edge, where the apps put their buttons
 JPEG_QUALITY = 92
 
@@ -83,12 +83,7 @@ BODY_SCALE = 1.0
 
 # ---------------------------------------------------------------- text helpers
 def load_font(px):
-    f = ImageFont.truetype(SF_FONT_PATH, px)
-    try:
-        f.set_variation_by_name(SF_VARIATION)
-    except Exception:
-        pass
-    return f
+    return ST.font(CAP_WEIGHT, px)
 
 
 def cover_fit(img, canvas):
@@ -112,7 +107,7 @@ def wrap_caption(draw, text, font, max_width):
     lines, cur = [], words[0]
     for w in words[1:]:
         trial = cur + " " + w
-        if draw.textlength(trial, font=font) <= max_width:
+        if ST.measure(draw, trial, font) <= max_width:
             cur = trial
         else:
             lines.append(cur)
@@ -121,10 +116,11 @@ def wrap_caption(draw, text, font, max_width):
     return lines
 
 
-def draw_caption(base, text, canvas, scale=1.0, pos="center"):
-    """Wrapped, white SF Pro Bold caption with soft shadow + dark stroke.
-    pos = center | top | bottom. Blank lines in `text` are preserved (used to
-    separate the hook from its sub-line)."""
+def draw_caption(base, text, canvas, scale=1.0, pos="center", key=None):
+    """Wrapped caption in the shared Character 6 look (white Inter Bold, black outline, soft
+    shadow, colour emoji). pos = center | top | bottom. Blank lines in `text` are preserved
+    (used to separate the hook from its sub-line). `key` ("<carousel_id>:<slide>") turns on
+    the small shift and the occasional slight tilt; top text only moves down, bottom only up."""
     if not text:
         return base
     W, H = canvas
@@ -132,7 +128,6 @@ def draw_caption(base, text, canvas, scale=1.0, pos="center"):
     font = load_font(font_px)
     margin_x = int(W * CAP_MARGIN_X_FRAC)
     max_text_w = W - 2 * margin_x
-    stroke_w = max(2, int(font_px * 0.08))
     line_h = int(font_px * CAP_LINE_SPACING)
 
     draw = ImageDraw.Draw(base)
@@ -143,39 +138,16 @@ def draw_caption(base, text, canvas, scale=1.0, pos="center"):
         else:
             lines.extend(wrap_caption(draw, para, font, max_text_w))
     block_h = line_h * len(lines)
+    edge = int(H * EDGE_FRAC)
     if pos == "top":
-        y0 = int(H * EDGE_FRAC)
+        y0, move = edge, dict(up=0)
     elif pos == "bottom":
-        y0 = H - int(H * EDGE_FRAC) - block_h
+        y0, move = H - edge - block_h, dict(down=0)
     else:
-        y0 = (H - block_h) // 2                      # vertical center
-
-    # soft drop shadow on its own layer, blurred then composited
-    shadow = Image.new("RGBA", (W, H), (0, 0, 0, 0))
-    sdraw = ImageDraw.Draw(shadow)
-    off = int(W * SHADOW_OFFSET_FRAC)
-    for i, ln in enumerate(lines):
-        if ln == "":
-            continue
-        w = sdraw.textlength(ln, font=font)
-        x = (W - w) / 2
-        y = y0 + i * line_h
-        sdraw.text((x + off, y + off), ln, font=font, fill=(0, 0, 0, 180))
-    blur = max(1, int(W * SHADOW_BLUR_FRAC))
-    shadow = shadow.filter(ImageFilter.GaussianBlur(blur))
-    base = Image.alpha_composite(base.convert("RGBA"), shadow).convert("RGB")
-
-    # crisp white text with a thin dark rim
-    draw = ImageDraw.Draw(base)
-    for i, ln in enumerate(lines):
-        if ln == "":
-            continue
-        w = draw.textlength(ln, font=font)
-        x = (W - w) / 2
-        y = y0 + i * line_h
-        draw.text((x, y), ln, font=font, fill=(255, 255, 255),
-                  stroke_width=stroke_w, stroke_fill=(0, 0, 0))
-    return base
+        y0, move = (H - block_h) // 2, {}           # vertical center
+    place = ST.placement(key, **move) if key else ST.NO_MOVE
+    base = base.convert("RGB")
+    return ST.draw_lines(base, lines, font, y0, line_h, place=place, safe=(edge, H - edge))
 
 
 _IMG_CACHE = {}   # backgrounds repeat across carousels; download each once per run
@@ -193,13 +165,13 @@ def open_image(src):
 
 
 def render_slide(image_src, caption, canvas, scale=1.0, predarkened=False,
-                 pos="center", scrim_strength=None):
+                 pos="center", scrim_strength=None, key=None):
     img = open_image(image_src)
     canvas_img = cover_fit(img, canvas)
     if scrim_strength is None:
         scrim_strength = 0.18 if predarkened else 0.34
     canvas_img = scrim(canvas_img, strength=scrim_strength)
-    return draw_caption(canvas_img, caption or "", canvas, scale=scale, pos=pos)
+    return draw_caption(canvas_img, caption or "", canvas, scale=scale, pos=pos, key=key)
 
 
 def make_filmstrip(slide_imgs, out_path):
@@ -474,7 +446,7 @@ def render_from_supabase(carousel_id=None, all_rows=False, upload=False,
             try:
                 slide = render_slide(url, caption, DEFAULT_CANVAS,
                                      scale=scale, predarkened=predark,
-                                     pos=pos, scrim_strength=scrim_strength)
+                                     pos=pos, scrim_strength=scrim_strength, key=f"{cid}:{i}")
             except Exception as e:
                 print(f"  ! {cid} slide {i}: {e}")
                 continue

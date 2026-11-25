@@ -28,9 +28,11 @@ pip install -r requirements.txt
   `~/.config/peptide-secrets/.env` or the repo `.env`, loaded by `common/env.py`.
   The publishable key will not work: `jealousy_carousels` has row level security with no
   policies, so only the service role can read or update it.
-- Font: `assets/TikTokSans.ttf` (TikTok Sans variable font, SIL Open Font License in
-  `assets/OFL.txt`). Slide 1 uses the Bold instance, the rest SemiBold. Override with
-  `JEALOUSY_FONT_PATH`.
+- Text: drawn by `common/slide_text.py`, the look every Character 6 carousel shares (Inter,
+  white with a black outline and a soft shadow, colour emoji). Slide 1 uses Inter Bold, the
+  rest SemiBold. Each slide's text shifts a little inside its planned area and about one slide
+  in three is tilted slightly; both are seeded by the carousel id, so a re-render matches.
+  The font is `common/fonts/Inter.ttf` (SIL Open Font License); override with `SLIDE_FONT_PATH`.
 
 ## Making a new batch
 

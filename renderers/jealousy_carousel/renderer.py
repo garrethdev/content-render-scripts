@@ -1,70 +1,14 @@
 import json, os, sys, datetime, hashlib, urllib.request, urllib.parse
 from PIL import Image, ImageDraw, ImageFont, ImageFilter, ImageOps
+sys.path.insert(0, os.path.dirname(os.path.dirname(os.path.dirname(os.path.abspath(__file__)))))
+from common import slide_text as ST  # noqa: E402  the shared Character 6 text look (Inter, outline, emoji, variation)
 BP = json.load(open(os.path.join(os.path.dirname(os.path.abspath(__file__)), "blueprint.json")))
 W, H = BP["canvas"]["w"], BP["canvas"]["h"]
-# TikTok Sans variable font (SIL OFL, assets/OFL.txt). Override with JEALOUSY_FONT_PATH.
-TT = os.environ.get("JEALOUSY_FONT_PATH") or os.path.join(os.path.dirname(os.path.abspath(__file__)), "assets", "TikTokSans.ttf")
 FONT, FONTB = "SemiBold", "Bold"
-_fc = {}
 def tfont(style, fs):
-    k = (style, fs)
-    if k not in _fc:
-        f = ImageFont.truetype(TT, fs); f.set_variation_by_name(style); _fc[k] = f
-    return _fc[k]
+    return ST.font(style, fs)
 SIZES = {"xl": 74, "l": 58, "m": 47}
-# Colour emoji in slide text (the writer's voice rules ask for some in every deck). TikTok Sans has none,
-# so each emoji is drawn with a colour emoji font at its bitmap size and scaled to the line.
-# Override with JEALOUSY_EMOJI_FONT; otherwise Apple Color Emoji (macOS) or Noto Color Emoji (Linux).
-import re
-EMOJI_SCALE = 1.0
-EMOJI_RE = re.compile(
-    "(?:[\U0001F1E6-\U0001F1FF]{2}"
-    "|[☀-➿⬀-⯿\U0001F000-\U0001FAFF]️?[\U0001F3FB-\U0001F3FF]?"
-    "(?:‍[☀-➿\U0001F000-\U0001FAFF]️?[\U0001F3FB-\U0001F3FF]?)*)")
-_ef, _etile, _eimg = None, {}, {}
-def emoji_font():
-    global _ef
-    if _ef is None:
-        _ef = False
-        for path in filter(None, [os.environ.get("JEALOUSY_EMOJI_FONT"), "/System/Library/Fonts/Apple Color Emoji.ttc",
-                                  "/usr/share/fonts/truetype/noto/NotoColorEmoji.ttf"]):
-            for size in (160, 109, 137, 96, 64):
-                try:
-                    _ef = ImageFont.truetype(path, size); return _ef
-                except OSError:
-                    continue
-        print("WARN: no colour emoji font found; emoji in slide text will be dropped", file=sys.stderr)
-    return _ef
-def emoji_image(cluster, fs):
-    """The emoji on a transparent tile cropped to the glyph, about one font size tall."""
-    k = (cluster, fs)
-    if k not in _eimg:
-        ef = emoji_font(); im = None
-        if ef:
-            if cluster not in _etile:
-                side = int(ef.size * 1.6); t = Image.new("RGBA", (side, side), (0, 0, 0, 0))
-                ImageDraw.Draw(t).text((side // 2, side // 2), cluster, font=ef, embedded_color=True, anchor="mm")
-                b = t.getbbox(); _etile[cluster] = t.crop(b) if b else None
-            t = _etile[cluster]
-            if t:
-                h = max(1, round(fs * EMOJI_SCALE)); im = t.resize((max(1, round(t.width * h / t.height)), h), Image.LANCZOS)
-        _eimg[k] = im
-    return _eimg[k]
-def runs(text):
-    """Split a line into ("text", s) and ("emoji", cluster) runs."""
-    out, i = [], 0
-    for m in EMOJI_RE.finditer(text):
-        if m.start() > i: out.append(("text", text[i:m.start()]))
-        out.append(("emoji", m.group(0))); i = m.end()
-    if i < len(text): out.append(("text", text[i:]))
-    return out
-def measure(draw, text, font):
-    w = 0
-    for kind, s in runs(text):
-        if kind == "text": w += draw.textlength(s, font=font)
-        else:
-            im = emoji_image(s, font.size); w += (im.width + round(font.size * 0.06)) if im else 0
-    return w
+measure = ST.measure
 here = os.path.dirname(os.path.abspath(__file__))
 def fetch(url):
     os.makedirs(os.path.join(here, "cache"), exist_ok=True)
@@ -83,7 +27,9 @@ def wrap(draw, text, font, maxw):
             lines.append(cur); cur = w
     if cur: lines.append(cur)
     return lines
-def render_slide(path, text, pos, color, size, opacity, blur, n, label=None):
+def render_slide(path, text, pos, color, size, opacity, blur, n, label=None, seed=None):
+    """`seed` (the carousel id) turns on the per-slide shift and tilt; without it the text sits
+    exactly where the blueprint puts it."""
     im0 = Image.open(fetch(path)).convert("RGB"); ow, oh = im0.size
     if BP["canvas"].get("fit") == "blur_fill":
         # 9:16 prototype: photo fills the width, blurred copy of itself fills the rest.
@@ -143,19 +89,13 @@ def render_slide(path, text, pos, color, size, opacity, blur, n, label=None):
     if pos == "top": y = tx["top_y"]
     elif pos == "center": y = (H - bh) // 2
     else: y = H - tx["bottom_margin"] - bh
-    fill = tuple(tx["fill"]); sh = tuple(tx["shadow"]); ox_, oy_ = tx["shadow_offset"]
-    asc = font.getmetrics()[0]; gap = round(font.size * 0.06)
-    for ln in lines:
-        x = (W - measure(dr, ln, font)) / 2
-        for kind, s in runs(ln):
-            if kind == "text":
-                dr.text((x + ox_, y + oy_), s, font=font, fill=sh)
-                dr.text((x, y), s, font=font, fill=fill); x += dr.textlength(s, font=font)
-            else:
-                em = emoji_image(s, font.size)
-                if em:
-                    x += gap / 2; im.paste(em, (round(x), round(y + asc - em.height * 0.88)), em); x += em.width + gap / 2
-        y += lh
+    # A little shift inside the planned area, and sometimes a slight tilt (common/slide_text.py).
+    # Bottom text already sits on the lowest line TikTok's caption leaves free, so it only moves up;
+    # top text only moves down.
+    move = {"top": dict(up=0), "bottom": dict(down=0)}.get(pos, {})
+    place = ST.placement(f"{seed}:{n}", **move) if seed else ST.NO_MOVE
+    ST.draw_lines(im, lines, font, y, lh, place=place, safe=(tx["top_y"] - 60, H - tx["bottom_margin"]),
+                  fill=tuple(tx["fill"]))
     if label:
         L = BP["label"]; lf = tfont(L["weight"], L["size"]); tw = dr.textlength(label, font=lf)
         bx0, by0 = L["x"], L["y"]; bx1, by1 = bx0 + tw + 2 * L["pad_x"], by0 + L["size"] + 2 * L["pad_y"] + 6
@@ -165,5 +105,6 @@ def render_slide(path, text, pos, color, size, opacity, blur, n, label=None):
         else:
             so = L.get("shadow_offset", [2, 3])
             dr.text((bx0 + so[0], by0 + so[1]), label, font=lf, fill=tuple(L.get("shadow", [0, 0, 0, 170])))
-            dr.text((bx0, by0), label, font=lf, fill=tuple(L["text"]))
+            dr.text((bx0, by0), label, font=lf, fill=tuple(L["text"]),
+                    stroke_width=ST.outline_width(L["size"]), stroke_fill=ST.OUTLINE)
     return im.convert("RGB")
