@@ -32,6 +32,7 @@ Supabase storage. Nothing secret is hardcoded; everything loads from env via
 | Divorce Recovery carousel (Character 6) | `renderers/divorce_recovery/` | `ingest_decks.py --decks N` then `render_divorce_recovery.py --upload` | 6 slides: expression cover, iOS lock screen with the ex's text, After/scenery/Before/After. Rows in `divorce_recovery_carousel`. |
 | Jealousy carousel (Character 6) | `renderers/jealousy_carousel/` | `stitch.py --batch <name>` then `gate.py --batch <name>` | 6 slides at 1080x1920: the villain's line over a face-blurred friend photo, then before photos, then the after. Copy and photo picks from the n8n writer + director; rows in `jealousy_carousels`. |
 | Kitchen Quote Video (Character 6) | `renderers/kitchen_quote_video/` | `render_kitchen_quote_video.py [video_id ...] [--batch B] [--dry-run]` | 10 s kitchen clip + one line over a dark fade, 1080x1920, silent (song at posting). Picks from all 33 `quote_video_clips`, blue-shirt clips included; rows in `quote_video_posts`. |
+| Story Wall video (Character 6) | `renderers/story_wall_video/` | `create_batch.py --batch B --stories ...` then `render_story_wall.py --batch B` | 8 s kitchen clip + one whole story_bank story as a wall of text over a light shade; text off for the last second. Rows in `story_wall_posts`. |
 
 **Not in this repo (no renderer exists yet):** Eat Whatever video, Peptide Question deck.
 **BA main video** is a Claude-skill pipeline (Sheets-based), not a standalone script.
