@@ -15,12 +15,15 @@ storage and marks the row rendered.
 Picture rules (Garreth, 2026-11-25; he asked that "or" and "and" be read as written):
   slide 1     one of the complaint photos he approved on the photo page (COMPLAINT_PHOTOS below), stored under
               rich-life-images/womens-complaints/complaint-photos/. The hook sits away from the body part (CENTER).
-  slides 2-6  nature OR a photo tagged "before" AND "old". One or two nature slides at random among 3 to 6.
+  slides 2-6  nature or food only, no photo of her (Garreth, 2026-11-25: "remove as many images of her in the middle
+              slides and tell the renderer to balance out more just nature or food shots"). They alternate, starting
+              with nature or food at random, so each deck gets two or three of each.
   slides 7-8  the reveal: photos tagged "after" AND "old".
 Tags come from public.v_character6_picture_pool, read fresh on every run: active rows of jealousy_image_pool under
-rich-life-images/character-6/ whose file still exists in storage. Nothing outside that folder is ever used for
-slides 2 to 8. Nature = no person in the photo, described as scenery (garden, field, sky, beach ...), no food, no
-kitchen. No picture repeats inside a deck; across a run the least used picture goes first.
+rich-life-images/character-6/ whose file still exists in storage, plus every file in character-6/nature-basis and
+character-6/food-basis. Nothing outside that folder is ever used for slides 2 to 8. Nature = the nature-basis folder,
+or no person in the photo and described as scenery (garden, field, sky, beach ...). Food = the food-basis folder, or no
+person and described as food. No picture repeats inside a deck; across a run the least used picture goes first.
 Text is straight on every slide (no shift, no tilt).
 
 Keys come through common/env: SUPABASE_ANON_KEY is enough for everything here (the table and both storage
@@ -63,6 +66,8 @@ CENTER = {"UA15": .68, "UA12z": .68, "UA13c": .72, "UA10": .70, "LS02": .62, "LS
           "DC21": .70, "DC22": .70, "DC15": .70, "DC16": .70, "DC18": .70, "DC12": .68, "DC03": .70, "BL17b": .40, "BL26": .52}
 
 NATURE = re.compile(r"\b(garden|field|sky|clouds|beach|sea|ocean|trees?|leaves|vines|lane|bougainvillea|flowers?|park|lake|sunset|meadow|hills?)\b", re.I)
+FOOD = re.compile(r"\b(plate|bowl|cake|pasta|soup|dessert|burger|salad|cutlet|ribs|casserole|pastries|meat|eggs|sandwich|platter|skewers|lunch|dinner|toast|smoothie|coffee|fruit)\b", re.I)
+HANDS = re.compile(r"\b(hand|hands|handheld|held|holding|fingers)\b", re.I)   # her out of the middle slides, hands too
 NOT_NATURE = re.compile(r"\b(kitchen|plate|bowl|cake|pasta|soup|dessert|burger|salad|cutlet|ribs|casserole|pastries|meat|eggs|jar|tongs|dish|bars|sandwich|platter|skewers|lunch|dinner)\b", re.I)
 
 
@@ -88,9 +93,12 @@ def load_pools():
     """Fresh from the view on every run. Each pool follows his tags exactly."""
     rows = api("GET", f"/rest/v1/{POOL_VIEW}?select=*")
     rows = [r for r in rows if r.get("url") and R.LIBRARY in r["url"]]
+    nophoto = lambda r: not r["her_in_photo"]  # noqa: E731
     pools = {
-        "before_old": [r for r in rows if r["stage"] == "before" and r["age_group"] == "old"],
-        "nature": [r for r in rows if not r["her_in_photo"] and NATURE.search(r["what"] or "") and not NOT_NATURE.search(r["what"] or "")],
+        "nature": [r for r in rows if r.get("folder") == "nature-basis" or
+                   (nophoto(r) and NATURE.search(r["what"] or "") and not NOT_NATURE.search(r["what"] or "") and not HANDS.search(r["what"] or ""))],
+        "food": [r for r in rows if r.get("folder") == "food-basis" or
+                 (nophoto(r) and r.get("folder") != "nature-basis" and FOOD.search(r["what"] or "") and not HANDS.search(r["what"] or ""))],
         "after_old": [r for r in rows if r["stage"] == "after" and r["age_group"] == "old"],
     }
     for k, v in pools.items():
@@ -116,10 +124,11 @@ def plan_row(row, k, pools):
     rng = random.Random(row["carousel_id"])
     pics = COMPLAINT_PHOTOS[row["complaint"]]
     plan = [{"kind": "complaint", "path": f"{COMPLAINT_PREFIX}/{pics[k % len(pics)]}.jpg", "id": pics[k % len(pics)]}]
-    nature_at = set(rng.sample([3, 4, 5, 6], rng.choice([1, 2])))
+    first = rng.choice(["nature", "food"])
+    other = "food" if first == "nature" else "nature"
     taken = set()
     for n in range(2, 7):
-        kind = "nature" if n in nature_at else "before_old"
+        kind = first if n % 2 == 0 else other
         plan.append({"kind": kind, "path": pick(pools[kind], taken, rng)["storage_path"]})
     for _ in (7, 8):
         plan.append({"kind": "after_old", "path": pick(pools["after_old"], taken, rng)["storage_path"]})
@@ -191,7 +200,7 @@ def main():
     if args.upload_complaint_photos:
         return upload_complaint_photos(args.upload_complaint_photos)
 
-    p = {"select": "*", "order": "carousel_id", "limit": str(args.limit)}
+    p = {"select": "*", "order": "carousel_id", "limit": str(args.limit), "or": "(status.is.null,status.neq.rejected)"}
     if not args.all:
         p["render_status"] = "eq.pending"
     if args.carousel:
